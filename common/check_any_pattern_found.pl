@@ -8,7 +8,7 @@ while (<STDIN>)
 	for $r (@regexps)
 	{
 		exit 0 if (/$r/);
-	}	
+	}
 }
 
 exit 1;

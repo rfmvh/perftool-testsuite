@@ -72,4 +72,3 @@ export RE_LINE_RECORD2="^\[\s+perf\s+record:\s+Captured and wrote $RE_NUMBER\s*M
 # The second line of perf-record "OK" output
 # Examples:
 #    [ perf record: Captured and wrote 0.405 MB perf.data (109 samples) ]
-

@@ -6,7 +6,7 @@
 #
 #		This file should be used for initialization of basic functions
 #	for checking, reporting results etc.
-#	
+#
 #
 
 THIS_TEST_NAME=`basename $0`

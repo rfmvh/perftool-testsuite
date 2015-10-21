@@ -7,7 +7,7 @@ $passed = 1;
 while (<STDIN>)
 {
 	s/\n//;
-	
+
 	$line_matched = 0;
 	for $r (@regexps)
 	{

@@ -45,7 +45,7 @@ else
 	echo -e "\t$VENDOR_ID\tFamily:$FAMILY Model:$MODEL Stepping:$STEPPING"
 fi
 if [[ $ARCH =~ ppc64.* ]]; then
-	export VIRTUALIZATION=`systemd-detect-virt -q && echo PowerKVM || ( test -e /proc/ppc64/lparcfg && echo PowerVM || echo none )`                
+	export VIRTUALIZATION=`systemd-detect-virt -q && echo PowerKVM || ( test -e /proc/ppc64/lparcfg && echo PowerVM || echo none )`
 else
 	VIRTUALIZATION=`systemd-detect-virt`
 	export VIRTUALIZATION=${VIRTUALIZATION:-none}

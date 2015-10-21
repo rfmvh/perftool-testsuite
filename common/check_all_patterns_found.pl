@@ -8,7 +8,7 @@ $passed = 1;
 while (<STDIN>)
 {
 	s/\n//;
-	
+
 	for $r (@regexps)
 	{
 		if (/$r/)

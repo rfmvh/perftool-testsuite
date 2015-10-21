@@ -16,5 +16,3 @@
 # enough to run each event on one core only.
 # Note: POWER8 only
 export PARAM_STAT_24x7_ALL_CORES=n
-
-
