@@ -31,7 +31,7 @@ export NPROC=`nproc`
 echo "======================================================"
 echo "Kernel: $KERNEL"
 echo "Architecture: $ARCH"
-if [ "$VERBOSE" = "y" ];
+if [ "$VERBOSE" = "y" ]; then
 	echo "CPU Info:"
 	head -n 25 /proc/cpuinfo | while read line; do echo -e "\t$line"; done; unset line
 	echo "AT_PLATFORM:"
