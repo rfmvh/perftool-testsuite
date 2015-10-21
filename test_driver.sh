@@ -11,6 +11,7 @@
 
 # FIXME :: add arguments for logging, test depth, etc
 export PERFTEST_LOGGING=${PERFTEST_LOGGING:-n}
+export VERBOSE=n
 
 #### specifies the sets of test per architecture
 declare -A TESTING_SET
@@ -30,14 +31,23 @@ export NPROC=`nproc`
 echo "======================================================"
 echo "Kernel: $KERNEL"
 echo "Architecture: $ARCH"
-echo "CPU Info:"
-head -n 25 /proc/cpuinfo | while read line; do echo -e "\t$line"; done; unset line
-echo "AT_PLATFORM:"
-LD_SHOW_AUXV=1 /bin/true | grep PLATFORM | while read line; do echo -e "\t$line"; done; unset line
+if [ "$VERBOSE" = "y" ];
+	echo "CPU Info:"
+	head -n 25 /proc/cpuinfo | while read line; do echo -e "\t$line"; done; unset line
+	echo "AT_PLATFORM:"
+	LD_SHOW_AUXV=1 /bin/true | grep PLATFORM | while read line; do echo -e "\t$line"; done; unset line
+else
+	echo "CPU Info:"
+	FAMILY=`grep family /proc/cpuinfo | head -n 1 | awk -F':' '{print $2}'`
+	MODEL=`grep model /proc/cpuinfo | head -n 1 | awk -F':' '{print $2}'`
+	STEPPING=`grep stepping /proc/cpuinfo | head -n 1 | awk -F':' '{print $2}'`
+	VENDOR_ID=`grep vendor_id /proc/cpuinfo | head -n 1 | awk -F':' '{print $2}'`
+	echo -e "\t$VENDOR_ID\tFamily:$FAMILY Model:$MODEL Stepping:$STEPPING"
+fi
 if [[ $ARCH =~ ppc64.* ]]; then
 	export VIRTUALIZATION=`systemd-detect-virt -q && echo PowerKVM || ( test -e /proc/ppc64/lparcfg && echo PowerVM || echo none )`                
 else
-	VIRTUALIZATION=`virt-what`
+	VIRTUALIZATION=`systemd-detect-virt`
 	export VIRTUALIZATION=${VIRTUALIZATION:-none}
 fi
 echo "Virtualization: $VIRTUALIZATION"
@@ -101,3 +111,4 @@ for subtest in $SUBTESTS_TO_RUN; do
 	fi
 done
 
+exit $FAILED_COUNT
