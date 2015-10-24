@@ -1,0 +1,19 @@
+base_trace
+	- --cpu option
+	- pagefaults
+	- test_syscalls
+		- something more deep for the syscalls; like strace-any
+	- record
+	- p pid attaching
+	- no-syscalls - specify other events as well; tracepoint events
+	- OVERLORD
+
+base_stat
+	- tracepoint events (some of them)
+	- tracepoint events definition (check for the syntax definition)
+	- more semantic checking
+
+base_record
+
+base_report
+
