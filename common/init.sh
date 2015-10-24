@@ -37,9 +37,9 @@ print_overall_results()
 {
 	RETVAL="$1"; shift
 	if [ $RETVAL -eq 0 ]; then
-		echo -e "$MALLPASS## [ PASS ] ##$MEND $TEST_NAME :: $THIS_TEST_NAME"
+		echo -e "$MALLPASS## [ PASS ] ##$MEND $TEST_NAME :: $THIS_TEST_NAME SUMMARY"
 	else
-		echo -e "$MALLFAIL## [ FAIL ] ##$MEND $TEST_NAME :: $THIS_TEST_NAME :: $RETVAL failures found"
+		echo -e "$MALLFAIL## [ FAIL ] ##$MEND $TEST_NAME :: $THIS_TEST_NAME SUMMARY :: $RETVAL failures found"
 	fi
 	return $RETVAL
 }
