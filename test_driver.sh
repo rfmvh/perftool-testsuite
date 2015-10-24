@@ -20,7 +20,7 @@ TESTING_SET['aarch64']="stat"
 TESTING_SET['ppc64']="stat"
 TESTING_SET['ppc64le']="stat"
 TESTING_SET['s390x']="stat"
-TESTING_SET['x86_64']="stat"
+TESTING_SET['x86_64']="stat trace"
 TESTING_SET['i686']="stat"
 
 
