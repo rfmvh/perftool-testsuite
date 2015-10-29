@@ -131,10 +131,10 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "pid"
 ### non-existing symbol
 
 # '--symbols' should show only the given symbols
-$CMD_PERF report --stdio --symbols=dummynonexistingsymbol > basic_symbols.out 2> basic_symbols.err
+$CMD_PERF report --stdio --symbols=dummynonexistingsymbol > basic_symbols.log 2> basic_symbols.err
 PERF_EXIT_CODE=$?
 
-../check_all_lines_matched.pl "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" < basic_symbols.out
+../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" < basic_symbols.log
 CHECK_EXIT_CODE=$?
 test ! -s basic_symbols.err
 (( CHECK_EXIT_CODE += $? ))
@@ -146,10 +146,10 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing symbol"
 ### symbol filter
 
 # '--symbol-filter' should filter symbols based on substrings
-$CMD_PERF report --stdio --symbol-filter=map > basic_symbolfilter.out 2> basic_symbolfilter.err
+$CMD_PERF report --stdio --symbol-filter=map > basic_symbolfilter.log 2> basic_symbolfilter.err
 PERF_EXIT_CODE=$?
 
-grep -P '\s+[\d\.]+%' basic_pid.log | ../common/check_all_lines_matched.pl "\[[k\.]\]\s+.*map"
+grep -P '\s+[\d\.]+%' basic_symbolfilter.log | ../common/check_all_lines_matched.pl "\[[k\.]\]\s+.*map"
 CHECK_EXIT_CODE=$?
 test ! -s basic_symbolfilter.err
 (( CHECK_EXIT_CODE += $? ))
