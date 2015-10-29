@@ -113,13 +113,52 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "show CPU utilization"
 (( TEST_RESULT += $? ))
 
 
+### pid
+
+# '--pid=' should limit the output for a process with the given pid only
+$CMD_PERF report --stdio --pid=1 > basic_pid.log 2> basic_pid.err
+PERF_EXIT_CODE=$?
+
+grep -P '\s+[\d\.]+%' basic_pid.log | ../common/check_all_lines_matched.pl "systemd|init"
+CHECK_EXIT_CODE=$?
+test ! -s basic_pid.err
+(( CHECK_EXIT_CODE += $? ))
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "pid"
+(( TEST_RESULT += $? ))
 
 
+### non-existing symbol
+
+# '--symbols' should show only the given symbols
+$CMD_PERF report --stdio --symbols=dummynonexistingsymbol > basic_symbols.out 2> basic_symbols.err
+PERF_EXIT_CODE=$?
+
+../check_all_lines_matched.pl "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" < basic_symbols.out
+CHECK_EXIT_CODE=$?
+test ! -s basic_symbols.err
+(( CHECK_EXIT_CODE += $? ))
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing symbol"
+(( TEST_RESULT += $? ))
+
+
+### symbol filter
+
+# '--symbol-filter' should filter symbols based on substrings
+$CMD_PERF report --stdio --symbol-filter=map > basic_symbolfilter.out 2> basic_symbolfilter.err
+PERF_EXIT_CODE=$?
+
+grep -P '\s+[\d\.]+%' basic_pid.log | ../common/check_all_lines_matched.pl "\[[k\.]\]\s+.*map"
+CHECK_EXIT_CODE=$?
+test ! -s basic_symbolfilter.err
+(( CHECK_EXIT_CODE += $? ))
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "symbol filter"
+(( TEST_RESULT += $? ))
 
 
 # TODO: $CMD_PERF report -n --showcpuutilization -TUxDg 2> 01.log
-
-
 
 # print overall resutls
 print_overall_results "$TEST_RESULT"
