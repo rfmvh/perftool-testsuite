@@ -35,7 +35,7 @@ done
 ### unacceptable --line descriptions
 
 # testing handling of invalid patterns for the '--line' option
-INVALID_PATTERNS="'func:foo' 'func:1-foo' 'func:1+foo' 'func;lazy*pattern'"
+INVALID_PATTERNS="func:foo func:1-foo func:1+foo func;lazy\*pattern"
 for desc in $INVALID_PATTERNS; do
 	$CMD_PERF probe --line $desc 2>&1 | grep -q "Semantic error"
 	CHECK_EXIT_CODE=$?
