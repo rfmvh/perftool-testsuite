@@ -17,3 +17,10 @@ base_record
 
 base_report
 
+base_probe
+	- some overload test
+		- adding huge amount of probes
+		- using huge amount of probes at same time
+	- some userspace probing with a custom C program
+		- create a custom C probram
+		- probe it and measure, whether perf stat counts well
