@@ -16,6 +16,7 @@ THIS_TEST_NAME=`basename $0`
 clear_all_probes
 find . -name \*.log | xargs rm
 find . -name \*.err | xargs rm
+make -C examples clean
 
 print_results 0 0 "clean-up - removing all probes and deleting logs"
 exit $?
