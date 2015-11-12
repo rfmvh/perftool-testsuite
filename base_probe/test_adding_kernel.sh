@@ -104,6 +104,24 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing removed probe (should NO
 (( TEST_RESULT += $? ))
 
 
+### dry run
+
+# the '-n' switch should run it in dry mode
+$CMD_PERF probe -n --add $TEST_PROBE 2> adding_kernel_dryrun.err
+PERF_EXIT_CODE=$?
+
+# check for the output (should be the same as usual)
+../common/check_all_patterns_found.pl "Added new event:" "probe:$TEST_PROBE" "on $TEST_PROBE" < adding_kernel_dryrun.err
+CHECK_EXIT_CODE=$?
+
+# check that no probe was added in real
+! ( $CMD_PERF probe -l | grep "probe:$TEST_PROBE" )
+(( CHECK_EXIT_CODE += $? ))
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "dry run :: adding probe"
+(( TEST_RESULT += $? ))
+
+
 ### force-adding probes
 
 # when using '--force' a probe should be added even if it is already there
