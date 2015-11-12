@@ -17,7 +17,7 @@
 
 THIS_TEST_NAME=`basename $0`
 
-make -c examples
+make -C examples
 
 print_results $? 0 "building examples"
 exit $?
