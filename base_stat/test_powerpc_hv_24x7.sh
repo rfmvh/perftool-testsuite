@@ -19,7 +19,7 @@ TEST_RESULT=0
 
 EVENTS_TO_TEST=`$CMD_PERF list | grep "24x7" | grep "core" | awk '{print $1}' | tr '\n' ' '`
 if [ -z "$EVENTS_TO_TEST" ]; then
-	print_testcase_skipped
+	print_overall_skipped
 	exit 0
 fi
 

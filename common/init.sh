@@ -46,5 +46,13 @@ print_overall_results()
 
 print_testcase_skipped()
 {
+	TASK_COMMENT="$@"
+	echo -e "$MSKIP-- [ SKIP ] --$MEND $TEST_NAME :: $THIS_TEST_NAME :: $TASK_COMMENT :: testcase skipped"
+	return 0
+}
+
+print_overall_skipped()
+{
 	echo -e "$MSKIP## [ SKIP ] ##$MEND $TEST_NAME :: $THIS_TEST_NAME :: testcase skipped"
+	return 0
 }

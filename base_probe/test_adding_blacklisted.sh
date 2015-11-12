@@ -21,7 +21,7 @@ TEST_RESULT=0
 # skip if not supported
 BLACKFUNC=`head -n 1 /sys/kernel/debug/kprobes/blacklist | cut -f2`
 if [ -z "$BLACKFUNC" ]; then
-	print_testcase_skipped
+	print_overall_skipped
 	exit 0
 fi
 
