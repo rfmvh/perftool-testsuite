@@ -1,26 +1,61 @@
-base_trace
-	- --cpu option
-	- pagefaults
-	- test_syscalls
-		- something more deep for the syscalls; like strace-any
-	- record
-	- p pid attaching
-	- no-syscalls - specify other events as well; tracepoint events
-	- OVERLORD
+base_annotate
+	- cover the remaining options, or at least:
+		--objdump
+		--print-line
+		--modules ?
+		--dump-raw-trace
+		--symbol; maybe related to kernel
+		--asm-raw
+		--group
+	- try to make some test for semantics
 
-base_stat
-	- tracepoint events (some of them)
-	- tracepoint events definition (check for the syntax definition)
-	- more semantic checking
-
-base_record
-
-base_report
+base_list
+	- some semantic testing (i.e. are the uncore events there when
+	they should? etc.)
 
 base_probe
 	- some overload test
 		- adding huge amount of probes
 		- using huge amount of probes at same time
-	- some userspace probing with a custom C program
-		- create a custom C probram
-		- probe it and measure, whether perf stat counts well
+	- some 'advanced' probing
+		- probing variables, args, retvals like watchpoints
+		- perf script reporting
+
+base_record
+	- create
+
+base_report
+	- cover remaining options
+	- multiple events reporting
+	- tui testing?
+
+base_stat
+	- tracepoint events (some of them)
+	- more semantic checking
+	- grouping events
+
+base_trace
+	- --cpu option
+	- pagefaults
+	- test_syscalls
+		- something more deep for the syscalls; like strace-any
+		- would be non-trivial to have it really multiarch
+	- no-syscalls - specify other events as well; tracepoint events
+	- dealing with forks/threads
+	- overload
+
+other commands to cover:
+	- archive
+	- bench
+	- buildid-cache & buildid-list
+	- diff
+	- evlist
+	- inject
+	- kmem
+	- kvm ?
+	- lock
+	- mem
+	- sched
+	- script
+	- timechart ?
+	- top
