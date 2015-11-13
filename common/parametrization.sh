@@ -16,3 +16,9 @@
 # enough to run each event on one core only.
 # Note: POWER8 only
 export PARAM_STAT_24x7_ALL_CORES=n
+
+# If set, all the tracepoint events will be checked for syntax
+# errors in their definition. This testcase may take a long time
+# and the checks are not that crucial, so it can be turned off
+# when you do not want to deep dive.
+export PARAM_STAT_TRACEPOINT_EVENTS_SYNTAX=y
