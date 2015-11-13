@@ -10,7 +10,7 @@
 . ../common/init.sh
 . ./settings.sh
 
-THIS_TEST_NAME=`basename $0`
+THIS_TEST_NAME=`basename $0 .sh`
 
 find . -name \*.log | xargs rm
 find . -name \*.err | xargs rm

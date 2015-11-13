@@ -11,7 +11,7 @@
 . ../common/init.sh
 . ./settings.sh
 
-THIS_TEST_NAME=`basename $0`
+THIS_TEST_NAME=`basename $0 .sh`
 
 clear_all_probes
 find . -name \*.log | xargs rm
