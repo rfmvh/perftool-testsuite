@@ -13,7 +13,7 @@
 #
 
 #### which perf to use in the testing
-export CMD_PERF=`which perf`
+export CMD_PERF=${CMD_PERF:-`which perf`}
 
 #### basic programs examinated by perf
 export CMD_BASIC_SLEEP="sleep 0.1"

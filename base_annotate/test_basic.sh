@@ -112,6 +112,20 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "full-paths"
 (( TEST_RESULT += $? ))
 
 
+### print-line
+
+# '--print-line' should print inline the source lines
+$CMD_PERF annotate --stdio --dso load -P --print-line > basic_printline.log 2> basic_printline.err
+PERF_EXIT_CODE=$?
+
+FULLPATH="`pwd`/examples"
+../common/check_all_patterns_found.pl "$FULLPATH/load\.c:$RE_NUMBER\s+$REGEX_LINE" "$REGEX_SECTION__TEXT" < basic_printline.log
+CHECK_EXIT_CODE=$?
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "print-line"
+(( TEST_RESULT += $? ))
+
+
 ### redirected input
 
 # '-i dir/perf.data' should point to some other perf.data file
@@ -131,7 +145,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "redirected input"
 
 ### execution without perf.data
 
-# test that perf list is even working
+# check for error message
 ! $CMD_PERF annotate > basic_nodata.log 2> basic_nodata.err
 PERF_EXIT_CODE=$?
 
