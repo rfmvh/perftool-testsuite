@@ -1,7 +1,6 @@
 base_annotate
 	- cover the remaining options, or at least:
 		--objdump
-		--print-line
 		--modules ?
 		--dump-raw-trace
 		--symbol; maybe related to kernel
