@@ -1,6 +1,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+static int counter = 0;
+
+int incr(void)
+{
+	int a;
+	a = counter++ * 2;
+	return a;
+}
+
 int isprime(int a)
 {
 	int i;
@@ -20,6 +29,11 @@ int main(int argc, char **argv)
 	for(i = 0; i < 9; i++)
 	{
 		printf("%i %s prime\n", numbers[i], (isprime(numbers[i]))? "is" : "is not");
+	}
+
+	for(i = 0; i < 9; i++)
+	{
+		printf("Now the state is %i.\n", incr());
 	}
 
 	return 0;
