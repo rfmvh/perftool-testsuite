@@ -60,6 +60,14 @@ export RE_EVENT_SUBSYSTEM="[\w\-]+:[\w\-]+"
 #    sched:sched_switch
 
 
+export RE_PATH="(?:\/[\w\+.-]+)+"
+# A full filepath
+# Examples:
+#    /usr/lib64/somelib.so.5.4.0
+#    /lib/modules/4.3.0-rc5/kernel/fs/xfs/xfs.ko
+#    /usr/bin/mv
+
+
 export RE_LINE_COMMENT="^#.*"
 # A comment line
 # Examples:
