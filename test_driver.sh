@@ -16,12 +16,12 @@ export VERBOSE=n
 #### specifies the sets of test per architecture
 declare -A TESTING_SET
 
-TESTING_SET['aarch64']="stat"
-TESTING_SET['ppc64']="stat"
-TESTING_SET['ppc64le']="stat"
-TESTING_SET['s390x']="stat"
-TESTING_SET['x86_64']="stat trace"
-TESTING_SET['i686']="stat"
+TESTING_SET['aarch64']="annotate buildid list probe report stat trace"
+TESTING_SET['ppc64']="annotate buildid list probe report stat trace"
+TESTING_SET['ppc64le']="annotate buildid list probe report stat trace"
+TESTING_SET['s390x']="annotate buildid list probe report stat trace"
+TESTING_SET['x86_64']="annotate buildid list probe report stat trace"
+TESTING_SET['i686']="annotate buildid list probe report stat trace"
 
 
 #### show something about the environment
