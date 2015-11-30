@@ -12,7 +12,7 @@
 
 THIS_TEST_NAME=`basename $0 .sh`
 
-make -C examples clean
+make -s -C examples clean
 
 find . -name \*.log | xargs -r rm
 find . -name \*.err | xargs -r rm

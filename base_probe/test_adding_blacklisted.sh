@@ -19,7 +19,7 @@ THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 # skip if not supported
-BLACKFUNC=`head -n 1 /sys/kernel/debug/kprobes/blacklist | cut -f2`
+BLACKFUNC=`head -n 1 /sys/kernel/debug/kprobes/blacklist 2> /dev/null | cut -f2`
 if [ -z "$BLACKFUNC" ]; then
 	print_overall_skipped
 	exit 0

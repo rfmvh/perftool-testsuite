@@ -16,7 +16,7 @@
 
 THIS_TEST_NAME=`basename $0 .sh`
 
-make -C examples
+make -s -C examples
 print_results $? 0 "building the example code"
 TEST_RESULT=$?
 
