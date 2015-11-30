@@ -9,6 +9,10 @@
 #
 #
 
+
+. ../common/settings.sh
+. ../common/patterns.sh
+
 THIS_TEST_NAME=`basename $0 .sh`
 
 print_results()

@@ -11,8 +11,6 @@
 #
 
 # include working environment
-. ../common/settings.sh
-. ../common/patterns.sh
 . ../common/init.sh
 . ./settings.sh
 
