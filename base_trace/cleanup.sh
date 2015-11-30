@@ -12,8 +12,8 @@
 . ../common/init.sh
 . ./settings.sh
 
-find . -name \*.log | xargs rm
-find . -name \*.err | xargs rm
+find . -name \*.log | xargs -r rm
+find . -name \*.err | xargs -r rm
 rm -f perf.data*
 print_overall_results 0
 exit 0

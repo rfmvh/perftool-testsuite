@@ -14,8 +14,8 @@ THIS_TEST_NAME=`basename $0 .sh`
 
 make -C examples clean
 
-find . -name \*.log | xargs rm
-find . -name \*.err | xargs rm
+find . -name \*.log | xargs -r rm
+find . -name \*.err | xargs -r rm
 rm -f perf.data
 
 print_results 0 0 "clean-up logs"

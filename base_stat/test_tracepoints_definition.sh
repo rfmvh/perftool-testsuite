@@ -26,7 +26,7 @@ if [ ! "$PARAM_STAT_TRACEPOINT_EVENTS_SYNTAX" == "y" ]; then
 fi
 
 # remove old logs
-find . -name tracepoints_def_\*.log | xargs rm
+find . -name tracepoints_def_\*.log | xargs -r rm
 
 ### check all the tracepoint events of all the available subsystems
 

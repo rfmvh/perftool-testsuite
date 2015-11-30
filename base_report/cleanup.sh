@@ -12,8 +12,8 @@
 
 THIS_TEST_NAME=`basename $0 .sh`
 
-find . -name \*.log | xargs rm
-find . -name \*.err | xargs rm
+find . -name \*.log | xargs -r rm
+find . -name \*.err | xargs -r rm
 
 rm -f perf.data*
 RM_EXIT_CODE=$?
