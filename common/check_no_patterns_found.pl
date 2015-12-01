@@ -2,6 +2,9 @@
 
 @regexps = @ARGV;
 
+$quiet = 0;
+$quiet = 1 if (defined $ENV{TESTMODE_QUIET} && $ENV{TESTMODE_QUIET} eq "y");
+
 %found = ();
 $passed = 1;
 
@@ -22,7 +25,7 @@ for $r (@regexps)
 {
 	if (exists $found{$r})
 	{
-		print "Regexp found: \"$r\"\n";
+		print "Regexp found: \"$r\"\n" unless $quiet;
 		$passed = 0;
 	}
 }

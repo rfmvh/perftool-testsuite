@@ -43,6 +43,6 @@ for (@kfuncs_lines)
 }
 
 $rate = ($matched / $all) * 100;
-printf("%d%% matches\n", $rate);
+printf("%d%% matches\n", $rate) unless $quiet;
 
 exit !($rate > $threshold);

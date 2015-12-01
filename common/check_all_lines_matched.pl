@@ -2,6 +2,9 @@
 
 @regexps = @ARGV;
 
+$quiet = 0;
+$quiet = 1 if (defined $ENV{TESTMODE_QUIET} && $ENV{TESTMODE_QUIET} eq "y");
+
 $passed = 1;
 
 while (<STDIN>)
@@ -20,7 +23,7 @@ while (<STDIN>)
 
 	unless ($line_matched)
 	{
-		print "Line did not match any pattern: \"$_\"\n";
+		print "Line did not match any pattern: \"$_\"\n" unless $quiet;
 		$passed = 0;
 	}
 }

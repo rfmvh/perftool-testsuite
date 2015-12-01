@@ -1,5 +1,8 @@
 #!/usr/bin/perl
 
+$quiet = 0;
+$quiet = 1 if (defined $ENV{TESTMODE_QUIET} && $ENV{TESTMODE_QUIET} eq "y");
+
 $passed = 1;
 
 while (<STDIN>)
@@ -12,7 +15,7 @@ while (<STDIN>)
 	if ($buildid_from_file ne $buildid_from_list)
 	{
 		$passed = 0;
-		print "$filepath has $buildid_from_file buildid but perf shows $buildid_from_list\n";
+		print "$filepath has $buildid_from_file buildid but perf shows $buildid_from_list\n" unless $quiet;
 	}
 }
 

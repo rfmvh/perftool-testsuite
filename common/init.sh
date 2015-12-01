@@ -15,6 +15,11 @@
 
 THIS_TEST_NAME=`basename $0 .sh`
 
+_echo()
+{
+	test "$TESTMODE_QUIET" = "y" || echo -e "$@"
+}
+
 print_results()
 {
 	PERF_RETVAL="$1"; shift
@@ -22,7 +27,7 @@ print_results()
 	FAILURE_REASON=""
 	TASK_COMMENT="$@"
 	if [ $PERF_RETVAL -eq 0 -a $CHECK_RETVAL -eq 0 ]; then
-		echo -e "$MPASS-- [ PASS ] --$MEND $TEST_NAME :: $THIS_TEST_NAME :: $TASK_COMMENT"
+		_echo "$MPASS-- [ PASS ] --$MEND $TEST_NAME :: $THIS_TEST_NAME :: $TASK_COMMENT"
 		return 0
 	else
 		if [ $PERF_RETVAL -ne 0 ]; then
@@ -32,7 +37,7 @@ print_results()
 			test -n "$FAILURE_REASON" && FAILURE_REASON="$FAILURE_REASON + "
 			FAILURE_REASON="$FAILURE_REASON""output regexp parsing"
 		fi
-		echo -e "$MFAIL-- [ FAIL ] --$MEND $TEST_NAME :: $THIS_TEST_NAME :: $TASK_COMMENT ($FAILURE_REASON)"
+		_echo "$MFAIL-- [ FAIL ] --$MEND $TEST_NAME :: $THIS_TEST_NAME :: $TASK_COMMENT ($FAILURE_REASON)"
 		return 1
 	fi
 }
@@ -41,9 +46,9 @@ print_overall_results()
 {
 	RETVAL="$1"; shift
 	if [ $RETVAL -eq 0 ]; then
-		echo -e "$MALLPASS## [ PASS ] ##$MEND $TEST_NAME :: $THIS_TEST_NAME SUMMARY"
+		_echo "$MALLPASS## [ PASS ] ##$MEND $TEST_NAME :: $THIS_TEST_NAME SUMMARY"
 	else
-		echo -e "$MALLFAIL## [ FAIL ] ##$MEND $TEST_NAME :: $THIS_TEST_NAME SUMMARY :: $RETVAL failures found"
+		_echo "$MALLFAIL## [ FAIL ] ##$MEND $TEST_NAME :: $THIS_TEST_NAME SUMMARY :: $RETVAL failures found"
 	fi
 	return $RETVAL
 }
@@ -51,12 +56,12 @@ print_overall_results()
 print_testcase_skipped()
 {
 	TASK_COMMENT="$@"
-	echo -e "$MSKIP-- [ SKIP ] --$MEND $TEST_NAME :: $THIS_TEST_NAME :: $TASK_COMMENT :: testcase skipped"
+	_echo "$MSKIP-- [ SKIP ] --$MEND $TEST_NAME :: $THIS_TEST_NAME :: $TASK_COMMENT :: testcase skipped"
 	return 0
 }
 
 print_overall_skipped()
 {
-	echo -e "$MSKIP## [ SKIP ] ##$MEND $TEST_NAME :: $THIS_TEST_NAME :: testcase skipped"
+	_echo "$MSKIP## [ SKIP ] ##$MEND $TEST_NAME :: $THIS_TEST_NAME :: testcase skipped"
 	return 0
 }

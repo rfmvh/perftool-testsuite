@@ -21,6 +21,12 @@ export CMD_QUICK_SLEEP="sleep 0.01"
 export CMD_LONGER_SLEEP="sleep 2"
 export CMD_SIMPLE="true"
 
+#### common settings
+export TESTMODE_QUIET=${TESTMODE_QUIET:-y}
+
+#### clear locale
+export LC_ALL=C
+
 #### colors
 if [ -t 1 ]; then
 	export MPASS="\e[32m"
