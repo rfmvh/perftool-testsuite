@@ -62,9 +62,7 @@ print_results 0 $CHECK_EXIT_CODE "usage message"
 # '--quiet' should mute all output
 $CMD_PERF probe --quiet --add vfs_read > basic_quiet01.log 2> basic_quiet01.err
 PERF_EXIT_CODE=$?
-$CMD_PERF probe --quiet --list > basic_quiet02.log 2> basic_quiet02.err
-(( PERF_EXIT_CODE += $? ))
-$CMD_PERF probe --quiet --del vfs_read > basic_quiet03.log 2> basic_quiet03.err
+$CMD_PERF probe --quiet --del vfs_read > basic_quiet03.log 2> basic_quiet02.err
 (( PERF_EXIT_CODE += $? ))
 
 test `cat basic_quiet*log basic_quiet*err | wc -l` -eq 0
