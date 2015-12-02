@@ -33,7 +33,7 @@ clear_all_probes
 ! $CMD_PERF probe $BLACKFUNC > adding_blacklisted.log 2> adding_blacklisted.err
 PERF_EXIT_CODE=$?
 
-REGEX_SKIP_MESSAGE="$BLACKFUNC is blacklisted function, skip it\."
+REGEX_SKIP_MESSAGE=" is blacklisted function, skip it\."
 REGEX_NOT_FOUND_MESSAGE="Probe point \'$BLACKFUNC\' not found."
 REGEX_ERROR_MESSAGE="Error: Failed to add events."
 ../common/check_all_lines_matched.pl "$REGEX_SKIP_MESSAGE" "$REGEX_NOT_FOUND_MESSAGE" "$REGEX_ERROR_MESSAGE" < adding_blacklisted.err
