@@ -29,4 +29,4 @@ export PARAM_STAT_24x7_ALL_CORES=n
 # errors in their definition. This testcase may take a long time
 # and the checks are not that crucial, so it can be turned off
 # when you do not want to deep dive.
-export PARAM_STAT_TRACEPOINT_EVENTS_SYNTAX=y
+export PARAM_STAT_TRACEPOINT_EVENTS_SYNTAX=n
