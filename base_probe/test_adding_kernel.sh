@@ -208,7 +208,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "wildcard adding support"
 # out-of-text functions should be skipped
 INITTEXT=init_setup
 grep -q " $INITTEXT" /proc/kallsyms
-if [ $? -eq 0 ]; then
+if [ $? -eq 0 -a "$MY_ARCH" = "x86_64" ]; then
 	! $CMD_PERF probe $INITTEXT 2> adding_kernel_outoftext.err
 	PERF_EXIT_CODE=$?
 

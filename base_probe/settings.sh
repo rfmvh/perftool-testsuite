@@ -10,6 +10,8 @@
 
 export TEST_NAME="perf_probe"
 
+export MY_ARCH=`arch`
+
 check_kprobes_available()
 {
 	grep -q kprobe_register /proc/kallsyms
