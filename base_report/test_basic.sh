@@ -55,7 +55,7 @@ REGEX_LINES_HEADER="#\s*Children\s+Self\s+Command\s+Shared Object\s+Symbol"
 REGEX_LINES="\s*$RE_NUMBER%\s+$RE_NUMBER%\s+\S+\s+\[kernel\.vmlinux\]\s+\[[k\.]\]\s+\w+"
 ../common/check_all_patterns_found.pl "$REGEX_LOST_SAMPLES_INFO" "$REGEX_SAMPLES_INFO" "$REGEX_LINES_HEADER" "$REGEX_LINES" < basic_basic.log
 CHECK_EXIT_CODE=$?
-test ! -s basic_basic.err
+../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < basic_basic.err
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic execution"
@@ -72,7 +72,7 @@ REGEX_LINES_HEADER="#\s*Children\s+Self\s+Samples\s+Command\s+Shared Object\s+Sy
 REGEX_LINES="\s*$RE_NUMBER%\s+$RE_NUMBER%\s+$RE_NUMBER\s+\S+\s+\[kernel\.vmlinux\]\s+\[[k\.]\]\s+\w+"
 ../common/check_all_patterns_found.pl "$REGEX_LINES_HEADER" "$REGEX_LINES" < basic_nrsamples.log
 CHECK_EXIT_CODE=$?
-test ! -s basic_nrsamples.err
+../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < basic_nrsamples.err
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "number of samples"
@@ -108,7 +108,7 @@ REGEX_LINES_HEADER="#\s*Children\s+Self\s+sys\s+usr\s+Command\s+Shared Object\s+
 REGEX_LINES="\s*$RE_NUMBER%\s+$RE_NUMBER%\s+$RE_NUMBER%\s+$RE_NUMBER%\s+\S+\s+\[kernel\.vmlinux\]\s+\[[k\.]\]\s+\w+"
 ../common/check_all_patterns_found.pl "$REGEX_LINES_HEADER" "$REGEX_LINES" < basic_cpuut.log
 CHECK_EXIT_CODE=$?
-test ! -s basic_cpuut.err
+../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < basic_cpuut.err
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "show CPU utilization"
@@ -123,7 +123,7 @@ PERF_EXIT_CODE=$?
 
 grep -P '\s+[\d\.]+%' basic_pid.log | ../common/check_all_lines_matched.pl "systemd|init"
 CHECK_EXIT_CODE=$?
-test ! -s basic_pid.err
+../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < basic_pid.err
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "pid"
@@ -138,7 +138,7 @@ PERF_EXIT_CODE=$?
 
 ../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" < basic_symbols.log
 CHECK_EXIT_CODE=$?
-test ! -s basic_symbols.err
+../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < basic_symbols.err
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing symbol"
@@ -153,7 +153,7 @@ PERF_EXIT_CODE=$?
 
 grep -P '\s+[\d\.]+%' basic_symbolfilter.log | ../common/check_all_lines_matched.pl "\[[k\.]\]\s+.*map"
 CHECK_EXIT_CODE=$?
-test ! -s basic_symbolfilter.err
+../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < basic_symbolfilter.err
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "symbol filter"

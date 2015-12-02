@@ -31,7 +31,7 @@ CHECK_EXIT_CODE=$?
 ../common/check_all_lines_matched.pl "$RE_LINE_REPORT_CONTENT" "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" < record_basic_report.log
 (( CHECK_EXIT_CODE += $? ))
 # check that the perf report stderr is empty
-test ! -s record_basic_report.err
+../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < record_basic_report.err
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic execution - record"
