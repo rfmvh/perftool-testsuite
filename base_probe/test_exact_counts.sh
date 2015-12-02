@@ -22,7 +22,9 @@ if [ $? -ne 0 ]; then
 	exit 0
 fi
 
+# clean up before we start
 clear_all_probes
+find . -name perf.data\* | xargs -r rm
 
 
 ### adding userspace probes
