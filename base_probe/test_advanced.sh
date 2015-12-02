@@ -23,7 +23,9 @@ if [ $? -ne 0 ]; then
 	exit 0
 fi
 
+# clean up before we start
 clear_all_probes
+find . -name perf.data\* | xargs -r rm
 
 
 ### function argument probing :: add
@@ -100,7 +102,7 @@ $CMD_PERF script > advanced_funcretval_script.log
 PERF_EXIT_CODE=$?
 
 # checking for the perf script output sanity
-REGEX_SCRIPT_LINE="\s*advanced\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+$RE_NUMBER:\s+probe_advanced:incr:\s+\($RE_NUMBER\s+<\-\s+$RE_NUMBER\) arg1=0x$RE_NUMBER_HEX"
+REGEX_SCRIPT_LINE="\s*advanced\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+$RE_NUMBER:\s+probe_advanced:incr:\s+\($RE_NUMBER_HEX\s+<\-\s+$RE_NUMBER_HEX\) arg1=0x$RE_NUMBER_HEX"
 ../common/check_all_lines_matched.pl "$REGEX_SCRIPT_LINE" < advanced_funcretval_script.log
 CHECK_EXIT_CODE=$?
 
