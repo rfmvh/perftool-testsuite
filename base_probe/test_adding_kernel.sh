@@ -18,6 +18,12 @@ TEST_RESULT=0
 
 TEST_PROBE="vfs_read"
 
+check_kprobes_available
+if [ $? -ne 0 ]; then
+	print_overall_skipped
+	exit 0
+fi
+
 
 ### basic probe adding
 

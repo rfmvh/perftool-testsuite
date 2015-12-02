@@ -17,6 +17,12 @@
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
+check_uprobes_available
+if [ $? -ne 0 ]; then
+	print_overall_skipped
+	exit 0
+fi
+
 clear_all_probes
 
 

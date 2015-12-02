@@ -15,6 +15,12 @@
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
+check_kprobes_available
+if [ $? -ne 0 ]; then
+	print_overall_skipped
+	exit 0
+fi
+
 
 ### help message
 
@@ -44,7 +50,7 @@ fi
 # without any args perf-probe should print usage
 $CMD_PERF probe 2> basic_usage.log
 
-../common/check_all_patterns_found.pl "usage" "perf probe" "verbose" "quiet" "add" "del" "force" "line" "vars" "externs" "range" < basic_usage.log
+../common/check_all_patterns_found.pl "[Uu]sage" "perf probe" "verbose" "quiet" "add" "del" "force" "line" "vars" "externs" "range" < basic_usage.log
 CHECK_EXIT_CODE=$?
 
 print_results 0 $CHECK_EXIT_CODE "usage message"
