@@ -98,16 +98,20 @@ for subtest in $SUBTESTS_TO_RUN; do
 	cd ..
 
 	# print result
-	if [ "$PERFTEST_LOGGING" = "y" ]; then
-		if [ $SUBTEST_RESULT -eq 0 ]; then
+	if [ $SUBTEST_RESULT -eq 0 ]; then
+		if [ "$PERFTEST_LOGGING" = "y" ]; then
 			echo -e "$MALLPASS## [ PASS ] ##$MEND $subtest"
-			(( PASSED_COUNT += 1 ))
 		else
-			echo -e "$MALLFAIL## [ FAIL ] ##$MEND $subtest"
-			(( FAILED_COUNT += 1 ))
+			echo; echo
 		fi
+		(( PASSED_COUNT += 1 ))
 	else
-		echo; echo
+		if [ "$PERFTEST_LOGGING" = "y" ]; then
+			echo -e "$MALLFAIL## [ FAIL ] ##$MEND $subtest"
+		else
+			echo; echo
+		fi
+		(( FAILED_COUNT += 1 ))
 	fi
 done
 
