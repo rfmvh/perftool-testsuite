@@ -21,18 +21,21 @@ test -s perf.data || ./setup.sh
 
 ### help message
 
-# test that a help message is shown and looks reasonable
-$CMD_PERF buildid-list --help > list_helpmsg.log
-PERF_EXIT_CODE=$?
+if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
+	# test that a help message is shown and looks reasonable
+	$CMD_PERF buildid-list --help > list_helpmsg.log
+	PERF_EXIT_CODE=$?
 
-../common/check_all_patterns_found.pl "PERF-BUILDID-LIST" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "SEE ALSO" < list_helpmsg.log
-CHECK_EXIT_CODE=$?
-../common/check_all_patterns_found.pl "perf\-buildid\-list \- List the buildids in a perf\.data file" < list_helpmsg.log
-(( CHECK_EXIT_CODE += $? ))
+	../common/check_all_patterns_found.pl "PERF-BUILDID-LIST" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "SEE ALSO" < list_helpmsg.log
+	CHECK_EXIT_CODE=$?
+	../common/check_all_patterns_found.pl "perf\-buildid\-list \- List the buildids in a perf\.data file" < list_helpmsg.log
+	(( CHECK_EXIT_CODE += $? ))
 
-print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "help message"
-(( TEST_RESULT += $? ))
-
+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "help message"
+	(( TEST_RESULT += $? ))
+else
+	print_testcase_skipped "help message"
+fi
 
 ### buildids check
 

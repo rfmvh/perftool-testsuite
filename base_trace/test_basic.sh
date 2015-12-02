@@ -15,23 +15,25 @@
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
-
 #### help message
 
-# test that a help message is shown and looks reasonable
-$CMD_PERF trace --help > basic_helpmsg.log
-PERF_EXIT_CODE=$?
+if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
+	# test that a help message is shown and looks reasonable
+	$CMD_PERF trace --help > basic_helpmsg.log
+	PERF_EXIT_CODE=$?
 
-../common/check_all_patterns_found.pl "PERF-TRACE" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "PAGEFAULTS" "EXAMPLES" "SEE ALSO" "NOTES" < basic_helpmsg.log
-CHECK_EXIT_CODE=$?
-../common/check_all_patterns_found.pl "all-cpus" "expr" "output" "pid" "tid" "uid" "verbose" "cpu" "duration" "summary" "sched" "event" < basic_helpmsg.log
-(( CHECK_EXIT_CODE += $? ))
-../common/check_all_patterns_found.pl "perf trace record" < basic_helpmsg.log
-(( CHECK_EXIT_CODE += $? ))
+	../common/check_all_patterns_found.pl "PERF-TRACE" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "PAGEFAULTS" "EXAMPLES" "SEE ALSO" "NOTES" < basic_helpmsg.log
+	CHECK_EXIT_CODE=$?
+	../common/check_all_patterns_found.pl "all-cpus" "expr" "output" "pid" "tid" "uid" "verbose" "cpu" "duration" "summary" "sched" "event" < basic_helpmsg.log
+	(( CHECK_EXIT_CODE += $? ))
+	../common/check_all_patterns_found.pl "perf trace record" < basic_helpmsg.log
+	(( CHECK_EXIT_CODE += $? ))
 
-print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "help message"
-(( TEST_RESULT += $? ))
-
+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "help message"
+	(( TEST_RESULT += $? ))
+else
+	print_testcase_skipped "help message"
+fi
 
 #### basic execution
 

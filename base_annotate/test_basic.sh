@@ -18,23 +18,27 @@ TEST_RESULT=0
 
 ### help message
 
-# test that a help message is shown and looks reasonable
-$CMD_PERF annotate --help > basic_helpmsg.log
-PERF_EXIT_CODE=$?
+if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
+	# test that a help message is shown and looks reasonable
+	$CMD_PERF annotate --help > basic_helpmsg.log
+	PERF_EXIT_CODE=$?
 
-../common/check_all_patterns_found.pl "PERF-ANNOTATE" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "SEE ALSO" < basic_helpmsg.log
-CHECK_EXIT_CODE=$?
-../common/check_all_patterns_found.pl "perf\-annotate \- Read perf.data .* display annotated code" < basic_helpmsg.log
-(( CHECK_EXIT_CODE += $? ))
-../common/check_all_patterns_found.pl "input" "dsos" "symbol" "force" "verbose" "dump-raw-trace" "vmlinux" "modules" < basic_helpmsg.log
-(( CHECK_EXIT_CODE += $? ))
-../common/check_all_patterns_found.pl "print-line" "full-paths" "stdio" "tui" "cpu" "source" "symfs" "disassembler-style" < basic_helpmsg.log
-(( CHECK_EXIT_CODE += $? ))
-../common/check_all_patterns_found.pl "objdump" "skip-missing" "group" < basic_helpmsg.log
-(( CHECK_EXIT_CODE += $? ))
+	../common/check_all_patterns_found.pl "PERF-ANNOTATE" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "SEE ALSO" < basic_helpmsg.log
+	CHECK_EXIT_CODE=$?
+	../common/check_all_patterns_found.pl "perf\-annotate \- Read perf.data .* display annotated code" < basic_helpmsg.log
+	(( CHECK_EXIT_CODE += $? ))
+	../common/check_all_patterns_found.pl "input" "dsos" "symbol" "force" "verbose" "dump-raw-trace" "vmlinux" "modules" < basic_helpmsg.log
+	(( CHECK_EXIT_CODE += $? ))
+	../common/check_all_patterns_found.pl "print-line" "full-paths" "stdio" "tui" "cpu" "source" "symfs" "disassembler-style" < basic_helpmsg.log
+	(( CHECK_EXIT_CODE += $? ))
+	../common/check_all_patterns_found.pl "objdump" "skip-missing" "group" < basic_helpmsg.log
+	(( CHECK_EXIT_CODE += $? ))
 
-print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "help message"
-(( TEST_RESULT += $? ))
+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "help message"
+	(( TEST_RESULT += $? ))
+else
+	print_testcase_skipped "help message"
+fi
 
 
 ### basic execution

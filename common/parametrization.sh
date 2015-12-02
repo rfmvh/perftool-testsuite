@@ -9,6 +9,14 @@
 #	for both smoke testing and deeper testing.
 #
 
+#### general
+
+# If set, the '--help' outputs of the commands will be checked.
+# Since the '--help' option calls a manpage and manpages are not
+# always generated, you may skip the man-page checks.
+export PARAM_GENERAL_HELP_TEXT_CHECK=n
+
+
 #### perf_stat
 
 # If set, the 24x7 events will be tested on all available cores.
