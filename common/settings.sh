@@ -23,6 +23,7 @@ export CMD_SIMPLE="true"
 
 #### common settings
 export TESTMODE_QUIET=${TESTMODE_QUIET:-y}
+export ERROR_MESSAGE_MAX_LINES=${ERROR_MESSAGE_MAX_LINES:-20}
 
 #### clear locale
 export LC_ALL=C
