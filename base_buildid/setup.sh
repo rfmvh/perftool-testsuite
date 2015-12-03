@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 #	setup.sh of perf buildid test
 #	Author: Michael Petlan <mpetlan@redhat.com>

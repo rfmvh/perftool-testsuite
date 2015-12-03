@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 #	setup.sh of perf list test
 #	Author: Michael Petlan <mpetlan@redhat.com>

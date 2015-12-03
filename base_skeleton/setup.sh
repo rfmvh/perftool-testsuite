@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 #	setup.sh of SKELETON test
 #	Author: Michael Petlan <mpetlan@redhat.com>

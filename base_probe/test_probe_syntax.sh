@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 #	test_probe_syntax of perf_probe test
 #	Author: Michael Petlan <mpetlan@redhat.com>

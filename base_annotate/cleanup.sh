@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 #	cleanup.sh of perf annotate test
 #	Author: Michael Petlan <mpetlan@redhat.com>

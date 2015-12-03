@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 #	test_buildid-list of perf buildid test
 #	Author: Michael Petlan <mpetlan@redhat.com>

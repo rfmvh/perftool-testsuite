@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 #	setup.sh of perf annotate test
 #	Author: Michael Petlan <mpetlan@redhat.com>

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 #	test_listing of perf_probe test
 #	Author: Michael Petlan <mpetlan@redhat.com>

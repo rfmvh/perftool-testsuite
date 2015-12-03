@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 #	test_exact_counts of perf_probe test
 #	Author: Michael Petlan <mpetlan@redhat.com>

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 #	test_tracepoints_definition.sh of perf_stat test
 #	Author: Michael Petlan <mpetlan@redhat.com>

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 #	test_basic of perf annotate test
 #	Author: Michael Petlan <mpetlan@redhat.com>

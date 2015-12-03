@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 #	test_powerpc_hv24x7 of perf_stat test
 #	Author: Michael Petlan <mpetlan@redhat.com>

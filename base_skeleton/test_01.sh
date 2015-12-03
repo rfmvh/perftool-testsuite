@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 #	test_01 of SKELETON test
 #	Author: Michael Petlan <mpetlan@redhat.com>

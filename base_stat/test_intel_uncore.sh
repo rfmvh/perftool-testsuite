@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 #	test_intel_uncore of perf_stat test
 #	Author: Michael Petlan <mpetlan@redhat.com>

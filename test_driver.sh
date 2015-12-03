@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 #	test_driver.sh
 #	Author: Michael Petlan <mpetlan@redhat.com>

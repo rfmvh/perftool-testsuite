@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 #	setup.sh of perf probe test
 #	Author: Michael Petlan <mpetlan@redhat.com>

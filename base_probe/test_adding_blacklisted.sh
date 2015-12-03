@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 #	test_adding_blacklisted of perf_probe test
 #	Author: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>

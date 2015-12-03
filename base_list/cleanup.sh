@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 #	cleanup.sh of perf list test
 #	Author: Michael Petlan <mpetlan@redhat.com>
