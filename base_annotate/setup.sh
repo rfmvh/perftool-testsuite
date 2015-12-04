@@ -22,7 +22,7 @@ TEST_RESULT=$?
 
 # record some data
 $CMD_PERF record examples/load > /dev/null 2> setup_record.log
-PERF_EXIT_CODE=$?   
+PERF_EXIT_CODE=$?
 
 # check the perf record output
 ../common/check_all_lines_matched.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < setup_record.log

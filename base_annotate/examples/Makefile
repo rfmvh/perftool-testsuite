@@ -9,5 +9,5 @@ all: $(PROGS)
 %: %.c
 	$(CC) $(CFLAGS) -o $@ $<
 
-clean: 
+clean:
 	rm -f $(PROGS)

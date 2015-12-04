@@ -21,4 +21,3 @@ clear_buildid_cache()
 {
 	rm -rf $BUILDIDDIR/*
 }
-

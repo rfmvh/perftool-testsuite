@@ -68,7 +68,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic execution - annotate"
 
 # '--dso SOME_DSO' limits the annotation to SOME_DSO only
 $CMD_PERF annotate --stdio --dso load > basic_dso.log 2> basic_dso.err
-PERF_EXIT_CODE=$? 
+PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "$REGEX_HEADER load" "$REGEX_LINE" "$REGEX_SECTION__TEXT" < basic_dso.log
 CHECK_EXIT_CODE=$?
@@ -87,7 +87,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "dso filter"
 
 # '--no-source' should show only the assembly code
 $CMD_PERF annotate --stdio --no-source --dso load > basic_nosource.log 2> basic_nosource.err
-PERF_EXIT_CODE=$? 
+PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "$REGEX_HEADER load" "$REGEX_LINE" "$REGEX_SECTION__TEXT" < basic_nosource.log
 CHECK_EXIT_CODE=$?
