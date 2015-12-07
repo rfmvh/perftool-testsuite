@@ -18,6 +18,9 @@ all: run_all check
 clean:
 	rm -f run_all
 
+pack:
+	tar c `git ls-tree -r master --name-only` | xz > perftool-testsuite.tar.xz
+
 check: run_all
 	./run_all -v
 
