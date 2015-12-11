@@ -87,7 +87,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide"
 $CMD_PERF trace -T -- $CMD_QUICK_SLEEP 2> basic_full_timestamp.log
 PERF_EXIT_CODE=$?
 
-../common/check_all_lines_matched.pl "$RE_LINE_TRACE" "\d{8,}\." < basic_full_timestamp.log
+../common/check_all_lines_matched.pl "$RE_LINE_TRACE" "\d{5,}\." < basic_full_timestamp.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "full timestamp"
