@@ -83,6 +83,19 @@ for i in ${!outputs[@]}; do
 done
 
 
+### non-sense argument
+
+# 'perf list somethingnonsense' caused segfault in 4.4-rc
+$CMD_PERF list somethingnonsense &> basic_nonsense.log
+PERF_EXIT_CODE=$?
+
+../common/check_no_patterns_found.pl "SIGSEGV" "egmentation fault" < basic_nonsense.log
+CHECK_EXIT_CODE=$?
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-sense argument"
+(( TEST_RESULT += $? ))
+
+
 # print overall resutls
 print_overall_results "$TEST_RESULT"
 exit $?
