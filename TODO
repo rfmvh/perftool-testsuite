@@ -32,6 +32,8 @@ base_stat
 	- tracepoint events (some of them)
 	- more semantic checking
 	- grouping events
+	- dealing with multithreaded apps and forks
+	- multiple attaches and detaches
 
 base_trace
 	- --cpu option
