@@ -45,6 +45,8 @@ PERF_EXIT_CODE=$?
 
 ../common/check_all_lines_matched.pl "$RE_LINE_TRACE" < basic_basic.log
 CHECK_EXIT_CODE=$?
+../common/check_all_patterns_found.pl "$RE_LINE_TRACE" < basic_basic.log
+(( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic execution"
 (( TEST_RESULT += $? ))
