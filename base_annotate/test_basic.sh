@@ -73,7 +73,7 @@ PERF_EXIT_CODE=$?
 ../common/check_all_patterns_found.pl "$REGEX_HEADER load" "$REGEX_LINE" "$REGEX_SECTION__TEXT" < basic_dso.log
 CHECK_EXIT_CODE=$?
 # check for the source code presence
-../common/check_all_patterns_found.pl "main\(" "from = atol" "from = 20L;" "for\s*\(i = 1L; j; \+\+i\)" "return 0;" < basic_dso.log
+../common/check_all_patterns_found.pl "main\s*\(" "from = atol" "from = 20L;" "for\s*\(i = 1L; j; \+\+i\)" "return 0;" < basic_dso.log
 (( CHECK_EXIT_CODE += $? ))
 # check whether the '--dso' option cuts the output to one dso only
 test `grep -c "Disassembly" basic_dso.log` -eq 2
