@@ -14,10 +14,16 @@ export MY_KERNEL_VERSION=`uname -r`
 export MY_CPUS_ONLINE=`nproc`
 export MY_CPUS_AVAILABLE=`cat /proc/cpuinfo | grep processor | wc -l`
 
-# FIXME look for the cache dir to /etc/perfconfig
-export BUILDIDDIR="$HOME/.debug"
+export BUILDIDDIR=${BUILDIDDIR:-"$HOME/.debug-`date +%s`"}
+test -d "$BUILDIDDIR" || mkdir "$BUILDIDDIR"
 
 clear_buildid_cache()
 {
 	rm -rf $BUILDIDDIR/*
+}
+
+remove_buildid_cache()
+{
+	clear_buildid_cache
+	rmdir $BUILDIDDIR
 }
