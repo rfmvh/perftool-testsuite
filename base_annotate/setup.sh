@@ -21,11 +21,11 @@ print_results $? 0 "building the example code"
 TEST_RESULT=$?
 
 # record some data
-$CMD_PERF record examples/load > /dev/null 2> setup_record.log
+$CMD_PERF record -o $CURRENT_TEST_DIR/perf.data $CURRENT_TEST_DIR/examples/load > /dev/null 2> $LOGS_DIR/setup_record.log
 PERF_EXIT_CODE=$?
 
 # check the perf record output
-../common/check_all_lines_matched.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < setup_record.log
+../common/check_all_lines_matched.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/setup_record.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "record data"
