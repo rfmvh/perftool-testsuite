@@ -16,7 +16,7 @@ make -s -C examples clean
 
 find . -name \*.log | xargs -r rm
 find . -name \*.err | xargs -r rm
-rm -f perf.data
+rm -f perf.data*
 
 print_results 0 0 "clean-up logs"
 exit $?
