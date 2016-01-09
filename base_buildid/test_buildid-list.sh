@@ -25,12 +25,12 @@ test -s perf.data || ./setup.sh
 
 if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
 	# test that a help message is shown and looks reasonable
-	$CMD_PERF buildid-list --help > list_helpmsg.log
+	$CMD_PERF buildid-list --help > $LOGS_DIR/list_helpmsg.log
 	PERF_EXIT_CODE=$?
 
-	../common/check_all_patterns_found.pl "PERF-BUILDID-LIST" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "SEE ALSO" < list_helpmsg.log
+	../common/check_all_patterns_found.pl "PERF-BUILDID-LIST" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "SEE ALSO" < $LOGS_DIR/list_helpmsg.log
 	CHECK_EXIT_CODE=$?
-	../common/check_all_patterns_found.pl "perf\-buildid\-list \- List the buildids in a perf\.data file" < list_helpmsg.log
+	../common/check_all_patterns_found.pl "perf\-buildid\-list \- List the buildids in a perf\.data file" < $LOGS_DIR/list_helpmsg.log
 	(( CHECK_EXIT_CODE += $? ))
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "help message"
@@ -43,18 +43,18 @@ fi
 ### buildids check
 
 # test that perf list is even working
-$CMD_PERF buildid-list > list_basic.log 2> list_basic.err
+$CMD_PERF buildid-list -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/list_buildids.log 2> $LOGS_DIR/list_buildids.err
 PERF_EXIT_CODE=$?
 
 # output sanity checks
 REGEX_LINE_BASIC="\w{40}\s+$RE_PATH"
-../common/check_all_lines_matched.pl "$REGEX_LINE_BASIC" < list_basic.log
+../common/check_all_lines_matched.pl "$REGEX_LINE_BASIC" < $LOGS_DIR/list_buildids.log
 CHECK_EXIT_CODE=$?
-test ! -s basic_basic.err
+test ! -s $LOGS_DIR/basic_buildids.err
 (( CHECK_EXIT_CODE += $? ))
 
 # output semantics check
-../common/check_buildids_vs_files.pl < list_basic.log
+../common/check_buildids_vs_files.pl < $LOGS_DIR/list_buildids.log
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "buildids check"
@@ -64,11 +64,11 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "buildids check"
 ### kernel buildid
 
 # the --kernel option should print the buildid of the running kernel
-$CMD_PERF buildid-list --kernel > list_kernel.log
+$CMD_PERF buildid-list --kernel > $LOGS_DIR/list_kernel.log
 PERF_EXIT_CODE=$?
 
 # check whether the buildid is printed
-../common/check_all_lines_matched.pl "\w{40}" < list_kernel.log
+../common/check_all_lines_matched.pl "\w{40}" < $LOGS_DIR/list_kernel.log
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "kernel buildid"
