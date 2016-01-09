@@ -16,7 +16,7 @@ export MY_CPUS_AVAILABLE=`cat /proc/cpuinfo | grep processor | wc -l`
 
 if [ -n "$PERFSUITE_RUN_DIR" ]; then
 	# when $PERFSUITE_RUN_DIR is set to something, all the logs and temp files will be placed there
-	# --> the $PERFSUITE_RUN_DIR/base_something/examples and $PERFSUITE_RUN_DIR/base_something/logs
+	# --> the $PERFSUITE_RUN_DIR/perf_something/examples and $PERFSUITE_RUN_DIR/perf_something/logs
 	#     dirs will be used for that
 	export PERFSUITE_RUN_DIR=`readlink -f $PERFSUITE_RUN_DIR`
 	export CURRENT_TEST_DIR="$PERFSUITE_RUN_DIR/$TEST_NAME"
