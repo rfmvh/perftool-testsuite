@@ -25,8 +25,10 @@ if [ ! "$PARAM_STAT_TRACEPOINT_EVENTS_SYNTAX" == "y" ]; then
 	exit 0
 fi
 
+test -d $LOGS_DIR/tracepoint_def || mkdir -p $LOGS_DIR/tracepoint_def
+
 # remove old logs
-find . -name tracepoints_def_\*.log | xargs -r rm
+rm -f $LOGS_DIR/tracepoint_def/tracepoints_def_*.log
 
 ### check all the tracepoint events of all the available subsystems
 
@@ -35,26 +37,26 @@ for subs in $SUBSYSTEMS; do
 	TRACEPOINT_EVENTS=`$CMD_PERF list $subs:\* | grep "Tracepoint event" | awk '{print $1}' | tr '\n' ' '`
 	PERF_EXIT_CODE=0
 	for tp in $TRACEPOINT_EVENTS; do
-		$CMD_PERF stat -e $tp -o /dev/stdout true > out 2> err
+		$CMD_PERF stat -e $tp -o /dev/stdout true > $LOGS_DIR/tracepoint_def/out 2> $LOGS_DIR/tracepoint_def/err
 		(( PERF_EXIT_CODE += $? ))
-		echo -n "$tp    is " >> tracepoints_def_$subs.log
+		echo -n "$tp    is " >> $LOGS_DIR/tracepoint_def/tracepoints_def_$subs.log
 
 		# check whether the event is supported when it is listed
-		grep -qi "not supported" out
-		test $? -eq 0 && echo -n "NOT SUPPORTED and " >> tracepoints_def_$subs.log || echo -n "supported and " >> tracepoints_def_$subs.log
+		grep -qi "not supported" $LOGS_DIR/tracepoint_def/out
+		test $? -eq 0 && echo -n "NOT SUPPORTED and " >> $LOGS_DIR/tracepoint_def/tracepoints_def_$subs.log || echo -n "supported and " >> $LOGS_DIR/tracepoint_def/tracepoints_def_$subs.log
 
 		# check whether the event causes any warnings
-		test -s err
-		test $? -eq 0 && echo "CAUSES WARNINGS" >> tracepoints_def_$subs.log || echo "is defined correctly" >> tracepoints_def_$subs.log
+		test -s $LOGS_DIR/tracepoint_def/err
+		test $? -eq 0 && echo "CAUSES WARNINGS" >> $LOGS_DIR/tracepoint_def/tracepoints_def_$subs.log || echo "is defined correctly" >> $LOGS_DIR/tracepoint_def/tracepoints_def_$subs.log
 	done
 
 	# check for the results
-	! grep -e "CAUSES WARNINGS" -e "NOT SUPPORTED" tracepoints_def_$subs.log
+	! grep -e "CAUSES WARNINGS" -e "NOT SUPPORTED" $LOGS_DIR/tracepoint_def/tracepoints_def_$subs.log
 	print_results $PERF_EXIT_CODE $? "subsystem $subs"
 	(( TEST_RESULT += $? ))
 done
 
-rm -f err out
+rm -f $LOGS_DIR/tracepoint_def/err $LOGS_DIR/tracepoint_def/out
 
 print_overall_results "$TEST_RESULT"
 exit $?

@@ -25,16 +25,16 @@ fi
 
 # FIXME test -e hw.log && rm -f hw.log
 
-test -d hw || mkdir hw
+test -d $LOGS_DIR/hw || mkdir $LOGS_DIR/hw
 
 
 #### testing hardware events
 
 for event in $EVENTS_TO_TEST; do
-	$CMD_PERF stat -a -e $event -o hw/$event.log --append -x';' -- $CMD_BASIC_SLEEP
+	$CMD_PERF stat -a -e $event -o $LOGS_DIR/hw/$event.log --append -x';' -- $CMD_BASIC_SLEEP
 	PERF_EXIT_CODE=$?
 	REGEX_LINES="$RE_NUMBER;+$event;$RE_NUMBER;100\.00"
-	../common/check_all_patterns_found.pl "$REGEX_LINES" < hw/$event.log
+	../common/check_all_patterns_found.pl "$REGEX_LINES" < $LOGS_DIR/hw/$event.log
 	CHECK_EXIT_CODE=$?
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "event $event"
 	(( TEST_RESULT += $? ))
