@@ -28,16 +28,16 @@ fi
 
 if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
 	# test that a help message is shown and looks reasonable
-	$CMD_PERF probe --help > basic_helpmsg.log
+	$CMD_PERF probe --help > $LOGS_DIR/basic_helpmsg.log
 	PERF_EXIT_CODE=$?
 
-	../common/check_all_patterns_found.pl "PERF-PROBE" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "PROBE\s+SYNTAX" "PROBE\s+ARGUMENT" "LINE\s+SYNTAX" < basic_helpmsg.log
+	../common/check_all_patterns_found.pl "PERF-PROBE" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "PROBE\s+SYNTAX" "PROBE\s+ARGUMENT" "LINE\s+SYNTAX" < $LOGS_DIR/basic_helpmsg.log
 	CHECK_EXIT_CODE=$?
-	../common/check_all_patterns_found.pl "LAZY\s+MATCHING" "FILTER\s+PATTERN" "EXAMPLES" "SEE\s+ALSO" < basic_helpmsg.log
+	../common/check_all_patterns_found.pl "LAZY\s+MATCHING" "FILTER\s+PATTERN" "EXAMPLES" "SEE\s+ALSO" < $LOGS_DIR/basic_helpmsg.log
 	(( CHECK_EXIT_CODE += $? ))
-	../common/check_all_patterns_found.pl "vmlinux" "module=" "source=" "verbose" "quiet" "add=" "del=" "list.*EVENT" "line=" "vars=" "externs" < basic_helpmsg.log
+	../common/check_all_patterns_found.pl "vmlinux" "module=" "source=" "verbose" "quiet" "add=" "del=" "list.*EVENT" "line=" "vars=" "externs" < $LOGS_DIR/basic_helpmsg.log
 	(( CHECK_EXIT_CODE += $? ))
-	../common/check_all_patterns_found.pl "no-inlines" "funcs.*FILTER" "filter=FILTER" "force" "dry-run" "max-probes" "exec=" "demangle-kernel" < basic_helpmsg.log
+	../common/check_all_patterns_found.pl "no-inlines" "funcs.*FILTER" "filter=FILTER" "force" "dry-run" "max-probes" "exec=" "demangle-kernel" < $LOGS_DIR/basic_helpmsg.log
 	(( CHECK_EXIT_CODE += $? ))
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "help message"
@@ -50,9 +50,9 @@ fi
 ### usage message
 
 # without any args perf-probe should print usage
-$CMD_PERF probe 2> basic_usage.log > /dev/null
+$CMD_PERF probe 2> $LOGS_DIR/basic_usage.log > /dev/null
 
-../common/check_all_patterns_found.pl "[Uu]sage" "perf probe" "verbose" "quiet" "add" "del" "force" "line" "vars" "externs" "range" < basic_usage.log
+../common/check_all_patterns_found.pl "[Uu]sage" "perf probe" "verbose" "quiet" "add" "del" "force" "line" "vars" "externs" "range" < $LOGS_DIR/basic_usage.log
 CHECK_EXIT_CODE=$?
 
 print_results 0 $CHECK_EXIT_CODE "usage message"
@@ -62,12 +62,12 @@ print_results 0 $CHECK_EXIT_CODE "usage message"
 ### quiet switch
 
 # '--quiet' should mute all output
-$CMD_PERF probe --quiet --add vfs_read > basic_quiet01.log 2> basic_quiet01.err
+$CMD_PERF probe --quiet --add vfs_read > $LOGS_DIR/basic_quiet01.log 2> $LOGS_DIR/basic_quiet01.err
 PERF_EXIT_CODE=$?
-$CMD_PERF probe --quiet --del vfs_read > basic_quiet03.log 2> basic_quiet02.err
+$CMD_PERF probe --quiet --del vfs_read > $LOGS_DIR/basic_quiet03.log 2> $LOGS_DIR/basic_quiet02.err
 (( PERF_EXIT_CODE += $? ))
 
-test `cat basic_quiet*log basic_quiet*err | wc -l` -eq 0
+test `cat $LOGS_DIR/basic_quiet*log $LOGS_DIR/basic_quiet*err | wc -l` -eq 0
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "quiet switch"

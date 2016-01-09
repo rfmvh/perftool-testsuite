@@ -32,13 +32,13 @@ clear_all_probes
 ### adding blacklisted function
 
 # functions from blacklist should be skipped by perf probe
-! $CMD_PERF probe $BLACKFUNC > adding_blacklisted.log 2> adding_blacklisted.err
+! $CMD_PERF probe $BLACKFUNC > $LOGS_DIR/adding_blacklisted.log 2> $LOGS_DIR/adding_blacklisted.err
 PERF_EXIT_CODE=$?
 
 REGEX_SKIP_MESSAGE=" is blacklisted function, skip it\."
 REGEX_NOT_FOUND_MESSAGE="Probe point \'$BLACKFUNC\' not found."
 REGEX_ERROR_MESSAGE="Error: Failed to add events."
-../common/check_all_lines_matched.pl "$REGEX_SKIP_MESSAGE" "$REGEX_NOT_FOUND_MESSAGE" "$REGEX_ERROR_MESSAGE" < adding_blacklisted.err
+../common/check_all_lines_matched.pl "$REGEX_SKIP_MESSAGE" "$REGEX_NOT_FOUND_MESSAGE" "$REGEX_ERROR_MESSAGE" < $LOGS_DIR/adding_blacklisted.err
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "adding blacklisted function $BLACKFUNC"
@@ -48,10 +48,10 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "adding blacklisted function $BLA
 ### listing not-added probe
 
 # blacklisted probes should NOT appear in perf-list output
-$CMD_PERF list probe:\* > adding_blacklisted_list.log
+$CMD_PERF list probe:\* > $LOGS_DIR/adding_blacklisted_list.log
 PERF_EXIT_CODE=$?
 
-../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "List of pre-defined events" < adding_blacklisted_list.log
+../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "List of pre-defined events" < $LOGS_DIR/adding_blacklisted_list.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing blacklisted probe (should NOT be listed)"
