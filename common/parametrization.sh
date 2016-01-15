@@ -14,7 +14,7 @@
 # If set, the '--help' outputs of the commands will be checked.
 # Since the '--help' option calls a manpage and manpages are not
 # always generated, you may skip the man-page checks.
-export PARAM_GENERAL_HELP_TEXT_CHECK=n
+export PARAM_GENERAL_HELP_TEXT_CHECK=${PARAM_GENERAL_HELP_TEXT_CHECK:-n}
 
 
 #### perf_stat
@@ -23,10 +23,10 @@ export PARAM_GENERAL_HELP_TEXT_CHECK=n
 # That might make it 'nproc' times longer. Basically it should be
 # enough to run each event on one core only.
 # Note: POWER8 only
-export PARAM_STAT_24x7_ALL_CORES=n
+export PARAM_STAT_24x7_ALL_CORES=${PARAM_STAT_24x7_ALL_CORES:-n}
 
 # If set, all the tracepoint events will be checked for syntax
 # errors in their definition. This testcase may take a long time
 # and the checks are not that crucial, so it can be turned off
 # when you do not want to deep dive.
-export PARAM_STAT_TRACEPOINT_EVENTS_SYNTAX=n
+export PARAM_STAT_TRACEPOINT_EVENTS_SYNTAX=${PARAM_STAT_TRACEPOINT_EVENTS_SYNTAX:-n}
