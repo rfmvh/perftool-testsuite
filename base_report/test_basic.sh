@@ -52,7 +52,7 @@ $CMD_PERF report -i $CURRENT_TEST_DIR/perf.data --stdio > $LOGS_DIR/basic_basic.
 PERF_EXIT_CODE=$?
 
 REGEX_LOST_SAMPLES_INFO="#\s*Total Lost Samples:\s+$RE_NUMBER"
-REGEX_SAMPLES_INFO="#\s*Samples:\s+$RE_NUMBER\s+of\s+event\s+'$RE_EVENT_ANY'"
+REGEX_SAMPLES_INFO="#\s*Samples:\s+(?:$RE_NUMBER)\w?\s+of\s+event\s+'$RE_EVENT_ANY'"
 REGEX_LINES_HEADER="#\s*Children\s+Self\s+Command\s+Shared Object\s+Symbol"
 REGEX_LINES="\s*$RE_NUMBER%\s+$RE_NUMBER%\s+\S+\s+\[kernel\.vmlinux\]\s+\[[k\.]\]\s+\w+"
 ../common/check_all_patterns_found.pl "$REGEX_LOST_SAMPLES_INFO" "$REGEX_SAMPLES_INFO" "$REGEX_LINES_HEADER" "$REGEX_LINES" < $LOGS_DIR/basic_basic.log
