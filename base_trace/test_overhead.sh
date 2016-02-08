@@ -1,0 +1,51 @@
+#!/bin/bash
+
+#
+#	test_overhead of perf_trace test
+#	Author: Michael Petlan <mpetlan@redhat.com>
+#
+#	Description:
+#
+#		This test tries to trace a heavier load.
+#
+#
+
+# include working environment
+. ../common/init.sh
+. ./settings.sh
+
+THIS_TEST_NAME=`basename $0 .sh`
+TEST_RESULT=0
+
+
+# skip if not enabled
+if [ "$PARAM_TRACE_OVERLOAD" = "n" ]; then
+	print_overall_skipped
+	exit 0
+fi
+
+
+#### systemwide
+
+# system-wide tracing limited by sleep time should finish
+$CMD_PERF trace -o $LOGS_DIR/overhead_systemwide.log -a -- $CMD_LONGER_SLEEP &
+PERF_PID=$!
+$CMD_LONGER_SLEEP
+$CMD_LONGER_SLEEP
+! kill -SIGINT $PERF_PID &> overhead_systemwide_kill.log
+wait $PERF_PID
+PERF_EXIT_CODE=$?
+
+../common/check_all_lines_matched.pl "$RE_LINE_TRACE" < $LOGS_DIR/overhead_systemwide.log
+CHECK_EXIT_CODE=$?
+
+../common/check_all_patterns_found.pl "No such process" < overhead_systemwide_kill.log
+(( CHECK_EXIT_CODE += $? ))
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide"
+(( TEST_RESULT += $? ))
+
+
+# print overall resutls
+print_overall_results "$TEST_RESULT"
+exit $?

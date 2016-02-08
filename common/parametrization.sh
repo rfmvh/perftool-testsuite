@@ -30,3 +30,10 @@ export PARAM_STAT_24x7_ALL_CORES=${PARAM_STAT_24x7_ALL_CORES:-n}
 # and the checks are not that crucial, so it can be turned off
 # when you do not want to deep dive.
 export PARAM_STAT_TRACEPOINT_EVENTS_SYNTAX=${PARAM_STAT_TRACEPOINT_EVENTS_SYNTAX:-n}
+
+
+#### perf_trace
+
+# If set, some heavy load tests are run. That might be not always
+# desired behaviour.
+export PARAM_TRACE_OVERLOAD=${PARAM_TRACE_OVERLOAD:-y}
