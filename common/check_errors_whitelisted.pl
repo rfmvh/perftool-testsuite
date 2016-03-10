@@ -16,8 +16,8 @@ else
 $max_printed_lines = 20;
 $max_printed_lines = $ENV{ERROR_MESSAGE_MAX_LINES} if (defined $ENV{ERROR_MESSAGE_MAX_LINES});
 
-$quiet = 0;
-$quiet = 1 if (defined $ENV{TESTMODE_QUIET} && $ENV{TESTMODE_QUIET} eq "y");
+$quiet = 1;
+$quiet = 0 if (defined $ENV{TESTLOG_VERBOSITY} && $ENV{TESTLOG_VERBOSITY} ge 2);
 
 $passed = 1;
 $lines_printed = 0;

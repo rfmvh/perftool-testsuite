@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
-$quiet = 0;
-$quiet = 1 if (defined $ENV{TESTMODE_QUIET} && $ENV{TESTMODE_QUIET} eq "y");
+$quiet = 1;
+$quiet = 0 if (defined $ENV{TESTLOG_VERBOSITY} && $ENV{TESTLOG_VERBOSITY} ge 2);
 
 $passed = 1;
 
@@ -17,7 +17,7 @@ while (<STDIN>)
 	}
 	else
 	{
-		$filecmd_output = `file $filepath`;
+		$filecmd_output = `file $filepath 2>/dev/null`;
 		($buildid_from_file) = $filecmd_output =~ /BuildID\[sha1\]=(\w{40})/;
 	}
 

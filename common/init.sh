@@ -17,7 +17,7 @@ THIS_TEST_NAME=`basename $0 .sh`
 
 _echo()
 {
-	test "$TESTMODE_QUIET" = "y" || echo -e "$@"
+	test "$TESTLOG_VERBOSITY" -ne 0 && echo -e "$@"
 }
 
 print_results()

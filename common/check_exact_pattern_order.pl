@@ -2,8 +2,8 @@
 
 @regexps = @ARGV;
 
-$quiet = 0;
-$quiet = 1 if (defined $ENV{TESTMODE_QUIET} && $ENV{TESTMODE_QUIET} eq "y");
+$quiet = 1;
+$quiet = 0 if (defined $ENV{TESTLOG_VERBOSITY} && $ENV{TESTLOG_VERBOSITY} ge 2);
 
 $passed = 1;
 $r = shift @regexps;

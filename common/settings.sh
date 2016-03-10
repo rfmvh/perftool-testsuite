@@ -22,7 +22,7 @@ export CMD_LONGER_SLEEP="sleep 2"
 export CMD_SIMPLE="true"
 
 #### common settings
-export TESTMODE_QUIET=${TESTMODE_QUIET:-y}
+export TESTLOG_VERBOSITY=${TESTLOG_VERBOSITY:-0}
 export ERROR_MESSAGE_MAX_LINES=${ERROR_MESSAGE_MAX_LINES:-20}
 
 #### clear locale

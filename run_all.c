@@ -124,13 +124,19 @@ int main(int argc, char *argv[])
 	DIR *dp;
 	struct dirent *ep;
 	int failures = 0;
+	char verbosity_str[2];
 
 	if(argc > 1)
 	{
 		if(strncmp(argv[1], "-v", 2) == 0)
 		{
-			verbose = 1;
-			setenv("TESTMODE_QUIET", "n", 1);
+			char *p;
+			for(p = argv[1]; *p != '\0'; p++)
+				if(*p == 'v') verbose++;
+			if(verbose > 9)
+				verbose = 9;
+			snprintf(verbosity_str, 2, "%i", verbose);
+			setenv("TESTLOG_VERBOSITY", verbosity_str, 1);
 		}
 	}
 

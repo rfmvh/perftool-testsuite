@@ -9,11 +9,24 @@ $threshold = 85;
 $kallsyms_file = $ARGV[0];
 $kfuncs_file = $ARGV[1];
 
+$quiet = 1;
+$quiet = 0 if (defined $ENV{TESTLOG_VERBOSITY} && $ENV{TESTLOG_VERBOSITY} ge 2);
+
+sub my_die
+{
+	my $msg = shift;
+	unless ($quiet)
+	{
+		print STDERR "$msg";
+	}
+	exit 1;
+}
+
 # load the kallsyms into a hash
 %kallsyms_hash = ();
-open (INFILE, $kallsyms_file) or die "ERROR: Unable to open $kallsyms_file.\n";
+open (INFILE, $kallsyms_file) or my_die "ERROR: Unable to open $kallsyms_file.\n";
 @kallsyms_lines = <INFILE>;
-close INFILE or die "ERROR: Unable to close $kallsyms_file\n";
+close INFILE or my_die "ERROR: Unable to close $kallsyms_file\n";
 
 for (@kallsyms_lines)
 {
@@ -24,9 +37,9 @@ for (@kallsyms_lines)
 }
 
 # check the kfuncs
-open (INFILE, $kfuncs_file) or die "ERROR: Unable to open $kfuncs_file\n";
+open (INFILE, $kfuncs_file) or my_die "ERROR: Unable to open $kfuncs_file\n";
 @kfuncs_lines = <INFILE>;
-close INFILE or die "ERROR: Unable to close $kfuncs_file\n";
+close INFILE or my_die "ERROR: Unable to close $kfuncs_file\n";
 
 for (@kfuncs_lines)
 {
