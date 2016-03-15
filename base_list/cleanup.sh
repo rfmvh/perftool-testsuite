@@ -10,10 +10,13 @@
 . ../common/init.sh
 . ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
+if [ -n "$PERFSUITE_RUN_DIR" ]; then
+	print_overall_skipped
+	exit 0
+fi
 
 find . -name \*.log | xargs -r rm
 find . -name \*.err | xargs -r rm
 
-print_results 0 0 "clean-up logs"
+print_overal_results 0
 exit $?

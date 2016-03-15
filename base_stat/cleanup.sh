@@ -12,6 +12,11 @@
 . ../common/init.sh
 . ./settings.sh
 
+if [ -n "$PERFSUITE_RUN_DIR" ]; then
+	print_overall_skipped
+	exit 0
+fi
+
 find . -name \*.log | xargs -r rm
 test -d hw && rmdir hw
 test -d hwcache && rmdir hwcache

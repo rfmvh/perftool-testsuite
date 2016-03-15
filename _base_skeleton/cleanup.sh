@@ -12,5 +12,10 @@
 . ../common/init.sh
 . ./settings.sh
 
+if [ -n "$PERFSUITE_RUN_DIR" ]; then
+	print_overall_skipped
+	exit 0
+fi
+
 print_overall_results 0
 exit 0

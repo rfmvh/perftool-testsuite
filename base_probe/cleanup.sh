@@ -11,12 +11,12 @@
 . ../common/init.sh
 . ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
-
 clear_all_probes
-find . -name \*.log | xargs -r rm
-find . -name \*.err | xargs -r rm
-make -s -C examples clean
+if [ ! -n "$PERFSUITE_RUN_DIR" ]; then
+	find . -name \*.log | xargs -r rm
+	find . -name \*.err | xargs -r rm
+	make -s -C examples clean
+fi
 
-print_results 0 0 "clean-up - removing all probes and deleting logs"
+print_overall_results 0
 exit $?

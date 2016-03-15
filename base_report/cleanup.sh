@@ -10,13 +10,15 @@
 . ../common/init.sh
 . ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
+if [ -n "$PERFSUITE_RUN_DIR" ]; then
+	print_overall_skipped
+	exit 0
+fi
 
 find . -name \*.log | xargs -r rm
 find . -name \*.err | xargs -r rm
-
 rm -f perf.data*
 RM_EXIT_CODE=$?
 
-print_results $RM_EXIT_CODE 0 "clean-up perf.data file and logs"
+print_overall_results $RM_EXIT_CODE
 exit $?

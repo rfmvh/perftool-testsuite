@@ -10,13 +10,14 @@
 . ../common/init.sh
 . ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
+if [ ! -n "$PERFSUITE_RUN_DIR" ]; then
+	remove_buildid_cache
+	find . -name \*.log | xargs -r rm
+	find . -name \*.err | xargs -r rm
+	test -e perf.data && rm -rf perf.data
+else
+	mv "$BUILDIDDIR" "$PERFSUITE_RUN_DIR/perf_buildid-cache/"
+fi
 
-find . -name \*.log | xargs -r rm
-find . -name \*.err | xargs -r rm
-test -e perf.data && rm -rf perf.data
-
-remove_buildid_cache
-
-print_results 0 0 "clean-up logs"
+print_overall_results 0
 exit $?
