@@ -56,7 +56,8 @@ PERF_EXIT_CODE=$?
 
 REGEX_LINES="^"$RE_NUMBER";+"$RE_EVENT
 REGEX_UNSUPPORTED_LINES="^<not supported>;+"$RE_EVENT
-../common/check_all_lines_matched.pl "$REGEX_LINES" "$REGEX_UNSUPPORTED_LINES" "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" < $LOGS_DIR/03.log
+REGEX_METRIC_LINE="stalled\scycles\sper\sinsn"
+../common/check_all_lines_matched.pl "$REGEX_LINES" "$REGEX_METRIC_LINE" "$REGEX_UNSUPPORTED_LINES" "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" < $LOGS_DIR/03.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "CSV output"
