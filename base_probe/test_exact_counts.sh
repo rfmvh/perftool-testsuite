@@ -87,7 +87,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "using probes :: perf record"
 (( TEST_RESULT += $? ))
 
 # perf report should report exact values too
-$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data -n > $LOGS_DIR/exact_counts_report.log
+$CMD_PERF report -s comm,dso,symbol --stdio -i $CURRENT_TEST_DIR/perf.data -n > $LOGS_DIR/exact_counts_report.log
 PERF_EXIT_CODE=$?
 
 # perf report should report exact sample counts
