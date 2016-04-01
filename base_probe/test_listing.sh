@@ -111,6 +111,8 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "kernel source lines list"
 (( TEST_RESULT += $? ))
 
 
+### userspace lines list
+
 # with '-x binary' the '-L' option should search for lines suitable for probing in the binary
 LONG_FUNC="some_function_with_a_really_long_name_that_must_be_longer_than_64_bytes"
 $CMD_PERF probe -x $CURRENT_TEST_DIR/examples/test -L $LONG_FUNC > $LOGS_DIR/listing_userspace_lines.log
@@ -124,23 +126,19 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "userspace lines list"
 (( TEST_RESULT += $? ))
 
 
-### userspace source lines list --> currently NOT SUPPORTED
-if false; then
+### userspace source lines list
 
 # the '-L' option should be able to list whole source file as well
 LONG_FUNC="some_function_with_a_really_long_name_that_must_be_longer_than_64_bytes"
-$CMD_PERF probe -x $CURRENT_TEST_DIR/examples/test -L $CURRENT_TEST_DIR/examples/test.c > $LOGS_DIR/listing_userspace_source_lines.log
+$CMD_PERF probe -x $CURRENT_TEST_DIR/examples/test -L examples/test.c > $LOGS_DIR/listing_userspace_source_lines.log
 PERF_EXIT_CODE=$?
 
 LONG_VAR="some_variable_with_a_really_long_name_that_must_be_longer_than_64_bytes"
-../common/check_all_patterns_found.pl "\d+\s+$LONG_VAR \+= 1;" < $LOGS_DIR/listing_userspace_source_lines.log
+../common/check_all_patterns_found.pl "\d+\s+$LONG_VAR \+= i;" < $LOGS_DIR/listing_userspace_source_lines.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "userspace source lines list"
 (( TEST_RESULT += $? ))
-else
-print_testcase_skipped "userspace source lines list"
-fi
 
 
 # print overall resutls
