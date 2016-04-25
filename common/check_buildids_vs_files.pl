@@ -8,9 +8,10 @@ $passed = 1;
 while (<STDIN>)
 {
 	chomp;
-	($buildid_from_list, $filepath) = $_ =~ /^(\w{40})\s+((?:\/[\w\+.-]+)+|(?:\[kernel\.kallsyms\]))$/;
-	if ($filepath =~ /\[kernel\.kallsyms\]/)
+	($buildid_from_list, $filepath) = $_ =~ /^(\w{40})\s+((?:\/[\w\+.-]+)+|(?:\[[\w\.]+\]))$/;
+	if ($filepath =~ /\[[\w\.]+\]/)
 	{
+		next unless ($filepath =~ /\[kernel\.kallsyms\]/);
 		$CMD_PERF = $ENV{'CMD_PERF'};
 		$buildid_from_file = `$CMD_PERF buildid-list -k`;
 		chomp $buildid_from_file;

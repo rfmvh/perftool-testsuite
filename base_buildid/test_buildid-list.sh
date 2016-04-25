@@ -49,7 +49,8 @@ PERF_EXIT_CODE=$?
 # output sanity checks
 REGEX_LINE_BASIC="\w{40}\s+$RE_PATH"
 REGEX_LINE_KALLSYMS="\w{40}\s+\[kernel\.kallsyms\]"
-../common/check_all_lines_matched.pl "$REGEX_LINE_BASIC" "$REGEX_LINE_KALLSYMS" < $LOGS_DIR/list_buildids.log
+REGEX_LINE_VDSO="\w{40}\s+\[\w+\]"
+../common/check_all_lines_matched.pl "$REGEX_LINE_BASIC" "$REGEX_LINE_KALLSYMS" "$REGEX_LINE_VDSO" < $LOGS_DIR/list_buildids.log
 CHECK_EXIT_CODE=$?
 test ! -s $LOGS_DIR/basic_buildids.err
 (( CHECK_EXIT_CODE += $? ))
