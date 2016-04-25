@@ -18,5 +18,5 @@ fi
 find . -name \*.log | xargs -r rm
 find . -name \*.err | xargs -r rm
 
-print_overal_results 0
+print_overall_results 0
 exit $?
