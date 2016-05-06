@@ -65,3 +65,30 @@ print_overall_skipped()
 	_echo "$MSKIP## [ SKIP ] ##$MEND $TEST_NAME :: $THIS_TEST_NAME :: testcase skipped"
 	return 0
 }
+
+detect_baremetal()
+{
+	# return values:
+	# 0 = bare metal
+	# 1 = virtualization detected
+	# 2 = unknown state
+	VIRT=`systemd-detect-virt 2>/dev/null`
+	test $? -eq 127 && return 2
+	test "$VIRT" = "none"
+}
+
+detect_intel()
+{
+	# return values:
+	# 0 = is Intel
+	# 1 = is not Intel or unknown
+	grep "vendor_id" < /proc/cpuinfo | grep -q "GenuineIntel"
+}
+
+detect_amd()
+{
+	# return values:
+	# 0 = is AMD
+	# 1 = is not AMD or unknown
+	grep "vendor_id" < /proc/cpuinfo | grep -q "AMD"
+}
