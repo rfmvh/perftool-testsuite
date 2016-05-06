@@ -19,8 +19,14 @@ TEST_RESULT=0
 
 EVENTS_TO_TEST=`$CMD_PERF list | grep "uncore" | awk '{print $1}' | tr '\n' ' '`
 if [ -z "$EVENTS_TO_TEST" ]; then
-	print_overall_skipped
-	exit 0
+	if should_support_intel_uncore; then
+		print_results 1 1 "uncore support not found despite being expected"
+		print_overall_results 1
+		exit 1
+	else
+		print_overall_skipped
+		exit 0
+	fi
 fi
 
 test -d $LOGS_DIR/intel_uncore || mkdir $LOGS_DIR/intel_uncore
