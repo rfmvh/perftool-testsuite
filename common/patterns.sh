@@ -107,7 +107,7 @@ export RE_LINE_TRACE_SUMMARY_HEADER="\s*syscall\s+calls\s+total\s+min\s+avg\s+ma
 #    syscall            calls    total       min       avg       max      stddev
 
 
-export RE_LINE_TRACE_SUMMARY_CONTENT="\s*\w+\s+(?:$RE_NUMBER\s+){5}$RE_NUMBER%"
+export RE_LINE_TRACE_SUMMARY_CONTENT="^\s*\w+\s+(?:$RE_NUMBER\s+){5}$RE_NUMBER%"
 # A line of a perf-trace summary table
 # Example:
 #    open                   3     0.017     0.005     0.006     0.007     10.90%
