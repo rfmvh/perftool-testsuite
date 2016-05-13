@@ -19,9 +19,12 @@ base_probe
 	- some 'advanced' probing
 		- probing variables, args, retvals like watchpoints
 		- perf script reporting
+		- lazy patterns like vfs_read;ret=*
 
 base_record
 	- create
+	- overload record (callgraph options)
+	- the '-b' option (caused panic on Atoms)
 
 base_report
 	- cover remaining options
