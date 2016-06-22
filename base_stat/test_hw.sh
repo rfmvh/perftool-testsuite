@@ -40,6 +40,24 @@ for event in $EVENTS_TO_TEST; do
 	(( TEST_RESULT += $? ))
 done
 
+
+#### testing kernel vs userspace
+
+# remove some events that does not make sense to test like this
+EVENTS_TO_TEST=${EVENTS_TO_TEST/ref-cycles/}
+EVENTS_TO_TEST=${EVENTS_TO_TEST/stalled-cycles-backend/}
+EVENTS_TO_TEST=${EVENTS_TO_TEST/stalled-cycles-frontend/}
+
+for event in $EVENTS_TO_TEST; do
+	$CMD_PERF stat -e $event:k -e $event:u -e $event:ku -o $LOGS_DIR/hw/$event--ku.log -x';' -- $CMD_SIMPLE
+	PERF_EXIT_CODE=$?
+	../common/check_ku_sum.pl < $LOGS_DIR/hw/$event--ku.log
+	CHECK_EXIT_CODE=$?
+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "k+u=ku check :: event $event"
+	(( TEST_RESULT += $? ))
+done
+
+
 # print overall resutls
 print_overall_results "$TEST_RESULT"
 exit $?
