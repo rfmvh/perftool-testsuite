@@ -112,7 +112,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "summary"
 ### attach process
 
 # perf-trace should be able to attach an existing process by '-p PID'
-$CMD_BASIC_SLEEP &
+$CMD_LONGER_SLEEP &
 $CMD_PERF trace -p $! -o $LOGS_DIR/basic_attach.log
 PERF_EXIT_CODE=$?
 
