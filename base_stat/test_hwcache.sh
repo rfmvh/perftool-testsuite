@@ -59,7 +59,7 @@ for event in $EVENTS_TO_TEST; do
 done
 fi
 
-# print overall resutls
+# print overall results
 print_overall_results "$TEST_RESULT"
 exit $?
 

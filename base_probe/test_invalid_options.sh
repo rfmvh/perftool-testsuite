@@ -75,6 +75,6 @@ for opt in '-a xxx -d xxx' '-a xxx -L foo' '-a xxx -V foo' '-a xxx -l' '-a xxx -
 done
 
 
-# print overall resutls
+# print overall results
 print_overall_results "$TEST_RESULT"
 exit $?

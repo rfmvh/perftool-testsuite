@@ -224,6 +224,6 @@ else
 fi
 
 
-# print overall resutls
+# print overall results
 print_overall_results "$TEST_RESULT"
 exit $?

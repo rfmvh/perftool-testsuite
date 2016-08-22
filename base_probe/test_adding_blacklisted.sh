@@ -58,6 +58,6 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing blacklisted probe (shoul
 (( TEST_RESULT += $? ))
 
 
-# print overall resutls
+# print overall results
 print_overall_results "$TEST_RESULT"
 exit $?

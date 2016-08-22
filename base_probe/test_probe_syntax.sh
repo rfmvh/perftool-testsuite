@@ -114,6 +114,6 @@ print_results 0 $CHECK_EXIT_CODE "various syntax forms :: func%return \$retval"
 clear_all_probes
 
 
-# print overall resutls
+# print overall results
 print_overall_results "$TEST_RESULT"
 exit $?

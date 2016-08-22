@@ -164,6 +164,6 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "symbol filter"
 
 # TODO: $CMD_PERF report -n --showcpuutilization -TUxDg 2> 01.log
 
-# print overall resutls
+# print overall results
 print_overall_results "$TEST_RESULT"
 exit $?
