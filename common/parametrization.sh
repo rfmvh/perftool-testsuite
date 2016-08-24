@@ -37,3 +37,10 @@ export PARAM_STAT_TRACEPOINT_EVENTS_SYNTAX=${PARAM_STAT_TRACEPOINT_EVENTS_SYNTAX
 # If set, some heavy load tests are run. That might be not always
 # desired behaviour.
 export PARAM_TRACE_OVERLOAD=${PARAM_TRACE_OVERLOAD:-y}
+
+
+#### perf_record
+
+# If set, some heavy load tests are run. That might be not always
+# desired behaviour.
+export PARAM_RECORD_OVERLOAD=${PARAM_RECORD_OVERLOAD:-y}

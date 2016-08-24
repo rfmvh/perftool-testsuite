@@ -19,6 +19,7 @@ export CMD_PERF=${CMD_PERF:-`which perf`}
 export CMD_BASIC_SLEEP="sleep 0.1"
 export CMD_QUICK_SLEEP="sleep 0.01"
 export CMD_LONGER_SLEEP="sleep 2"
+export CMD_VERY_LONG_SLEEP="sleep 30"
 export CMD_SIMPLE="true"
 
 #### common settings

@@ -1,0 +1,132 @@
+#!/bin/bash
+
+#
+#	test_overhead of perf_record test
+#	Author: Michael Petlan <mpetlan@redhat.com>
+#
+#	Description:
+#
+#		This test tries how perf record behaves under a heavier load.
+#
+#
+
+# include working environment
+. ../common/init.sh
+. ./settings.sh
+
+THIS_TEST_NAME=`basename $0 .sh`
+TEST_RESULT=0
+
+
+# skip if not enabled
+if [ "$PARAM_RECORD_OVERLOAD" = "n" ]; then
+	print_overall_skipped
+	exit 0
+fi
+
+# cause some load
+for i in `seq 1 $MY_CPUS_ONLINE`; do
+	$CURRENT_TEST_DIR/examples/load 99999 > /dev/null &
+done
+
+
+#### systemwide basic with loaded system
+
+$CMD_PERF record -o $CURRENT_TEST_DIR/perf.data.1 -a > $LOGS_DIR/overhead_systemwide.log &
+PERF_PID=$!
+$CMD_VERY_LONG_SLEEP
+! kill -SIGINT $PERF_PID &> overhead_systemwide_kill.log
+wait $PERF_PID
+PERF_EXIT_CODE=$?
+
+../common/check_all_lines_matched.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/overhead_systemwide.log
+CHECK_EXIT_CODE=$?
+
+../common/check_all_patterns_found.pl "No such process" < overhead_systemwide_kill.log
+(( CHECK_EXIT_CODE += $? ))
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide basic"
+(( TEST_RESULT += $? ))
+
+
+#### systemwide basic with loaded system - report
+
+$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data.1 > $LOGS_DIR/overhead_systemwide_report.log
+PERF_EXIT_CODE=$?
+
+../common/check_all_patterns_found.pl "function_a" "function_b" "function_F" < $LOGS_DIR/overhead_systemwide_report.log
+CHECK_EXIT_CODE=$?
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide basic report"
+(( TEST_RESULT += $? ))
+
+
+#### systemwide with loaded system with callgraph fp
+
+$CMD_PERF record -g --call-graph fp -o $CURRENT_TEST_DIR/perf.data.2 -a > $LOGS_DIR/overhead_systemwide_callgraph_fp.log &
+PERF_PID=$!
+$CMD_VERY_LONG_SLEEP
+! kill -SIGINT $PERF_PID &> overhead_systemwide_kill_callgraph_fp.log
+wait $PERF_PID
+PERF_EXIT_CODE=$?
+
+../common/check_all_lines_matched.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/overhead_systemwide_callgraph_fp.log
+CHECK_EXIT_CODE=$?
+
+../common/check_all_patterns_found.pl "No such process" < overhead_systemwide_kill_callgraph_fp.log
+(( CHECK_EXIT_CODE += $? ))
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide with call-graph fp"
+(( TEST_RESULT += $? ))
+
+
+#### systemwide with loaded system with callgraph fp -- report
+
+$CMD_PERF report --stdio -g -i $CURRENT_TEST_DIR/perf.data.2 > $LOGS_DIR/overhead_systemwide_callgraph_fp_report.log
+PERF_EXIT_CODE=$?
+
+../common/check_all_patterns_found.pl "function_a" "function_b" "function_F" < $LOGS_DIR/overhead_systemwide_callgraph_fp_report.log
+CHECK_EXIT_CODE=$?
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide with call-graph fp report"
+(( TEST_RESULT += $? ))
+
+
+#### systemwide with loaded system with callgraph dwarf
+
+$CMD_PERF record -g --call-graph dwarf -a -o $CURRENT_TEST_DIR/perf.data.3 > $LOGS_DIR/overhead_systemwide_callgraph_dwarf.log &
+PERF_PID=$!
+$CMD_VERY_LONG_SLEEP
+! kill -SIGINT $PERF_PID &> overhead_systemwide_killcallgraph_dwarf.log
+wait $PERF_PID
+PERF_EXIT_CODE=$?
+
+../common/check_all_lines_matched.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/overhead_systemwide_callgraph_dwarf.log
+CHECK_EXIT_CODE=$?
+
+../common/check_all_patterns_found.pl "No such process" < overhead_systemwide_kill_callgraph_dwarf.log
+(( CHECK_EXIT_CODE += $? ))
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide with call-graph dwarf"
+(( TEST_RESULT += $? ))
+
+
+#### systemwide with loaded system with callgraph dwarf -- report
+
+$CMD_PERF report --stdio -g -i $CURRENT_TEST_DIR/perf.data.3 > $LOGS_DIR/overhead_systemwide_callgraph_dwarf_report.log
+PERF_EXIT_CODE=$?
+
+../common/check_all_patterns_found.pl "function_a" "function_b" "function_F" < $LOGS_DIR/overhead_systemwide_callgraph_dwarf_report.log
+CHECK_EXIT_CODE=$?
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide with call-graph dwarf report"
+(( TEST_RESULT += $? ))
+
+
+# kill the load processes if there is still some
+killall -q load
+
+
+# print overall results
+print_overall_results "$TEST_RESULT"
+exit $?
