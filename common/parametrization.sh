@@ -43,4 +43,4 @@ export PARAM_TRACE_OVERLOAD=${PARAM_TRACE_OVERLOAD:-y}
 
 # If set, some heavy load tests are run. That might be not always
 # desired behaviour.
-export PARAM_RECORD_OVERLOAD=${PARAM_RECORD_OVERLOAD:-y}
+export PARAM_RECORD_OVERLOAD=${PARAM_RECORD_OVERLOAD:-n}
