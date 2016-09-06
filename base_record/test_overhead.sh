@@ -32,17 +32,18 @@ done
 
 #### systemwide basic with loaded system
 
-$CMD_PERF record -o $CURRENT_TEST_DIR/perf.data.1 -a > $LOGS_DIR/overhead_systemwide.log &
+$CMD_PERF record -o $CURRENT_TEST_DIR/perf.data.1 -a 2> $LOGS_DIR/overhead_systemwide.log &
 PERF_PID=$!
 $CMD_VERY_LONG_SLEEP
-! kill -SIGINT $PERF_PID &> overhead_systemwide_kill.log
-wait $PERF_PID
+kill -SIGINT $PERF_PID &> $LOGS_DIR/overhead_systemwide_kill.log
 PERF_EXIT_CODE=$?
+! wait $PERF_PID
+(( PERF_EXIT_CODE += $? ))
 
-../common/check_all_lines_matched.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/overhead_systemwide.log
+../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/overhead_systemwide.log
 CHECK_EXIT_CODE=$?
 
-../common/check_all_patterns_found.pl "No such process" < overhead_systemwide_kill.log
+../common/check_no_patterns_found.pl "No such process" < $LOGS_DIR/overhead_systemwide_kill.log
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide basic"
@@ -51,7 +52,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide basic"
 
 #### systemwide basic with loaded system - report
 
-$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data.1 > $LOGS_DIR/overhead_systemwide_report.log
+$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data.1 > $LOGS_DIR/overhead_systemwide_report.log 2> $LOGS_DIR/overhead_systemwide_report.err
 PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "function_a" "function_b" "function_F" < $LOGS_DIR/overhead_systemwide_report.log
@@ -63,17 +64,18 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide basic report"
 
 #### systemwide with loaded system with callgraph fp
 
-$CMD_PERF record -g --call-graph fp -o $CURRENT_TEST_DIR/perf.data.2 -a > $LOGS_DIR/overhead_systemwide_callgraph_fp.log &
+$CMD_PERF record -g --call-graph fp -o $CURRENT_TEST_DIR/perf.data.2 -a 2> $LOGS_DIR/overhead_systemwide_callgraph_fp.log &
 PERF_PID=$!
 $CMD_VERY_LONG_SLEEP
-! kill -SIGINT $PERF_PID &> overhead_systemwide_kill_callgraph_fp.log
-wait $PERF_PID
+kill -SIGINT $PERF_PID &> $LOGS_DIR/overhead_systemwide_kill_callgraph_fp.log
 PERF_EXIT_CODE=$?
+! wait $PERF_PID
+(( PERF_EXIT_CODE += $? ))
 
-../common/check_all_lines_matched.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/overhead_systemwide_callgraph_fp.log
+../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/overhead_systemwide_callgraph_fp.log
 CHECK_EXIT_CODE=$?
 
-../common/check_all_patterns_found.pl "No such process" < overhead_systemwide_kill_callgraph_fp.log
+../common/check_no_patterns_found.pl "No such process" < $LOGS_DIR/overhead_systemwide_kill_callgraph_fp.log
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide with call-graph fp"
@@ -82,7 +84,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide with call-graph fp"
 
 #### systemwide with loaded system with callgraph fp -- report
 
-$CMD_PERF report --stdio -g -i $CURRENT_TEST_DIR/perf.data.2 > $LOGS_DIR/overhead_systemwide_callgraph_fp_report.log
+$CMD_PERF report --stdio -g -i $CURRENT_TEST_DIR/perf.data.2 > $LOGS_DIR/overhead_systemwide_callgraph_fp_report.log 2> $LOGS_DIR/overhead_systemwide_callgraph_fp_report.err
 PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "function_a" "function_b" "function_F" < $LOGS_DIR/overhead_systemwide_callgraph_fp_report.log
@@ -94,17 +96,18 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide with call-graph fp re
 
 #### systemwide with loaded system with callgraph dwarf
 
-$CMD_PERF record -g --call-graph dwarf -a -o $CURRENT_TEST_DIR/perf.data.3 > $LOGS_DIR/overhead_systemwide_callgraph_dwarf.log &
+$CMD_PERF record -g --call-graph dwarf -a -o $CURRENT_TEST_DIR/perf.data.3 2> $LOGS_DIR/overhead_systemwide_callgraph_dwarf.log &
 PERF_PID=$!
 $CMD_VERY_LONG_SLEEP
-! kill -SIGINT $PERF_PID &> overhead_systemwide_killcallgraph_dwarf.log
-wait $PERF_PID
+kill -SIGINT $PERF_PID &> $LOGS_DIR/overhead_systemwide_kill_callgraph_dwarf.log
 PERF_EXIT_CODE=$?
+! wait $PERF_PID
+(( PERF_EXIT_CODE += $? ))
 
-../common/check_all_lines_matched.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/overhead_systemwide_callgraph_dwarf.log
+../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/overhead_systemwide_callgraph_dwarf.log
 CHECK_EXIT_CODE=$?
 
-../common/check_all_patterns_found.pl "No such process" < overhead_systemwide_kill_callgraph_dwarf.log
+../common/check_no_patterns_found.pl "No such process" < $LOGS_DIR/overhead_systemwide_kill_callgraph_dwarf.log
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide with call-graph dwarf"
@@ -113,7 +116,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide with call-graph dwarf
 
 #### systemwide with loaded system with callgraph dwarf -- report
 
-$CMD_PERF report --stdio -g -i $CURRENT_TEST_DIR/perf.data.3 > $LOGS_DIR/overhead_systemwide_callgraph_dwarf_report.log
+$CMD_PERF report --stdio -g -i $CURRENT_TEST_DIR/perf.data.3 > $LOGS_DIR/overhead_systemwide_callgraph_dwarf_report.log 2> $LOGS_DIR/overhead_systemwide_callgraph_dwarf_report.err
 PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "function_a" "function_b" "function_F" < $LOGS_DIR/overhead_systemwide_callgraph_dwarf_report.log
@@ -124,7 +127,14 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide with call-graph dwarf
 
 
 # kill the load processes if there is still some
-killall -q load
+LOAD_PIDS=`pidof load`
+kill $LOAD_PIDS &> /dev/null
+! wait $LOAD_PIDS 2> $LOGS_DIR/overhead_kill_all.log
+../common/check_all_patterns_found.pl "Terminated" "99999" "/dev/null" < $LOGS_DIR/overhead_kill_all.log
+CHECK_EXIT_CODE=$?
+
+print_results 0 $CHECK_EXIT_CODE "killing all the load"
+(( TEST_RESULT += $? ))
 
 
 # print overall results

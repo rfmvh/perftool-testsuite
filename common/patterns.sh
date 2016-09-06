@@ -86,13 +86,14 @@ export RE_LINE_RECORD1="^\[\s+perf\s+record:\s+Woken up $RE_NUMBER times? to wri
 #    [ perf record: Woken up 1 times to write data ]
 
 
-export RE_LINE_RECORD2="^\[\s+perf\s+record:\s+Captured and wrote $RE_NUMBER\s*MB\s+(?:[\w\+\.-]*(?:$RE_PATH)?\/)?perf\.data\s*\(~?$RE_NUMBER samples\)\s+\].*$"
+export RE_LINE_RECORD2="^\[\s+perf\s+record:\s+Captured and wrote $RE_NUMBER\s*MB\s+(?:[\w\+\.-]*(?:$RE_PATH)?\/)?perf\.data(?:\.\d+)?\s*\(~?$RE_NUMBER samples\)\s+\].*$"
 # The second line of perf-record "OK" output
 # Examples:
 #    [ perf record: Captured and wrote 0.405 MB perf.data (109 samples) ]
 #    [ perf record: Captured and wrote 0.405 MB perf.data (~109 samples) ]
 #    [ perf record: Captured and wrote 0.405 MB /some/temp/dir/perf.data (109 samples) ]
 #    [ perf record: Captured and wrote 0.405 MB ./perf.data (109 samples) ]
+#    [ perf record: Captured and wrote 0.405 MB ./perf.data.3 (109 samples) ]
 
 
 export RE_LINE_TRACE="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*$RE_PROCESS_PID\s+.*\)\s+=\s+\-?$RE_NUMBER|$RE_NUMBER_HEX.*$"
