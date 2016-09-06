@@ -49,7 +49,7 @@ PERF_EXIT_CODE=$?
 # check the perf record output
 ../common/check_all_lines_matched.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/basic_basic.err
 CHECK_EXIT_CODE=$?
-../common/check_all_lines_matched.pl "perf.data" < $LOGS_DIR/basic_basic.out
+../common/check_all_patterns_found.pl "perf.data" < $LOGS_DIR/basic_basic.err
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic record"
