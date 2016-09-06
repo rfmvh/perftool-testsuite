@@ -15,6 +15,8 @@ if [ -n "$PERFSUITE_RUN_DIR" ]; then
 	exit 0
 fi
 
+make -s -C examples clean
+
 find . -name \*.log | xargs -r rm
 find . -name \*.err | xargs -r rm
 rm -f perf.data*
