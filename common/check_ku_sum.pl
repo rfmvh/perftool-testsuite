@@ -22,11 +22,23 @@ while (<STDIN>)
 
 $passed = 0 if (($k == -1) || ($u == -1) || ($ku == -1));
 
-$diff = ($k + $u - $ku) / $ku;
-$diff *= -1 if $diff < 0;
-if ($diff > $koef)
+if ($ku != 0)
 {
-	print "FAIL ($k + $u - $ku) / $ku = $diff ; it should be $diff < $koef\n" unless $quiet;
+	$diff = ($k + $u - $ku) / $ku;
+	$diff *= -1 if $diff < 0;
+	if ($diff > $koef)
+	{
+		print "FAIL ($k + $u - $ku) / $ku = $diff ; it should be $diff < $koef\n" unless $quiet;
+		$passed = 0;
+	}
+}
+else
+{
+	if ($k + $u > 0)
+	{
+		print "FAIL ($k + $u) > 0 while $ku = 0\n" unless $quiet;
+		$passed = 0;
+	}
 }
 
 exit ($passed == 0);
