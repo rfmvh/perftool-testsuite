@@ -48,6 +48,10 @@ for subs in $SUBSYSTEMS; do
 		# check whether the event causes any warnings
 		test -s $LOGS_DIR/tracepoint_def/err
 		test $? -eq 0 && echo "CAUSES WARNINGS" >> $LOGS_DIR/tracepoint_def/tracepoints_def_$subs.log || echo "is defined correctly" >> $LOGS_DIR/tracepoint_def/tracepoints_def_$subs.log
+
+		# log the warnings
+		echo "$tp" >> $LOGS_DIR/tracepoint_def/tracepoints_def_$subs.warn
+		cat $LOGS_DIR/tracepoint_def/err >> $LOGS_DIR/tracepoint_def/tracepoints_def_$subs.warn
 	done
 
 	# check for the results
