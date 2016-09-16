@@ -29,11 +29,14 @@ test -d $LOGS_DIR/sw || mkdir $LOGS_DIR/sw
 #### testing software events
 
 for event in $EVENTS_TO_TEST; do
-	$CMD_PERF stat -a -e $event -o $LOGS_DIR/sw/$event.log --append -x';' -- $CMD_LONGER_SLEEP
+	$CMD_PERF stat -a -e $event -o $LOGS_DIR/sw/$event.log --append -x';' -- $CMD_LONGER_SLEEP 2> $LOGS_DIR/test_sw.err
 	PERF_EXIT_CODE=$?
 	REGEX_LINES="$RE_NUMBER;+$event;$RE_NUMBER;100\.00"
-	../common/check_all_patterns_found.pl "$REGEX_LINES" < $LOGS_DIR/sw/$event.log
+	test -e $LOGS_DIR/sw/$event.log && ../common/check_all_patterns_found.pl "$REGEX_LINES" < $LOGS_DIR/sw/$event.log
 	CHECK_EXIT_CODE=$?
+	if [ $TESTLOG_VERBOSITY -ge 2 -a $PERF_EXIT_CODE -ne 0 ]; then
+		cat $LOGS_DIR/test_sw.err
+	fi
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "event $event"
 	(( TEST_RESULT += $? ))
 done
@@ -46,14 +49,19 @@ EVENTS_TO_TEST=${EVENTS_TO_TEST/cpu-clock/}
 EVENTS_TO_TEST=${EVENTS_TO_TEST/task-clock/}
 
 for event in $EVENTS_TO_TEST; do
-	$CMD_PERF stat -e $event:k -e $event:u -e $event:ku -o $LOGS_DIR/sw/$event--ku.log -x';' -- $CMD_SIMPLE
+	$CMD_PERF stat -e $event:k -e $event:u -e $event:ku -o $LOGS_DIR/sw/$event--ku.log -x';' -- $CMD_SIMPLE 2> $LOGS_DIR/test_sw.err
 	PERF_EXIT_CODE=$?
-	../common/check_ku_sum.pl < $LOGS_DIR/sw/$event--ku.log
+	test -e $LOGS_DIR/sw/$event--ku.log && ../common/check_ku_sum.pl < $LOGS_DIR/sw/$event--ku.log
 	CHECK_EXIT_CODE=$?
+	if [ $TESTLOG_VERBOSITY -ge 2 -a $PERF_EXIT_CODE -ne 0 ]; then
+		cat $LOGS_DIR/test_sw.err
+	fi
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "k+u=ku check :: event $event"
 	(( TEST_RESULT += $? ))
 done
 
+
+rm -f $LOGS_DIR/test_sw.err
 
 # print overall results
 print_overall_results "$TEST_RESULT"
