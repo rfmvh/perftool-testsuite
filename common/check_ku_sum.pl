@@ -26,7 +26,7 @@ $diff = ($k + $u - $ku) / $ku;
 $diff *= -1 if $diff < 0;
 if ($diff > $koef)
 {
-	print "FAIL ($k + $u) / $ku = $diff ; it should be $diff < $koef\n" unless $quiet;
+	print "FAIL ($k + $u - $ku) / $ku = $diff ; it should be $diff < $koef\n" unless $quiet;
 }
 
 exit ($passed == 0);
