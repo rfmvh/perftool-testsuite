@@ -69,6 +69,23 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing events"
 (( TEST_RESULT += $? ))
 
 
+### domain table
+
+# since the domains are specified as an argument, we need a table
+DOMAIN_TABLE_FILE=/sys/bus/event_source/devices/hv_24x7/interface/domains
+test -e $DOMAIN_TABLE_FILE
+CHECK_EXIT_CODE=$?
+
+../common/check_exact_pattern_order.pl "^1:\s" "^2:\s" "^3:\s" "^4:\s" "^5:\s" "^6:\s" < $DOMAIN_TABLE_FILE
+(( CHECK_EXIT_CODE += $? ))
+
+../common/check_all_patterns_found.pl "Physical Chip" "Physical Core" "VCPU" "Home" "Node" < $DOMAIN_TABLE_FILE
+(( CHECK_EXIT_CODE += $? ))
+
+print_results 0 $CHECK_EXIT_CODE "domain table"
+(( TEST_RESULT += $? ))
+
+
 # print overall results
 print_overall_results "$TEST_RESULT"
 exit $?
