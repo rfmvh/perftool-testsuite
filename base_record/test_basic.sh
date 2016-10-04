@@ -43,13 +43,13 @@ fi
 
 # test that perf record is even working
 rm -f $CURRENT_TEST_DIR/perf.data
-$CMD_PERF record -o $CURRENT_TEST_DIR/perf.data ls $CURRENT_TEST_DIR > $LOGS_DIR/basic_basic.log 2> $LOGS_DIR/basic_basic.err
+$CMD_PERF record -o $CURRENT_TEST_DIR/perf.data ls $CURRENT_TEST_DIR > /dev/null 2> $LOGS_DIR/basic_basic.err
 PERF_EXIT_CODE=$?
 
 # check the perf record output
 ../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" "perf.data" < $LOGS_DIR/basic_basic.err
 CHECK_EXIT_CODE=$?
-../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/basic_basic.log
+../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/basic_basic.err
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic record"
