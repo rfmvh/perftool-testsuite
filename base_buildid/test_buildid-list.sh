@@ -18,7 +18,7 @@
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
-test -s perf.data || ./setup.sh
+test -s $CURRENT_TEST_DIR/perf.data || ./setup.sh
 
 
 ### help message
