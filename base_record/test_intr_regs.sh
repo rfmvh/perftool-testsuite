@@ -94,6 +94,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic sampling ($INTR_REG0) :: r
 # check that the report contains enough values
 NO_OF_VALUES=`cat $LOGS_DIR/intr_basic_report.log | grep -P "$REGEX_INTR_RESULT" | wc -l`
 NO_OF_SAMPLES=`cat $LOGS_DIR/intr_basic_record.err | perl -ne 'print "$1" if /(\d+)\ssamples\)/'`
+test -z "$NO_OF_SAMPLES" && NO_OF_SAMPLES=0
 test $NO_OF_VALUES -eq $NO_OF_SAMPLES
 CHECK_EXIT_CODE=$?
 
