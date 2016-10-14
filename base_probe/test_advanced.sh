@@ -61,7 +61,7 @@ $CMD_PERF script -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/advanced_funcargs_sc
 PERF_EXIT_CODE=$?
 
 # checking for the perf script output sanity
-REGEX_SCRIPT_LINE="\s*advanced\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+$RE_NUMBER:\s+probe_advanced:isprime:\s+\($RE_NUMBER\) a=$RE_NUMBER"
+REGEX_SCRIPT_LINE="\s*advanced\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+$RE_NUMBER:\s+probe_advanced:isprime:\s+\($RE_NUMBER_HEX\) a=$RE_NUMBER"
 ../common/check_all_lines_matched.pl "$REGEX_SCRIPT_LINE" < $LOGS_DIR/advanced_funcargs_script.log
 CHECK_EXIT_CODE=$?
 
