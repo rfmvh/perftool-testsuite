@@ -18,6 +18,8 @@
 THIS_TEST_NAME=`basename $0 .sh`
 
 make -s -C examples
-
 print_results $? 0 "building examples"
+TEST_RESULT=$?
+
+print_overall_results $TEST_RESULT
 exit $?

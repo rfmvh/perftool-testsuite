@@ -23,4 +23,7 @@ PERF_EXIT_CODE=$?
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "prepare the perf.data file"
+TEST_RESULT=$?
+
+print_overall_results $TEST_RESULT
 exit $?
