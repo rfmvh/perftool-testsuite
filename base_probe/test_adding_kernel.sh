@@ -34,7 +34,7 @@ for opt in "" "-a" "--add"; do
 	$CMD_PERF probe $opt $TEST_PROBE 2> $LOGS_DIR/adding_kernel_add$opt.err
 	PERF_EXIT_CODE=$?
 
-	../common/check_all_patterns_found.pl "Added new event:" "probe:$TEST_PROBE" "on $TEST_PROBE" < $LOGS_DIR/adding_kernel_add$opt.err
+	../common/check_all_patterns_found.pl "Added new events?:" "probe:$TEST_PROBE" "on $TEST_PROBE" < $LOGS_DIR/adding_kernel_add$opt.err
 	CHECK_EXIT_CODE=$?
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "adding probe $TEST_PROBE :: $opt"
@@ -48,7 +48,7 @@ done
 $CMD_PERF list probe:\* > $LOGS_DIR/adding_kernel_list.log
 PERF_EXIT_CODE=$?
 
-../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "List of pre-defined events" "probe:$TEST_PROBE\s+\[Tracepoint event\]" < $LOGS_DIR/adding_kernel_list.log
+../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "List of pre-defined events" "probe:${TEST_PROBE}(?:_\d+)?\s+\[Tracepoint event\]" < $LOGS_DIR/adding_kernel_list.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe :: perf list"
@@ -61,7 +61,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe :: perf list
 $CMD_PERF probe -l > $LOGS_DIR/adding_kernel_list-l.log
 PERF_EXIT_CODE=$?
 
-../common/check_all_patterns_found.pl "\s*probe:$TEST_PROBE\s+\(on $TEST_PROBE@.+\)" < $LOGS_DIR/adding_kernel_list-l.log
+../common/check_all_patterns_found.pl "\s*probe:$TEST_PROBE\s+\(on ${TEST_PROBE}(?:\+$RE_NUMBER_HEX)?@.+\)" < $LOGS_DIR/adding_kernel_list-l.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe :: perf probe -l"
@@ -87,7 +87,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "using added probe"
 ### removing added probe
 
 # '-d' should remove the probe
-$CMD_PERF probe -d $TEST_PROBE 2> $LOGS_DIR/adding_kernel_removing.err
+$CMD_PERF probe -d $TEST_PROBE\* 2> $LOGS_DIR/adding_kernel_removing.err
 PERF_EXIT_CODE=$?
 
 ../common/check_all_lines_matched.pl "Removed event: probe:$TEST_PROBE" < $LOGS_DIR/adding_kernel_removing.err
@@ -117,7 +117,7 @@ $CMD_PERF probe -n --add $TEST_PROBE 2> $LOGS_DIR/adding_kernel_dryrun.err
 PERF_EXIT_CODE=$?
 
 # check for the output (should be the same as usual)
-../common/check_all_patterns_found.pl "Added new event:" "probe:$TEST_PROBE" "on $TEST_PROBE" < $LOGS_DIR/adding_kernel_dryrun.err
+../common/check_all_patterns_found.pl "Added new events?:" "probe:$TEST_PROBE" "on $TEST_PROBE" < $LOGS_DIR/adding_kernel_dryrun.err
 CHECK_EXIT_CODE=$?
 
 # check that no probe was added in real
@@ -134,7 +134,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "dry run :: adding probe"
 $CMD_PERF probe --add $TEST_PROBE 2> $LOGS_DIR/adding_kernel_forceadd_01.err
 PERF_EXIT_CODE=$?
 
-../common/check_all_patterns_found.pl "Added new event:" "probe:$TEST_PROBE" "on $TEST_PROBE" < $LOGS_DIR/adding_kernel_forceadd_01.err
+../common/check_all_patterns_found.pl "Added new events?:" "probe:$TEST_PROBE" "on $TEST_PROBE" < $LOGS_DIR/adding_kernel_forceadd_01.err
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "force-adding probes :: first probe adding"
@@ -151,10 +151,11 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "force-adding probes :: second pr
 (( TEST_RESULT += $? ))
 
 # adding existing probe with '--force' should pass
+NO_OF_PROBES=`$CMD_PERF probe -l | wc -l`
 $CMD_PERF probe --force --add $TEST_PROBE 2> $LOGS_DIR/adding_kernel_forceadd_03.err
 PERF_EXIT_CODE=$?
 
-../common/check_all_patterns_found.pl "Added new event:" "probe:${TEST_PROBE}_1" "on $TEST_PROBE" < $LOGS_DIR/adding_kernel_forceadd_03.err
+../common/check_all_patterns_found.pl "Added new events?:" "probe:${TEST_PROBE}_${NO_OF_PROBES}" "on $TEST_PROBE" < $LOGS_DIR/adding_kernel_forceadd_03.err
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "force-adding probes :: second probe adding (with force)"
@@ -164,15 +165,15 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "force-adding probes :: second pr
 ### using doubled probe
 
 # since they are the same, they should produce the same results
-$CMD_PERF stat -e probe:$TEST_PROBE -e probe:${TEST_PROBE}_1 -x';' -o $LOGS_DIR/adding_kernel_using_two.log -- bash -c 'cat /proc/cpuinfo > /dev/null'
+$CMD_PERF stat -e probe:$TEST_PROBE -e probe:${TEST_PROBE}_${NO_OF_PROBES} -x';' -o $LOGS_DIR/adding_kernel_using_two.log -- bash -c 'cat /proc/cpuinfo > /dev/null'
 PERF_EXIT_CODE=$?
 
-REGEX_LINE="$RE_NUMBER;+probe:${TEST_PROBE}_?1?;$RE_NUMBER;$RE_NUMBER"
+REGEX_LINE="$RE_NUMBER;+probe:${TEST_PROBE}_?$NO_OF_PROBES?;$RE_NUMBER;$RE_NUMBER"
 ../common/check_all_lines_matched.pl "$REGEX_LINE" "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" < $LOGS_DIR/adding_kernel_using_two.log
 CHECK_EXIT_CODE=$?
 
 VALUE_1=`grep "$TEST_PROBE;" $LOGS_DIR/adding_kernel_using_two.log | awk -F';' '{print $1}'`
-VALUE_2=`grep "${TEST_PROBE}_1;" $LOGS_DIR/adding_kernel_using_two.log | awk -F';' '{print $1}'`
+VALUE_2=`grep "${TEST_PROBE}_${NO_OF_PROBES};" $LOGS_DIR/adding_kernel_using_two.log | awk -F';' '{print $1}'`
 
 test $VALUE_1 -eq $VALUE_2
 (( CHECK_EXIT_CODE += $? ))
