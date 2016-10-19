@@ -17,6 +17,13 @@
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
+# skip the testcase if $PERFSUITE_RUN_DIR is set, since we
+# cannot guarantee not writting into the current tree (we
+# miss '-o' option in 'perf mem record'
+if [ -n "$PERFSUITE_RUN_DIR" ]; then
+	print_overall_skipped
+	exit 0
+fi
 
 # skip the testcase if there are no suitable events to be used
 if [ "$MEM_LOADS_SUPPORTED" = "no" -a "$MEM_STORES_SUPPORTED" = "no" ]; then
