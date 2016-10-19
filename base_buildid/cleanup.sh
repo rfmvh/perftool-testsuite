@@ -14,7 +14,11 @@
 touch $CURRENT_TEST_DIR/BUILDIDDIRS
 while read line; do
 	BUILDIDDIR="$line"
-	remove_buildid_cache
+	if [[ " ${BUILDIDDIR}/*" =~ ' /*' ]] || [[ "$BUILDIDDIR" =~ /$ ]]; then
+		rm -rf $BUILDIDDIR/.b*
+		rm -rf $BUILDIDDIR/*
+		rmdir $BUILDIDDIR
+	fi
 done < $CURRENT_TEST_DIR/BUILDIDDIRS
 rm -f $CURRENT_TEST_DIR/BUILDIDDIRS
 

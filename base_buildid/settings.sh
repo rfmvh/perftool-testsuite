@@ -38,9 +38,3 @@ clear_buildid_cache()
 	rm -rf $BUILDIDDIR/.b*
 	rm -rf $BUILDIDDIR/*
 }
-
-remove_buildid_cache()
-{
-	clear_buildid_cache
-	rmdir $BUILDIDDIR
-}
