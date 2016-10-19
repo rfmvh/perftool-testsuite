@@ -7,15 +7,12 @@
 #
 #
 
-export TEST_NAME="perf_buildid-cache"
+export TEST_NAME="perf_buildid"
 export MY_ARCH=`arch`
 export MY_HOSTNAME=`hostname`
 export MY_KERNEL_VERSION=`uname -r`
 export MY_CPUS_ONLINE=`nproc`
 export MY_CPUS_AVAILABLE=`cat /proc/cpuinfo | grep -P "processor\s" | wc -l`
-
-export BUILDIDDIR=${BUILDIDDIR:-"$HOME/.debug-`date +%s`"}
-test -d "$BUILDIDDIR" || mkdir "$BUILDIDDIR"
 
 if [ -n "$PERFSUITE_RUN_DIR" ]; then
 	# when $PERFSUITE_RUN_DIR is set to something, all the logs and temp files will be placed there
@@ -32,9 +29,13 @@ else
 	export LOGS_DIR="."
 fi
 
+if [ ! "$THIS_TEST_NAME" = "cleanup" ]; then
+	source settings_cache.sh
+fi
 
 clear_buildid_cache()
 {
+	rm -rf $BUILDIDDIR/.b*
 	rm -rf $BUILDIDDIR/*
 }
 

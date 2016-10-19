@@ -10,13 +10,19 @@
 . ../common/init.sh
 . ./settings.sh
 
-if [ ! -n "$PERFSUITE_RUN_DIR" ]; then
+# clean all the buildid-caches created within this test
+touch $CURRENT_TEST_DIR/BUILDIDDIRS
+while read line; do
+	BUILDIDDIR="$line"
 	remove_buildid_cache
+done < $CURRENT_TEST_DIR/BUILDIDDIRS
+rm -f $CURRENT_TEST_DIR/BUILDIDDIRS
+
+if [ ! -n "$PERFSUITE_RUN_DIR" ]; then
 	find . -name \*.log | xargs -r rm
 	find . -name \*.err | xargs -r rm
 	test -e perf.data && rm -rf perf.data
-else
-	mv "$BUILDIDDIR" "$PERFSUITE_RUN_DIR/perf_buildid-cache/"
+	test -e perf.data.old && rm -rf perf.data.old
 fi
 
 print_overall_results 0

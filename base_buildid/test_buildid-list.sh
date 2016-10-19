@@ -15,10 +15,13 @@
 . ../common/init.sh
 . ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
-test -s $CURRENT_TEST_DIR/perf.data || ./setup.sh
+### run the setup
+source setup_src.sh
+
+# the test name needs to be reset here
+THIS_TEST_NAME=`basename $0 .sh`
 
 
 ### help message
