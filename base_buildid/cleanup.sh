@@ -15,6 +15,8 @@ touch $CURRENT_TEST_DIR/BUILDIDDIRS
 while read line; do
 	BUILDIDDIR="$line"
 	if [[ " ${BUILDIDDIR}/*" =~ ' /*' ]] || [[ "$BUILDIDDIR" =~ /$ ]]; then
+		true # skipping deletion
+	else
 		rm -rf $BUILDIDDIR/.b*
 		rm -rf $BUILDIDDIR/*
 		rmdir $BUILDIDDIR
