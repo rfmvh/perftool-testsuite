@@ -68,6 +68,12 @@ export RE_PATH="(?:\/[\w\+\.-]+)+"
 #    /usr/bin/mv
 
 
+export RE_FILE_NAME="[\w\+\.-]+"
+# A filename
+# Examples:
+#    libstdc++.so.6
+
+
 export RE_LINE_COMMENT="^#.*"
 # A comment line
 # Examples:
