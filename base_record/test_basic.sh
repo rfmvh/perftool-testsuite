@@ -56,6 +56,40 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic record"
 (( TEST_RESULT += $? ))
 
 
+### hwcache + tracepoint
+
+# in some version of kernel, these two types of events did not work together
+EVENT_HWCACHE=`perf list hwcache | grep "Hardware cache event" | awk '{print $1}' | head -n 1`
+EVENT_TRACEPOINT=`perf list tracepoint | grep "Tracepoint event" | awk '{print $1}' | head -n 1`
+if [ -z "$EVENT_HWCACHE" -o -z "$EVENT_TRACEPOINT" ]; then
+	print_testcase_skipped "hwcache + tracepoint :: record"
+	print_testcase_skipped "hwcache + tracepoint :: evlist"
+else
+	$CMD_PERF record -e $EVENT_HWCACHE -e $EVENT_TRACEPOINT -o $CURRENT_TEST_DIR/perf.data -a $CMD_LONGER_SLEEP 2> $LOGS_DIR/basic_hwcache_tracepoint_record.err
+	PERF_EXIT_CODE=$?
+
+	# check the perf record output
+	../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" "perf.data" < $LOGS_DIR/basic_hwcache_tracepoint_record.err
+	CHECK_EXIT_CODE=$?
+	../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/basic_hwcache_tracepoint_record.err
+	(( CHECK_EXIT_CODE += $? ))
+
+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "hwcache + tracepoint :: record"
+	(( TEST_RESULT += $? ))
+
+
+	# check the events recorded
+	$CMD_PERF evlist -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_hwcache_tracepoint_evlist.log
+	PERF_EXIT_CODE=$?
+
+	# check the events used
+	../common/check_all_patterns_found.pl "$EVENT_HWCACHE" "$EVENT_TRACEPOINT" < $LOGS_DIR/basic_hwcache_tracepoint_evlist.log
+	CHECK_EXIT_CODE=$?
+
+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "hwcache + tracepoint :: evlist"
+	(( TEST_RESULT += $? ))
+fi
+
 # print overall results
 print_overall_results "$TEST_RESULT"
 exit $?
