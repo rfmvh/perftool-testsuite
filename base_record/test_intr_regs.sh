@@ -102,6 +102,44 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic sampling ($INTR_REG0) :: r
 (( TEST_RESULT += $? ))
 
 
+### using all registers
+
+# without specifying the register, perf should capture values of all of them
+$CMD_PERF record -I $CMD_SIMPLE > /dev/null 2> $LOGS_DIR/intr_all_regs_record.err
+PERF_EXIT_CODE=$?
+
+../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" "perf.data" < $LOGS_DIR/intr_all_regs_record.err
+CHECK_EXIT_CODE=$?
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "using all registers :: record"
+(( TEST_RESULT += $? ))
+
+# perf report -D should print the register values per samples
+$CMD_PERF report -D > $LOGS_DIR/intr_all_regs_report.log
+PERF_EXIT_CODE=$?
+
+# check that the report contains enough values of all the registers
+NO_OF_SAMPLES=`cat $LOGS_DIR/intr_all_regs_record.err | perl -ne 'print "$1" if /(\d+)\ssamples\)/'`
+ALL_REGISTERS=`cat $LOGS_DIR/intr_list.err | grep available | sed 's/available registers: //'`
+if [ -z "$ALL_REGISTERS" ]; then
+	# if there are no available registers, we cannot check anything and it means a failure
+	CHECK_EXIT_CODE=1
+else
+	# check if all the registers that are supported are really captured within the samples
+	CHECK_EXIT_CODE=0
+	for rg in $ALL_REGISTERS; do
+		REGEX_INTR_RESULT="\.+\s$rg\s+0x$RE_NUMBER_HEX"
+		NO_OF_VALUES=`cat $LOGS_DIR/intr_all_regs_report.log | grep -P "$REGEX_INTR_RESULT" | wc -l`
+		test -z "$NO_OF_SAMPLES" && NO_OF_SAMPLES=0
+		test $NO_OF_VALUES -eq $NO_OF_SAMPLES
+		(( CHECK_EXIT_CODE += $? ))
+	done
+fi
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "using all registers :: report values count"
+(( TEST_RESULT += $? ))
+
+
 # print overall results
 print_overall_results "$TEST_RESULT"
 exit $?
