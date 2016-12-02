@@ -225,6 +225,30 @@ else
 fi
 
 
+### non-existing variable
+
+# perf probe should survive a non-existing variable probing attempt
+{ $CMD_PERF probe 'vfs_read somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64' ; } 2> $LOGS_DIR/adding_kernel_nonexisting.err
+PERF_EXIT_CODE=$?
+
+# the exitcode should not be 0 or segfault
+test $PERF_EXIT_CODE -ne 139 -a $PERF_EXIT_CODE -ne 0
+PERF_EXIT_CODE=$?
+
+# check that the error message is reasonable
+../common/check_all_patterns_found.pl "Failed to find" "somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64" < $LOGS_DIR/adding_kernel_nonexisting.err
+CHECK_EXIT_CODE=$?
+../common/check_all_patterns_found.pl "in this function" "Error" "Failed to add events" < $LOGS_DIR/adding_kernel_nonexisting.err
+(( CHECK_EXIT_CODE += $? ))
+../common/check_all_lines_matched.pl "Failed to find" "Error" < $LOGS_DIR/adding_kernel_nonexisting.err
+(( CHECK_EXIT_CODE += $? ))
+../common/check_no_patterns_found.pl "Segmentation" "fault" "SIGSEGV" "segfault" < $LOGS_DIR/adding_kernel_nonexisting.err
+(( CHECK_EXIT_CODE += $? ))
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing variable"
+(( TEST_RESULT += $? ))
+
+
 # print overall results
 print_overall_results "$TEST_RESULT"
 exit $?
