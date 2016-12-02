@@ -61,7 +61,7 @@ test -e $LOGS_DIR/invalid_options_mutually_exclusive.log && rm -f $LOGS_DIR/inva
 for opt in '-a xxx -d xxx' '-a xxx -L foo' '-a xxx -V foo' '-a xxx -l' '-a xxx -F' \
 		'-d xxx -L foo' '-d xxx -V foo' '-d xxx -l' '-d xxx -F' \
 		'-L foo -V bar' '-L foo -l' '-L foo -F' '-V foo -l' '-V foo -F' '-l -F'; do
-	! $CMD_PERF probe $opt 2> $LOGS_DIR/aux.log
+	! $CMD_PERF probe $opt > /dev/null 2> $LOGS_DIR/aux.log
 	PERF_EXIT_CODE=$?
 
 	../common/check_all_patterns_found.pl "Error: switch .+ cannot be used with switch .+" < $LOGS_DIR/aux.log
