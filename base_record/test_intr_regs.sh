@@ -34,6 +34,17 @@ if [[ "$MY_ARCH" =~ x86_64 ]]; then
 	INTR_REG0="AX"
 fi
 
+# enable for i386 (and i586 and )
+if [[ "$MY_ARCH" =~ i[356]86 ]]; then
+	INTR_REGISTERS_SUPPORT="yes"
+
+	REGEX_INTR_REG_LIST="AX BX CX DX SI DI BP SP IP FLAGS CS SS DS ES FS GS"
+	# e.g.
+	# AX BX CX DX SI DI BP SP IP FLAGS CS SS DS ES FS GS
+
+	INTR_REG0="AX"
+fi
+
 # enable for ppc64
 if [[ "$MY_ARCH" =~ ppc64.* ]]; then
 	INTR_REGISTERS_SUPPORT="yes"
