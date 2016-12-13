@@ -48,7 +48,11 @@ REGEX_LINE_BASIC="\s*$RE_EVENT_ANY\s+(?:OR\s+$RE_EVENT_ANY\s+)?\[.*event.*\]"
 REGEX_LINE_BREAKPOINT="\s*mem:<addr>.*\s+\[Hardware breakpoint\]"
 REGEX_LINE_RAW="\[Raw hardware event descriptor\]"
 REGEX_LINE_AUX="see \'man perf\-list\' on how to encode it"
-../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "$REGEX_LINE_HEADER" "$REGEX_LINE_BASIC" "$REGEX_LINE_BREAKPOINT" "$REGEX_LINE_RAW" "$REGEX_LINE_AUX" < $LOGS_DIR/basic_basic.log
+REGEX_LINE_PMU_GRP="^\w[\w\s]*\w:"
+REGEX_LINE_PMU_EVENT="^\s\s$RE_EVENT_ANY"
+REGEX_LINE_PMU_DESCR="^\s{7,}(?:\[[^\]]+)|(?:[^\]]+\])"
+../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "$REGEX_LINE_HEADER" "$REGEX_LINE_BASIC" "$REGEX_LINE_BREAKPOINT" "$REGEX_LINE_RAW" "$REGEX_LINE_AUX" \
+		"$REGEX_LINE_PMU_GRP" "$REGEX_LINE_PMU_EVENT" "$REGEX_LINE_PMU_DESCR" < $LOGS_DIR/basic_basic.log
 CHECK_EXIT_CODE=$?
 test ! -s $LOGS_DIR/basic_basic.err
 (( CHECK_EXIT_CODE += $? ))
@@ -75,7 +79,7 @@ for i in ${!outputs[@]}; do
 	$CMD_PERF list $i > $LOGS_DIR/basic_$j.log
 	PERF_EXIT_CODE=$?
 
-	../common/check_all_lines_matched.pl "$REGEX_LINE_HEADER" "$RE_LINE_EMPTY" "${outputs[$i]}" < $LOGS_DIR/basic_$j.log
+	../common/check_all_lines_matched.pl "$REGEX_LINE_HEADER" "$RE_LINE_EMPTY" "${outputs[$i]}" "$REGEX_LINE_PMU_GRP" "$REGEX_LINE_PMU_EVENT" "$REGEX_LINE_PMU_DESCR" < $LOGS_DIR/basic_$j.log
 	CHECK_EXIT_CODE=$?
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "list $i"
