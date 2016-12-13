@@ -19,7 +19,7 @@ while read line; do
 	else
 		rm -rf $BUILDIDDIR/.b*
 		rm -rf $BUILDIDDIR/*
-		rmdir $BUILDIDDIR
+		rmdir $BUILDIDDIR 2> /dev/null
 	fi
 done < $CURRENT_TEST_DIR/BUILDIDDIRS
 rm -f $CURRENT_TEST_DIR/BUILDIDDIRS
