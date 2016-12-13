@@ -59,7 +59,7 @@ PERF_EXIT_CODE=$?
 REGEX_LOST_SAMPLES_INFO="#\s*Total Lost Samples:\s+$RE_NUMBER"
 REGEX_SAMPLES_INFO="#\s*Samples:\s+(?:$RE_NUMBER)\w?\s+of\s+event\s+'$RE_EVENT_ANY'"
 REGEX_LINES_HEADER="#\s*Overhead\s+Command\s+Shared Object\s+Symbol"
-REGEX_LINES="\s*$RE_NUMBER%\s+\S+\s+\[kernel\.vmlinux\]\s+\[[k\.]\]\s+\w+"
+REGEX_LINES="\s*$RE_NUMBER%\s+\S+\s+\[kernel\.(?:vmlinux)|(?:kallsyms)\]\s+\[[k\.]\]\s+\w+"
 ../common/check_all_patterns_found.pl "$REGEX_LOST_SAMPLES_INFO" "$REGEX_SAMPLES_INFO" "$REGEX_LINES_HEADER" "$REGEX_LINES" < $LOGS_DIR/basic_report.log
 CHECK_EXIT_CODE=$?
 ../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/basic_report.err
@@ -107,10 +107,10 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "archive creation"
 # get the DSOs that were hit by samples
 perf script | perl -ne 'print "$1\n" if /\(([^\)]+)\)$/' | sort -u | grep -P '^/' > $CURRENT_TEST_DIR/basic_dsos_hit.list
 # get the DSOs that were saved to the archive
-bzcat perf.data.tar.bz2 2>/dev/null | tar t 2>/dev/null | grep -v -P '^\.' 2>/dev/null | perl -pe 's/^/\//;s/\/[0-9a-f]{40}$//' | sort > $CURRENT_TEST_DIR/basic_dsos_archived.list
+bzcat perf.data.tar.bz2 2>/dev/null | tar t 2>/dev/null | grep -v -P '^\.' 2>/dev/null | grep -v -P '^\[' | perl -pe 's/^/\//;s/\/[0-9a-f]{40}.*$//' | sort > $CURRENT_TEST_DIR/basic_dsos_archived.list
 (( EXIT_CODE = ${PIPESTATUS[0]} + ${PIPESTATUS[1]} + ${PIPESTATUS[2]} + ${PIPESTATUS[3]} + ${PIPESTATUS[4]} ))
 
-../common/check_dso_archive_content.pl "$CURRENT_TEST_DIR/basic_dsos_archive.list" "$CURRENT_TEST_DIR/basic_dsos_hit.list"
+../common/check_dso_archive_content.pl "$CURRENT_TEST_DIR/basic_dsos_archived.list" "$CURRENT_TEST_DIR/basic_dsos_hit.list"
 CHECK_EXIT_CODE=$?
 
 print_results $EXIT_CODE $CHECK_EXIT_CODE "archive sanity (contents)"
