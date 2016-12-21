@@ -249,6 +249,41 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing variable"
 (( TEST_RESULT += $? ))
 
 
+### function with return value
+
+# adding probe with return value
+$CMD_PERF probe --add "$TEST_PROBE%return \$retval" 2> $LOGS_DIR/adding_kernel_func_retval_add.err
+PERF_EXIT_CODE=$?
+
+../common/check_all_patterns_found.pl "Added new events?:" "probe:$TEST_PROBE" "on $TEST_PROBE%return with \\\$retval" < $LOGS_DIR/adding_kernel_func_retval_add.err
+CHECK_EXIT_CODE=$?
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "function with retval :: add"
+(( TEST_RESULT += $? ))
+
+# recording some data
+$CMD_PERF record -e probe:$TEST_PROBE -o $CURRENT_TEST_DIR/perf.data -- cat /proc/cpuinfo > /dev/null 2> $LOGS_DIR/adding_kernel_func_retval_record.err
+PERF_EXIT_CODE=$?
+
+../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/adding_kernel_func_retval_record.err
+CHECK_EXIT_CODE=$?
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "function with retval :: record"
+(( TEST_RESULT += $? ))
+
+# perf script should report the function calls with the correct arg values
+$CMD_PERF script -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/adding_kernel_func_retval_script.log
+PERF_EXIT_CODE=$?
+
+REGEX_SCRIPT_LINE="\s*cat\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+$RE_NUMBER:\s+probe:$TEST_PROBE:\s+\($RE_NUMBER_HEX\s+<\-\s+$RE_NUMBER_HEX\)\s+arg1=$RE_NUMBER_HEX"
+../common/check_all_lines_matched.pl "$REGEX_SCRIPT_LINE" < $LOGS_DIR/adding_kernel_func_retval_script.log
+CHECK_EXIT_CODE=$?
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "function argument probing :: script"
+(( TEST_RESULT += $? ))
+
+
+
 # print overall results
 print_overall_results "$TEST_RESULT"
 exit $?
