@@ -30,12 +30,12 @@ fi
 
 check_kprobes_available()
 {
-	grep -q kprobe_register /proc/kallsyms
+	test -e /sys/kernel/debug/tracing/kprobe_events
 }
 
 check_uprobes_available()
 {
-	grep -q uprobe_register /proc/kallsyms
+	test -e /sys/kernel/debug/tracing/uprobe_events
 }
 
 clear_all_probes()
