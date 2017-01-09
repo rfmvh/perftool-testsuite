@@ -38,8 +38,8 @@ for i in 1 2 3 103 997 65535; do
 	(( PERF_EXIT_CODE += $? ))
 done
 
-../common/check_all_patterns_found.pl "probe_exact:f_1x" "probe_exact:f_2x" "probe_exact:f_3x" "probe_exact:f_103x" \
-		"probe_exact:f_997x" "probe_exact:f_65535x" < $LOGS_DIR/exact_counts_add.log
+../common/check_all_patterns_found.pl "probe_exact\w*:f_1x" "probe_exact\w*:f_2x" "probe_exact\w*:f_3x" "probe_exact\w*:f_103x" \
+		"probe_exact\w*:f_997x" "probe_exact\w*:f_65535x" < $LOGS_DIR/exact_counts_add.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "adding userspace probes"
@@ -51,8 +51,8 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "adding userspace probes"
 $CMD_PERF probe -l > $LOGS_DIR/exact_counts_list.log
 PERF_EXIT_CODE=$?
 
-../common/check_all_patterns_found.pl "probe_exact:f_1x" "probe_exact:f_2x" "probe_exact:f_3x" "probe_exact:f_103x" \
-		"probe_exact:f_997x" "probe_exact:f_65535x" < $LOGS_DIR/exact_counts_list.log
+../common/check_all_patterns_found.pl "probe_exact\w*:f_1x" "probe_exact\w*:f_2x" "probe_exact\w*:f_3x" "probe_exact\w*:f_103x" \
+		"probe_exact\w*:f_997x" "probe_exact\w*:f_65535x" < $LOGS_DIR/exact_counts_list.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probes"
@@ -62,11 +62,12 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probes"
 ### using probes :: perf stat
 
 # perf stat should catch all the events and give exact results
-$CMD_PERF stat -x';' -e 'probe_exact:*' $CURRENT_TEST_DIR/examples/exact_counts 2> $LOGS_DIR/exact_counts_stat.log
+PROBE_PREFIX=`head -n 1 $LOGS_DIR/exact_counts_list.log | perl -ne 'print "$1" if /\s+(\w+):/'`
+$CMD_PERF stat -x';' -e "$PROBE_PREFIX:"'*' $CURRENT_TEST_DIR/examples/exact_counts 2> $LOGS_DIR/exact_counts_stat.log
 PERF_EXIT_CODE=$?
 
 # check for exact values in perf stat results
-../common/check_all_lines_matched.pl "(\d+);+probe_exact:f_\1x" < $LOGS_DIR/exact_counts_stat.log
+../common/check_all_lines_matched.pl "(\d+);+$PROBE_PREFIX:f_\1x" < $LOGS_DIR/exact_counts_stat.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "using probes :: perf stat"
@@ -76,7 +77,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "using probes :: perf stat"
 ### using probes :: perf record
 
 # perf record should catch all the samples as well
-$CMD_PERF record -e 'probe_exact:*' -o $CURRENT_TEST_DIR/perf.data $CURRENT_TEST_DIR/examples/exact_counts 2> $LOGS_DIR/exact_counts_record.log
+$CMD_PERF record -e "$PROBE_PREFIX:"'*' -o $CURRENT_TEST_DIR/perf.data $CURRENT_TEST_DIR/examples/exact_counts 2> $LOGS_DIR/exact_counts_record.log
 PERF_EXIT_CODE=$?
 
 # perf record should catch exactly 66641 samples
