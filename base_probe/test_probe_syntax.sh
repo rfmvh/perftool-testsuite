@@ -59,7 +59,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "custom named probe :: add"
 $CMD_PERF probe -l > $LOGS_DIR/probe_syntax_custom_name_list.log
 PERF_EXIT_CODE=$?
 
-../common/check_all_patterns_found.pl "\s*probe:myprobe\s+\(on $TEST_PROBE@.+\)" < $LOGS_DIR/probe_syntax_custom_name_list.log
+../common/check_all_patterns_found.pl "\s*probe:myprobe\s+\(on $TEST_PROBE(?:\+\d+)?@.+\)" < $LOGS_DIR/probe_syntax_custom_name_list.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "custom named probe :: list"
