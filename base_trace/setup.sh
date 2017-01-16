@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-#	setup.sh of SKELETON test
+#	setup.sh of perf_trace test
 #	Author: Michael Petlan <mpetlan@redhat.com>
 #
 #	Description:

@@ -17,14 +17,14 @@ base_probe
 		- adding huge amount of probes
 		- using huge amount of probes at same time
 	- some 'advanced' probing
-		- probing variables, args, retvals like watchpoints
-		- perf script reporting
 		- lazy patterns like vfs_read;ret=*
 
 base_record
-	- create
-	- overload record (callgraph options)
-	- the '-b' option (caused panic on Atoms)
+	- branch-any (the '-b' option (caused panic on Atoms))
+	- cgroup-only recording ?
+	- timestamps ('-T' + perf report -D to view)
+	- stats ('-s' + perf report -T to view); does not seem to do anything
+	- --switch-output
 
 base_report
 	- cover remaining options
@@ -49,16 +49,12 @@ base_trace
 	- overload
 
 other commands to cover:
-	- archive
 	- bench
-	- buildid-cache & buildid-list
-	- diff
-	- evlist
+	- buildid-cache
 	- inject
 	- kmem
 	- kvm ?
 	- lock
-	- mem
 	- sched
 	- script
 	- timechart ?
