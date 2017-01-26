@@ -105,9 +105,9 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "archive creation"
 ### archive file sanity
 
 # get the DSOs that were hit by samples
-perf script | perl -ne 'print "$1\n" if /\(([^\)]+)\)$/' | sort -u | grep -P '^/' > $CURRENT_TEST_DIR/basic_dsos_hit.list
+$CMD_PERF script -i $CURRENT_TEST_DIR/perf.data | perl -ne 'print "$1\n" if /\(([^\)]+)\)$/' | sort -u | grep -P '^/' > $CURRENT_TEST_DIR/basic_dsos_hit.list
 # get the DSOs that were saved to the archive
-bzcat perf.data.tar.bz2 2>/dev/null | tar t 2>/dev/null | grep -v -P '^\.' 2>/dev/null | grep -v -P '^\[' | perl -pe 's/^/\//;s/\/[0-9a-f]{40}.*$//' | sort > $CURRENT_TEST_DIR/basic_dsos_archived.list
+bzcat $CURRENT_TEST_DIR/perf.data.tar.bz2 2>/dev/null | tar t 2>/dev/null | grep -v -P '^\.' 2>/dev/null | grep -v -P '^\[' | perl -pe 's/^/\//;s/\/[0-9a-f]{40}.*$//' | sort > $CURRENT_TEST_DIR/basic_dsos_archived.list
 (( EXIT_CODE = ${PIPESTATUS[0]} + ${PIPESTATUS[1]} + ${PIPESTATUS[2]} + ${PIPESTATUS[3]} + ${PIPESTATUS[4]} ))
 
 ../common/check_dso_archive_content.pl "$CURRENT_TEST_DIR/basic_dsos_archived.list" "$CURRENT_TEST_DIR/basic_dsos_hit.list"
