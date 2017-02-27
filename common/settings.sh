@@ -24,13 +24,14 @@ export CMD_SIMPLE="true"
 
 #### common settings
 export TESTLOG_VERBOSITY=${TESTLOG_VERBOSITY:-0}
+export TESTLOG_FORCE_COLOR=${TESTLOG_FORCE_COLOR:-no}
 export ERROR_MESSAGE_MAX_LINES=${ERROR_MESSAGE_MAX_LINES:-20}
 
 #### clear locale
 export LC_ALL=C
 
 #### colors
-if [ -t 1 ]; then
+if [ -t 1 -o "$TESTLOG_FORCE_COLOR" = "yes" ]; then
 	export MPASS="\e[32m"
 	export MALLPASS="\e[1;32m"
 	export MFAIL="\e[31m"
