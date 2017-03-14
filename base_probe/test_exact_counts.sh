@@ -88,9 +88,10 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "using probes :: perf record"
 (( TEST_RESULT += $? ))
 
 # perf report should report exact values too
-$CMD_PERF report -s comm,dso,symbol --stdio -i $CURRENT_TEST_DIR/perf.data -n > $LOGS_DIR/exact_counts_report.log
+$CMD_PERF report -s comm,dso,symbol --stdio -i $CURRENT_TEST_DIR/perf.data -n > $LOGS_DIR/exact_counts_report.log 2> $LOGS_DIR/exact_counts_report.err
 PERF_EXIT_CODE=$?
 
+test $TESTLOG_VERBOSITY -ge 2 && cat $LOGS_DIR/exact_counts_report.err
 # perf report should report exact sample counts
 ../common/check_all_lines_matched.pl "\s*100.00%\s+(\d+)\s+exact_counts\s+exact_counts\s+\[\.\]\s+f_\1x" "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" < $LOGS_DIR/exact_counts_report.log
 CHECK_EXIT_CODE=$?

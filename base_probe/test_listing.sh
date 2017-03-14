@@ -59,9 +59,10 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "userspace functions list"
 ### kernel variables list
 
 # the '-V' option should list all the available variables for a function/line
-$CMD_PERF probe -V vfs_read > $LOGS_DIR/listing_kernel_variables.log
+$CMD_PERF probe -V vfs_read > $LOGS_DIR/listing_kernel_variables.log 2> $LOGS_DIR/listing_kernel_variables.err
 PERF_EXIT_CODE=$?
 
+test $TESTLOG_VERBOSITY -ge 2 && cat $LOGS_DIR/listing_kernel_variables.err
 ../common/check_all_patterns_found.pl "Available variables at vfs_read" "char\s*\*\s*buf" "pos" "size_t\s+count" "struct\s+file\s*\*\s*file" < $LOGS_DIR/listing_kernel_variables.log
 CHECK_EXIT_CODE=$?
 
@@ -88,9 +89,10 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "userspace variables list"
 ### kernel lines list
 
 # the '-L' option should list all the available lines suitable for probing per function
-$CMD_PERF probe -L vfs_read > $LOGS_DIR/listing_kernel_lines.log
+$CMD_PERF probe -L vfs_read > $LOGS_DIR/listing_kernel_lines.log 2> $LOGS_DIR/listing_kernel_lines.err
 PERF_EXIT_CODE=$?
 
+test $TESTLOG_VERBOSITY -ge 2 && cat $LOGS_DIR/listing_kernel_lines.err
 ../common/check_all_patterns_found.pl "\d+\s+\{" "\d+\s+\}" "0\s+ssize_t\svfs_read" "\d+\s+\w+" < $LOGS_DIR/listing_kernel_lines.log
 CHECK_EXIT_CODE=$?
 
@@ -101,9 +103,10 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "kernel lines list"
 ### kernel source lines list
 
 # the '-L' option should list all the available lines suitable for probing per file
-$CMD_PERF probe -L fs/read_write.c > $LOGS_DIR/listing_kernel_source_lines.log
+$CMD_PERF probe -L fs/read_write.c > $LOGS_DIR/listing_kernel_source_lines.log 2> $LOGS_DIR/listing_kernel_source_lines.err
 PERF_EXIT_CODE=$?
 
+test $TESTLOG_VERBOSITY -ge 2 && cat $LOGS_DIR/listing_kernel_source_lines.err
 ../common/check_all_patterns_found.pl "linux/fs/read_write.c" "\d+\s+\{" "\d+\s+\}" "\d+\s+\w+" "\d+\s+.*vfs_read" "\d+\s+.*vfs_write" "Linus Torvalds" < $LOGS_DIR/listing_kernel_source_lines.log
 CHECK_EXIT_CODE=$?
 

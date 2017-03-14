@@ -212,9 +212,10 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "function string argument kprobin
 (( TEST_RESULT += $? ))
 
 # perf script should report the function calls with the correct arg values
-$CMD_PERF script -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/advanced_k_funcstrargs_script.log
+$CMD_PERF script -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/advanced_k_funcstrargs_script.log 2> $LOGS_DIR/advanced_k_funcstrargs_script.err
 PERF_EXIT_CODE=$?
 
+test $TESTLOG_VERBOSITY -ge 2 && cat $LOGS_DIR/advanced_k_funcstrargs_script.err
 # checking for the perf script output sanity
 REGEX_SCRIPT_LINE="\s*cat\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+$RE_NUMBER:\s+probe:do_sys_open:\s+\($RE_NUMBER_HEX\) filename_string=\"$RE_PATH\""
 ../common/check_all_lines_matched.pl "$REGEX_SCRIPT_LINE" < $LOGS_DIR/advanced_k_funcstrargs_script.log
