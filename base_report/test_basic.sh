@@ -27,7 +27,7 @@ if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
 
 	../common/check_all_patterns_found.pl "PERF-REPORT" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "OVERHEAD\s+CALCULATION" "SEE ALSO" < $LOGS_DIR/basic_helpmsg.log
 	CHECK_EXIT_CODE=$?
-	../common/check_all_patterns_found.pl "input" "verbose" "show-nr-samples" "showcpuutilization" "threads" "comms" "pid" "tid" "dsos" "symbols" "symbol-filter" < $LOGS_DIR/basic_helpmsg.log
+	../common/check_all_patterns_found.pl "input" "verbose" "show-nr-samples" "show-cpu-utilization" "threads" "comms" "pid" "tid" "dsos" "symbols" "symbol-filter" < $LOGS_DIR/basic_helpmsg.log
 	(( CHECK_EXIT_CODE += $? ))
 	../common/check_all_patterns_found.pl "hide-unresolved" "sort" "fields" "parent" "exclude-other" "column-widths" "field-separator" "dump-raw-trace" "children" < $LOGS_DIR/basic_helpmsg.log
 	(( CHECK_EXIT_CODE += $? ))
