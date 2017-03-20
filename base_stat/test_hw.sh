@@ -27,6 +27,9 @@ fi
 
 test -d $LOGS_DIR/hw || mkdir $LOGS_DIR/hw
 
+# free the potentially seized counter
+disable_nmi_watchdog_if_exists
+
 
 #### testing hardware events
 
@@ -62,6 +65,8 @@ if ! [[ "$MY_ARCH" =~ ppc64.* ]]; then
 else
 	print_testcase_skipped "k+u=ku check"
 fi
+
+restore_nmi_watchdog_if_needed
 
 # print overall results
 print_overall_results "$TEST_RESULT"

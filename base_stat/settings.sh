@@ -29,6 +29,27 @@ else
 	export LOGS_DIR="."
 fi
 
+# NMI Watchdog may occupy one PMU counter which is not great for k+u=ku
+# tests, since they need at least 3 counters (k, u, ku). That would not
+# be a problem, but not all of the available counters are generic, so it
+# may easily happen that we run out of usable counters for some event
+# with NMI watchdog enabled
+
+disable_nmi_watchdog_if_exists()
+{
+	test -e /proc/sys/kernel/nmi_watchdog || return 9
+	export NMI_WD_PREVIOUS_VALUE=`cat /proc/sys/kernel/nmi_watchdog`
+	echo 0 > /proc/sys/kernel/nmi_watchdog
+	return $NMI_WD_PREVIOUS_VALUE
+}
+
+restore_nmi_watchdog_if_needed()
+{
+	test -n "$NMI_WD_PREVIOUS_VALUE" || return 9
+	echo $NMI_WD_PREVIOUS_VALUE > /proc/sys/kernel/nmi_watchdog
+	return $NMI_WD_PREVIOUS_VALUE
+}
+
 
 # The following functions detect whether the machine should support/test
 # various microarchitecture specific features.

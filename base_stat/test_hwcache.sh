@@ -27,8 +27,11 @@ test -d $LOGS_DIR/hwcache || mkdir $LOGS_DIR/hwcache
 
 # FIXME test -e hw.log && rm -f hw.log
 
+# free the potentially seized counter
+disable_nmi_watchdog_if_exists
 
-#### testing hardware events
+
+#### testing hardware cache events
 
 for event in $EVENTS_TO_TEST; do
 	$CMD_PERF stat -a -e $event -o $LOGS_DIR/hwcache/$event.log --append -x';' -- $CMD_BASIC_SLEEP
@@ -59,6 +62,8 @@ for event in $EVENTS_TO_TEST; do
 done
 fi
 
+restore_nmi_watchdog_if_needed
+
 # print overall results
 print_overall_results "$TEST_RESULT"
 exit $?
@@ -66,4 +71,4 @@ exit $?
 
 
 # FIXME we should test the numbers
-# FIXME we should be able to blacklist events on some archs (<not supported> is OK (SND, IVB))
+# FIXME we should be able to blacklist events on some archs (<not supported> is OK (SNB, IVB))
