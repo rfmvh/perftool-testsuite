@@ -27,7 +27,7 @@ if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
 
 	../common/check_all_patterns_found.pl "PERF-ANNOTATE" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "SEE ALSO" < $LOGS_DIR/basic_helpmsg.log
 	CHECK_EXIT_CODE=$?
-	../common/check_all_patterns_found.pl "perf\-annotate \- Read perf.data .* display annotated code" < $LOGS_DIR/basic_helpmsg.log
+	../common/check_all_patterns_found.pl "perf\-annotate \- Read perf.data .* display" "annotated code" < $LOGS_DIR/basic_helpmsg.log
 	(( CHECK_EXIT_CODE += $? ))
 	../common/check_all_patterns_found.pl "input" "dsos" "symbol" "force" "verbose" "dump-raw-trace" "vmlinux" "modules" < $LOGS_DIR/basic_helpmsg.log
 	(( CHECK_EXIT_CODE += $? ))
