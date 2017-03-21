@@ -1,1 +1,2 @@
 no symbols found in .*, maybe install a debug package
+was updated .*is prelink enabled.+ Restart the long running apps that use it
