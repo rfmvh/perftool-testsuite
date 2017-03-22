@@ -19,8 +19,19 @@ TEST_RESULT=0
 
 EVENTS_TO_TEST=`$CMD_PERF list hw | grep "Hardware event" | awk '{print $1}' | egrep '^.' | tr '\n' ' '`
 if [ -z "$EVENTS_TO_TEST" ]; then
-	print_overall_skipped
-	exit 0
+	if [ "$TEST_IGNORE_MISSING_PMU" = "y" ]; then
+		print_overall_skipped
+		exit 0
+	else
+		if should_support_pmu; then
+			print_results 1 1 "PMU support not found despite being expected (no hw events)"
+			print_overall_results 1
+			exit $?
+		else
+			print_overall_skipped
+			exit 0
+		fi
+	fi
 fi
 
 # FIXME test -e hw.log && rm -f hw.log

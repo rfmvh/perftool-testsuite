@@ -98,3 +98,14 @@ should_support_intel_rapl()
 	AUX=${RAPL_COMPATIBLE/$CURRENT_MODEL/}
 	! test "$RAPL_COMPATIBLE" = "$AUX"
 }
+
+
+should_support_pmu()
+{
+	# return values
+	# 0 = expected to support PMU
+	# 1 = not expected to support PMU
+
+	# everything except s390x is expected to support PMU
+	! test "$MY_ARCH" = "s390x"
+}

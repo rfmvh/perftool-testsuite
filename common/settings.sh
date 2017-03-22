@@ -24,8 +24,11 @@ export CMD_SIMPLE="true"
 
 #### common settings
 export TESTLOG_VERBOSITY=${TESTLOG_VERBOSITY:-2}
-export TESTLOG_FORCE_COLOR=${TESTLOG_FORCE_COLOR:-no}
+export TESTLOG_FORCE_COLOR=${TESTLOG_FORCE_COLOR:-n}
 export TESTLOG_ERR_MSG_MAX_LINES=${TESTLOG_ERR_MSG_MAX_LINES:-20}
+
+#### other environment-related settings
+export TEST_IGNORE_MISSING_PMU=${TEST_IGNORE_MISSING_PMU:-n}
 
 #### clear locale
 export LC_ALL=C
