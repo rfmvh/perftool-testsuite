@@ -19,6 +19,7 @@
 
 /* globals */
 int verbose = 0;
+int do_cleanup = 1;
 int fatal_occured = 0;
 
 
@@ -109,7 +110,8 @@ int run_group(char *path)
 		perror("Cannot open inner dir.");
 
 	/* try to do clean-up */
-	try_shell("cleanup.sh");
+	if(do_cleanup)
+		try_shell("cleanup.sh");
 
 	chdir("..");
 	if (verbose)
@@ -124,11 +126,13 @@ int main(int argc, char *argv[])
 	DIR *dp;
 	struct dirent *ep;
 	int failures = 0;
+	int i;
 	char verbosity_str[2];
 
-	if(argc > 1)
+	for(i = 1; i < argc; i++)
 	{
-		if(strncmp(argv[1], "-v", 2) == 0)
+		/* verbosity */
+		if(strncmp(argv[i], "-v", 2) == 0)
 		{
 			char *p;
 			for(p = argv[1]; *p != '\0'; p++)
@@ -137,6 +141,14 @@ int main(int argc, char *argv[])
 				verbose = 9;
 			snprintf(verbosity_str, 2, "%i", verbose);
 			setenv("TESTLOG_VERBOSITY", verbosity_str, 1);
+			continue;
+		}
+
+		/* skip the clean-up */
+		if((strcmp(argv[i], "--no-cleanup") == 0) || (strcmp(argv[i], "-n") == 0))
+		{
+			do_cleanup = 0;
+			continue;
 		}
 	}
 
