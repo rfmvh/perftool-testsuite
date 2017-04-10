@@ -36,7 +36,7 @@ $CMD_LONGER_SLEEP
 wait $PERF_PID
 PERF_EXIT_CODE=$?
 
-../common/check_all_lines_matched.pl "$RE_LINE_TRACE" < $LOGS_DIR/overhead_systemwide.log
+../common/check_all_lines_matched.pl "$RE_LINE_TRACE_FULL" < $LOGS_DIR/overhead_systemwide.log
 CHECK_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "No such process" < overhead_systemwide_kill.log

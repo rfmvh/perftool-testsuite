@@ -43,9 +43,9 @@ fi
 $CMD_PERF trace $CMD_QUICK_SLEEP 2> $LOGS_DIR/basic_basic.log
 PERF_EXIT_CODE=$?
 
-../common/check_all_lines_matched.pl "$RE_LINE_TRACE" < $LOGS_DIR/basic_basic.log
+../common/check_all_lines_matched.pl "$RE_LINE_TRACE_FULL" < $LOGS_DIR/basic_basic.log
 CHECK_EXIT_CODE=$?
-../common/check_all_patterns_found.pl "$RE_LINE_TRACE" < $LOGS_DIR/basic_basic.log
+../common/check_all_patterns_found.pl "$RE_LINE_TRACE_FULL" < $LOGS_DIR/basic_basic.log
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic execution"
@@ -76,7 +76,7 @@ kill -SIGINT $PERF_PID
 wait $PERF_PID
 PERF_EXIT_CODE=$?
 
-../common/check_all_lines_matched.pl "$RE_LINE_TRACE" < $LOGS_DIR/basic_systemwide.log
+../common/check_all_lines_matched.pl "$RE_LINE_TRACE_FULL" < $LOGS_DIR/basic_systemwide.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide"
@@ -89,7 +89,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide"
 $CMD_PERF trace -T -- $CMD_QUICK_SLEEP 2> $LOGS_DIR/basic_full_timestamp.log
 PERF_EXIT_CODE=$?
 
-../common/check_all_lines_matched.pl "$RE_LINE_TRACE" "\d{5,}\." < $LOGS_DIR/basic_full_timestamp.log
+../common/check_all_lines_matched.pl "$RE_LINE_TRACE_FULL" "\d{5,}\." < $LOGS_DIR/basic_full_timestamp.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "full timestamp"
@@ -117,7 +117,7 @@ $CMD_PERF trace -p $! -o $LOGS_DIR/basic_attach.log
 PERF_EXIT_CODE=$?
 
 # sanity check
-../common/check_all_lines_matched.pl "$RE_LINE_TRACE" < $LOGS_DIR/basic_attach.log
+../common/check_all_lines_matched.pl "$RE_LINE_TRACE_ONE_PROC" "$RE_LINE_TRACE_CONTINUED" "exit" < $LOGS_DIR/basic_attach.log
 CHECK_EXIT_CODE=$?
 
 # perf should know the syscall even if perf attached during it (*sleep)
