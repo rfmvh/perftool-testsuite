@@ -112,14 +112,19 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "summary"
 ### attach process
 
 # perf-trace should be able to attach an existing process by '-p PID'
-$CMD_LONGER_SLEEP &
+echo "some_test_string" | $CURRENT_TEST_DIR/examples/vest &
 $CMD_PERF trace -p $! -o $LOGS_DIR/basic_attach.log
 PERF_EXIT_CODE=$?
 
+# sanity check
 ../common/check_all_lines_matched.pl "$RE_LINE_TRACE" < $LOGS_DIR/basic_attach.log
 CHECK_EXIT_CODE=$?
-# perf should know the syscall even if perf attached during it (sleep)
-../common/check_all_patterns_found.pl "sleep" "close" "exit" < $LOGS_DIR/basic_attach.log
+
+# perf should know the syscall even if perf attached during it (*sleep)
+../common/check_all_patterns_found.pl "\.\.\.\s+\[continued\]:\s*(?:nano)?sleep\(\)+\s*=\s*0" < $LOGS_DIR/basic_attach.log
+(( CHECK_EXIT_CODE += $? ))
+# the following syscalls should have full entries in the log:
+../common/check_all_patterns_found.pl "(?:nano)?sleep\([^\)]" "open(?:at)?\([^\)]" "close\([^\)]" "write\([^\)]" < $LOGS_DIR/basic_attach.log
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "attach process"
