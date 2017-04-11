@@ -32,14 +32,14 @@ $CMD_PERF trace -o $LOGS_DIR/overhead_systemwide.log -a -- $CMD_LONGER_SLEEP &
 PERF_PID=$!
 $CMD_LONGER_SLEEP
 $CMD_LONGER_SLEEP
-! kill -SIGINT $PERF_PID &> overhead_systemwide_kill.log
+! kill -SIGINT $PERF_PID &> $LOGS_DIR/overhead_systemwide_kill.log
 wait $PERF_PID
 PERF_EXIT_CODE=$?
 
 ../common/check_all_lines_matched.pl "$RE_LINE_TRACE_FULL" < $LOGS_DIR/overhead_systemwide.log
 CHECK_EXIT_CODE=$?
 
-../common/check_all_patterns_found.pl "No such process" < overhead_systemwide_kill.log
+../common/check_all_patterns_found.pl "No such process" < $LOGS_DIR/overhead_systemwide_kill.log
 (( CHECK_EXIT_CODE += $? ))
 
 ../common/check_timestamps.pl < $LOGS_DIR/overhead_systemwide.log
