@@ -42,6 +42,9 @@ CHECK_EXIT_CODE=$?
 ../common/check_all_patterns_found.pl "No such process" < overhead_systemwide_kill.log
 (( CHECK_EXIT_CODE += $? ))
 
+../common/check_timestamps.pl < $LOGS_DIR/overhead_systemwide.log
+(( CHECK_EXIT_CODE += $? ))
+
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide"
 (( TEST_RESULT += $? ))
 
