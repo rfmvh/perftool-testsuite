@@ -5,6 +5,42 @@ $quiet = 0 if (defined $ENV{TESTLOG_VERBOSITY} && $ENV{TESTLOG_VERBOSITY} ge 2);
 
 $passed = 1;
 
+sub get_filecmd_output
+{
+	my ($filepath) = @_;
+	if ($filepath =~ /ko.xz$/)
+	{
+		# xzipped module
+		$tmpfile = `mktemp`;
+		`xzcat $filepath > $tmpfile`;
+		$_ = `file $tmpfile 2>/dev/null`;
+		unlink $tmpfile;
+	}
+	elsif ($filepath =~ /ko.bz2$/)
+	{
+		# bzipped module
+		$tmpfile = `mktemp`;
+		`bzzcat $filepath > $tmpfile`;
+		$_ = `file $tmpfile 2>/dev/null`;
+		unlink $tmpfile;
+	}
+	elsif ($filepath =~ /ko.gz$/)
+	{
+		# gzipped module
+		$tmpfile = `mktemp`;
+		`zcat $filepath > $tmpfile`;
+		$_ = `file $tmpfile 2>/dev/null`;
+		unlink $tmpfile;
+	}
+	else
+	{
+		# all other files
+		$_ = `file $filepath 2>/dev/null`;
+	}
+
+	return $_;
+}
+
 while (<STDIN>)
 {
 	chomp;
@@ -18,7 +54,7 @@ while (<STDIN>)
 	}
 	else
 	{
-		$filecmd_output = `file $filepath 2>/dev/null`;
+		$filecmd_output = &get_filecmd_output($filepath);
 		($buildid_from_file) = $filecmd_output =~ /BuildID\[sha1\]=(\w{40})/;
 	}
 
