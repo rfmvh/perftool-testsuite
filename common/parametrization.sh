@@ -25,6 +25,11 @@ export PARAM_GENERAL_HELP_TEXT_CHECK=${PARAM_GENERAL_HELP_TEXT_CHECK:-n}
 # Note: POWER8 only
 export PARAM_STAT_24x7_ALL_CORES=${PARAM_STAT_24x7_ALL_CORES:-n}
 
+# If set, the 24x7 events will be tested on all available domains.
+# Domain list: /sys/bus/event_source/devices/hv_24x7/interface/domains
+# Default "n" value means that only domains "1 2" are tested.
+export PARAM_STAT_24x7_ALL_DOMAINS=${PARAM_STAT_24x7_ALL_DOMAINS:-n}
+
 # If set, all the tracepoint events will be checked for syntax
 # errors in their definition. This testcase may take a long time
 # and the checks are not that crucial, so it can be turned off
