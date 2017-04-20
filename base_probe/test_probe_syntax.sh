@@ -49,7 +49,7 @@ clear_all_probes
 $CMD_PERF probe myprobe=$TEST_PROBE 2> $LOGS_DIR/probe_syntax_custom_name_add.log
 PERF_EXIT_CODE=$?
 
-../common/check_all_patterns_found.pl "Added new event:" "probe:myprobe" "on $TEST_PROBE" < $LOGS_DIR/probe_syntax_custom_name_add.log
+../common/check_all_patterns_found.pl "Added new events?:" "probe:myprobe" "on $TEST_PROBE" < $LOGS_DIR/probe_syntax_custom_name_add.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "custom named probe :: add"
