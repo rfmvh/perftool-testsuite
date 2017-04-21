@@ -49,3 +49,13 @@ export PARAM_TRACE_OVERLOAD=${PARAM_TRACE_OVERLOAD:-y}
 # If set, some heavy load tests are run. That might be not always
 # desired behaviour.
 export PARAM_RECORD_OVERLOAD=${PARAM_RECORD_OVERLOAD:-n}
+
+# If set to "y", "fp" callgraph will be used in perf-record overhead
+# test; if set to "n", it will not be used. If not set/empty, it will
+# maybe run and maybe not.
+export PARAM_RECORD_CALLGRAPH_FP=${PARAM_RECORD_CALLGRAPH_FP:-y}
+
+# If set to "y", "dwarf" callgraph will be used in perf-record overhead
+# test; if set to "n", it will not be used. If not set/empty, it will
+# run depending on architecture (default behavior).
+export PARAM_RECORD_CALLGRAPH_DWARF=${PARAM_RECORD_CALLGRAPH_DWARF:-}

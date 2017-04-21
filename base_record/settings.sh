@@ -28,3 +28,29 @@ else
 	export CURRENT_TEST_DIR="."
 	export LOGS_DIR="."
 fi
+
+should_test_callgraph_fp()
+{
+	# testing "fp" callgraph depends only on its config variable
+	test "$PARAM_RECORD_CALLGRAPH_FP" = "y"
+}
+
+should_test_callgraph_dwarf()
+{
+	test -z "$PARAM_RECORD_CALLGRAPH_DWARF" && PARAM_RECORD_CALLGRAPH_DWARF="decide"
+	case "$PARAM_RECORD_CALLGRAPH_DWARF" in
+		"y")
+			# run it
+			return 0
+			;;
+		"n")
+			# do NOT run it
+			return 1
+			;;
+		*)
+			# run it only on x86_64 and aarch64
+			test "$MY_ARCH" = "x86_64" -o "$MY_ARCH" = "aarch64"
+			return $?
+			;;
+	esac
+}
