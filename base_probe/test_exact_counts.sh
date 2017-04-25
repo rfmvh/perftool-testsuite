@@ -77,7 +77,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "using probes :: perf stat"
 ### using probes :: perf record
 
 # perf record should catch all the samples as well
-$CMD_PERF record -e "$PROBE_PREFIX:"'*' -o $CURRENT_TEST_DIR/perf.data $CURRENT_TEST_DIR/examples/exact_counts 2> $LOGS_DIR/exact_counts_record.log
+$CMD_PERF record -m 16M -e "$PROBE_PREFIX:"'*' -o $CURRENT_TEST_DIR/perf.data $CURRENT_TEST_DIR/examples/exact_counts 2> $LOGS_DIR/exact_counts_record.log
 PERF_EXIT_CODE=$?
 
 # perf record should catch exactly 66641 samples
