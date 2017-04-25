@@ -39,14 +39,26 @@ fi
 # detect virtualization
 type virt-what 2>/dev/null >/dev/null
 if [ $? -ne 0 ]; then
-	VIRT="unknown"
+	# try systemd if available
+	if type systemd-detect-virt &> /dev/null; then
+		VIRT=`systemd-detect-virt`
+	else
+		VIRT="unknown"
+	fi
 else
 	VIRT=`virt-what`
+	if [ -z "$VIRT" ]; then
+		# try systemd if available
+		if type systemd-detect-virt &> /dev/null; then
+			VIRT=`systemd-detect-virt`
+		else
+			VIRT="unknown"
+		fi
+	fi
 fi
 
-# we can continue only if VIRT is 'LPAR' or unknown
-echo "$VIRT" | grep -q -i -e "lpar" -e "unknown"
-if ! [ "$VIRT" = "" -o "$VIRT" = "unknown" ]; then
+# we can continue only if VIRT is 'LPAR', 'none' or unknown
+if ! [ "$VIRT" = "" -o "$VIRT" = "unknown" -o "$VIRT" = "none" ]; then
 	print_overall_skipped
 	exit 0
 fi
