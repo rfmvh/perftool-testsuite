@@ -109,3 +109,15 @@ should_support_pmu()
 	# everything except s390x is expected to support PMU
 	! test "$MY_ARCH" = "s390x"
 }
+
+
+should_support_hw_breakpoints()
+{
+	# return values
+	# 0 = expected to support HW breakpoints
+	# 1 = not expected to support HW breakpoints
+
+	# when mem:<addr>[/len][:access] event is listed, we expect it
+	# to be supported
+	$CMD_PERF list | grep -q '\[Hardware breakpoint\]'
+}
