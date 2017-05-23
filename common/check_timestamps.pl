@@ -13,6 +13,10 @@ while (<STDIN>)
 {
 	s/\n//;
 
+	# skip lines with unpaired syscalls (continued ones that had been started before perf attached), such as:
+	#          ? (     ?   ): something/732  ... [continued]: poll()) = 0 Timeout
+	next if /^\s+\?\s*\(\s+\?/;
+
 	($p) = $_ =~ /^\s*(\d+(?:\.\d+))\s/;
 	$p *= 1.0;
 
