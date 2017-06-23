@@ -18,6 +18,8 @@ if [ -n "$PERFSUITE_RUN_DIR" ]; then
 fi
 
 find . -name \*.log | xargs -r rm
+find . -name \*.err | xargs -r rm
+test -d sw && rmdir sw
 test -d hw && rmdir hw
 test -d hwcache && rmdir hwcache
 test -d hv24x7 && rmdir hv_24x7
