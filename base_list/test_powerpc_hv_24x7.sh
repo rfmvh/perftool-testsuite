@@ -70,7 +70,7 @@ fi
 $CMD_PERF list hv_24x7 > $LOGS_DIR/hv_24x7_list.log
 PERF_EXIT_CODE=$?
 
-REGEX_HV_ARG=",(?:domain|core)=\?"
+REGEX_HV_ARG=",(?:domain|core|chip)=\?"
 REGEX_HV_EVENTNAME="[A-Za-z0-9](?:[A-Za-z0-9]|_[A-Za-z0-9])+"
 REGEX_HV_EVENT="hv_24x7\/$REGEX_HV_EVENTNAME(?:$REGEX_HV_ARG)+\/"
 REGEX_LINE_BASIC="^\s*$REGEX_HV_EVENT\s+\[Kernel\sPMU\sevent\]"
