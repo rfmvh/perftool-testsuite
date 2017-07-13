@@ -23,7 +23,7 @@ $CMD_PERF list | grep -q mem-stores || export MEM_STORES_SUPPORTED="no"
 export LDLAT_LOADS_SUPPORTED="yes"
 export LDLAT_STORES_SUPPORTED="yes"
 $CMD_PERF mem record -e list |& grep -q ldlat-loads || export LDLAT_LOADS_SUPPORTED="no"
-$CMD_PERF mem record -e list |& grep -q ldlat-stores || export LDLAT_STORES_SUPPORTED="yes"
+$CMD_PERF mem record -e list |& grep -q ldlat-stores || export LDLAT_STORES_SUPPORTED="no"
 
 if [ -n "$PERFSUITE_RUN_DIR" ]; then
 	# when $PERFSUITE_RUN_DIR is set to something, all the logs and temp files will be placed there
