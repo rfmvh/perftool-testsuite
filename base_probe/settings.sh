@@ -56,3 +56,8 @@ check_kernel_debuginfo()
 {
 	eu-addr2line -k 0x`grep -m 1 vfs_read /proc/kallsyms | cut -f 1 -d" "` | grep vfs_read
 }
+
+check_sdt_support()
+{
+	$CMD_PERF list sdt | grep sdt > /dev/null 2> /dev/null
+}
