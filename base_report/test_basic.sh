@@ -123,7 +123,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "show CPU utilization"
 $CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data --pid=1 > $LOGS_DIR/basic_pid.log 2> $LOGS_DIR/basic_pid.err
 PERF_EXIT_CODE=$?
 
-grep -P -v '^#' | grep -P '\s+[\d\.]+%' $LOGS_DIR/basic_pid.log | ../common/check_all_lines_matched.pl "systemd|init"
+grep -P -v '^#' $LOGS_DIR/basic_pid.log | grep -P '\s+[\d\.]+%' | ../common/check_all_lines_matched.pl "systemd|init"
 CHECK_EXIT_CODE=$?
 ../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/basic_pid.err
 (( CHECK_EXIT_CODE += $? ))
@@ -153,7 +153,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing symbol"
 $CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data --symbol-filter=map > $LOGS_DIR/basic_symbolfilter.log 2> $LOGS_DIR/basic_symbolfilter.err
 PERF_EXIT_CODE=$?
 
-grep -P -v '^#' | grep -P '\s+[\d\.]+%' $LOGS_DIR/basic_symbolfilter.log | ../common/check_all_lines_matched.pl "\[[k\.]\]\s+.*map"
+grep -P -v '^#' $LOGS_DIR/basic_symbolfilter.log | grep -P '\s+[\d\.]+%' | ../common/check_all_lines_matched.pl "\[[k\.]\]\s+.*map"
 CHECK_EXIT_CODE=$?
 ../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/basic_symbolfilter.err
 (( CHECK_EXIT_CODE += $? ))
