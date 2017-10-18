@@ -22,6 +22,10 @@ if [ $? -ne 0 ]; then
 	exit 0
 fi
 
+# load libpthread to buildid cache
+LIBPTHREAD_PATH=`ldd $CURRENT_TEST_DIR/examples/simple_threads | grep pthread | cut -d' ' -f3`
+$CMD_PERF buildid-cache --add $LIBPTHREAD_PATH
+
 check_sdt_support
 if [ $? -ne 0 ]; then
 	print_overall_skipped
