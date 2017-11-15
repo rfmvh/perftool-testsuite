@@ -36,7 +36,7 @@ fi
 
 if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
 	# test that a help message is shown and looks reasonable
-	$CMD_PERF mem --help > $LOGS_DIR/basic_helpmsg.log
+	$CMD_PERF mem --help > $LOGS_DIR/basic_helpmsg.log 2> $LOGS_DIR/basic_helpmsg.err
 	PERF_EXIT_CODE=$?
 
 	../common/check_all_patterns_found.pl "PERF-MEM" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "SEE ALSO" < $LOGS_DIR/basic_helpmsg.log
@@ -44,6 +44,8 @@ if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
 	../common/check_all_patterns_found.pl "command" "type" "dump-raw-samples" "field-separator" "cpu-list" < $LOGS_DIR/basic_helpmsg.log
 	(( CHECK_EXIT_CODE += $? ))
 	../common/check_all_patterns_found.pl "perf mem record" "perf mem report" "dump" "raw samples" "delay" < $LOGS_DIR/basic_helpmsg.log
+	(( CHECK_EXIT_CODE += $? ))
+	../common/check_no_patterns_found.pl "No manual entry for" < $LOGS_DIR/basic_helpmsg.err
 	(( CHECK_EXIT_CODE += $? ))
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "help message"

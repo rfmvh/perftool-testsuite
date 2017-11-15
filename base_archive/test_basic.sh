@@ -35,12 +35,14 @@ THIS_TEST_NAME=`basename $0 .sh`
 
 if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
 	# test that a help message is shown and looks reasonable
-	$CMD_PERF archive --help > $LOGS_DIR/basic_helpmsg.log
+	$CMD_PERF archive --help > $LOGS_DIR/basic_helpmsg.log 2> $LOGS_DIR/basic_helpmsg.err
 	PERF_EXIT_CODE=$?
 
 	../common/check_all_patterns_found.pl "PERF-ARCHIVE" "NAME" "SYNOPSIS" "DESCRIPTION" "SEE ALSO" < $LOGS_DIR/basic_helpmsg.log
 	CHECK_EXIT_CODE=$?
 	../common/check_all_patterns_found.pl "perf archive \[file\]" "This command runs perf-buildid-list" "perf.data" < $LOGS_DIR/basic_helpmsg.log
+	(( CHECK_EXIT_CODE += $? ))
+	../common/check_no_patterns_found.pl "No manual entry for" < $LOGS_DIR/basic_helpmsg.err
 	(( CHECK_EXIT_CODE += $? ))
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "help message"

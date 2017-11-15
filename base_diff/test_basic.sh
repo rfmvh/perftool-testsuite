@@ -22,7 +22,7 @@ TEST_RESULT=0
 
 if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
 	# test that a help message is shown and looks reasonable
-	$CMD_PERF diff --help > $LOGS_DIR/basic_helpmsg.log
+	$CMD_PERF diff --help > $LOGS_DIR/basic_helpmsg.log 2> $LOGS_DIR/basic_helpmsg.err
 	PERF_EXIT_CODE=$?
 
 	../common/check_all_patterns_found.pl "PERF-DIFF" "NAME" "SYNOPSIS" "DESCRIPTION" "COMPARISON" "OPTIONS" "SEE ALSO" < $LOGS_DIR/basic_helpmsg.log
@@ -34,6 +34,8 @@ if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
 	../common/check_all_patterns_found.pl "symfs" "baseline-only" "compute" "period" "formula" "order" "percentage" < $LOGS_DIR/basic_helpmsg.log
 	(( CHECK_EXIT_CODE += $? ))
 	../common/check_all_patterns_found.pl "delta" "ratio" "wdiff" < $LOGS_DIR/basic_helpmsg.log
+	(( CHECK_EXIT_CODE += $? ))
+	../common/check_no_patterns_found.pl "No manual entry for" < $LOGS_DIR/basic_helpmsg.err
 	(( CHECK_EXIT_CODE += $? ))
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "help message"

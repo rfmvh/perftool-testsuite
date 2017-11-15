@@ -39,7 +39,7 @@ fi
 
 if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
 	# test that a help message is shown and looks reasonable
-	$CMD_PERF c2c --help > $LOGS_DIR/basic_helpmsg.log
+	$CMD_PERF c2c --help > $LOGS_DIR/basic_helpmsg.log 2> $LOGS_DIR/basic_helpmsg.err
 	PERF_EXIT_CODE=$?
 
 	../common/check_all_patterns_found.pl "PERF-C2C" "NAME" "SYNOPSIS" "DESCRIPTION" "RECORD OPTIONS" "REPORT OPTIONS" "C2C RECORD" "C2C REPORT" "NODE INFO" "COALESCE" "SEE ALSO" < $LOGS_DIR/basic_helpmsg.log
@@ -49,6 +49,8 @@ if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
 	../common/check_all_patterns_found.pl "vmlinux" "input" "node-info" "call-graph" "coalesce" "stdio" < $LOGS_DIR/basic_helpmsg.log
 	(( CHECK_EXIT_CODE += $? ))
 	../common/check_all_patterns_found.pl "stats" "full-symbols" "no-source" "show-all" "display" "force" < $LOGS_DIR/basic_helpmsg.log
+	(( CHECK_EXIT_CODE += $? ))
+	../common/check_no_patterns_found.pl "No manual entry for" < $LOGS_DIR/basic_helpmsg.err
 	(( CHECK_EXIT_CODE += $? ))
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "help message"
