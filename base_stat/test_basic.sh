@@ -17,6 +17,38 @@
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
+
+### help message
+
+if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
+	# test that a help message is shown and looks reasonable
+	$CMD_PERF stat --help > $LOGS_DIR/basic_helpmsg.log 2> $LOGS_DIR/basic_helpmsg.err
+	PERF_EXIT_CODE=$?
+
+	../common/check_all_patterns_found.pl "PERF-STAT" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "STAT\s+RECORD" "STAT\s+REPORT" < $LOGS_DIR/basic_helpmsg.log
+	CHECK_EXIT_CODE=$?
+	../common/check_all_patterns_found.pl "CSV\s+SYNTAX" "EXAMPLES" "SEE\s+ALSO" < $LOGS_DIR/basic_helpmsg.log
+	(( CHECK_EXIT_CODE += $? ))
+	../common/check_all_patterns_found.pl "performance\scounter\sstatistics" "command" "record" "report" < $LOGS_DIR/basic_helpmsg.log
+	(( CHECK_EXIT_CODE += $? ))
+	../common/check_all_patterns_found.pl "event" "no-inherit" "pid" "tid" "all-cpus" "scale" "detailed" "repeat" < $LOGS_DIR/basic_helpmsg.log
+	(( CHECK_EXIT_CODE += $? ))
+	../common/check_all_patterns_found.pl "big-num" "no-aggr" "null" "verbose" "SEP" "field-separator" "cgroup" < $LOGS_DIR/basic_helpmsg.log
+	(( CHECK_EXIT_CODE += $? ))
+	../common/check_all_patterns_found.pl "append" "pre" "post" "interval-print" "metric-only" "per-socket" "per-core" < $LOGS_DIR/basic_helpmsg.log
+	(( CHECK_EXIT_CODE += $? ))
+	../common/check_all_patterns_found.pl "per-thread" "delay" "msecs" "transaction" "topdown" < $LOGS_DIR/basic_helpmsg.log
+	(( CHECK_EXIT_CODE += $? ))
+	../common/check_no_patterns_found.pl "No manual entry for" < $LOGS_DIR/basic_helpmsg.err
+	(( CHECK_EXIT_CODE += $? ))
+
+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "help message"
+	(( TEST_RESULT += $? ))
+else
+	print_testcase_skipped "help message"
+fi
+
+
 #### basic execution
 
 # test that perf stat is even working
