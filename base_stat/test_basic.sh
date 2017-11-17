@@ -27,7 +27,7 @@ if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
 
 	../common/check_all_patterns_found.pl "PERF-STAT" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "STAT\s+RECORD" "STAT\s+REPORT" < $LOGS_DIR/basic_helpmsg.log
 	CHECK_EXIT_CODE=$?
-	../common/check_all_patterns_found.pl "CSV\s+SYNTAX" "EXAMPLES" "SEE\s+ALSO" < $LOGS_DIR/basic_helpmsg.log
+	../common/check_all_patterns_found.pl "CSV\s+FORMAT" "EXAMPLES" "SEE\s+ALSO" < $LOGS_DIR/basic_helpmsg.log
 	(( CHECK_EXIT_CODE += $? ))
 	../common/check_all_patterns_found.pl "performance\scounter\sstatistics" "command" "record" "report" < $LOGS_DIR/basic_helpmsg.log
 	(( CHECK_EXIT_CODE += $? ))
