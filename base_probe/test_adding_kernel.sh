@@ -61,7 +61,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe :: perf list
 $CMD_PERF probe -l > $LOGS_DIR/adding_kernel_list-l.log
 PERF_EXIT_CODE=$?
 
-../common/check_all_patterns_found.pl "\s*probe:$TEST_PROBE\s+\(on ${TEST_PROBE}(?:\+$RE_NUMBER_HEX)?@.+\)" < $LOGS_DIR/adding_kernel_list-l.log
+../common/check_all_patterns_found.pl "\s*probe:${TEST_PROBE}(?:_\d+)?\s+\(on ${TEST_PROBE}(?:\+$RE_NUMBER_HEX)?@.+\)" < $LOGS_DIR/adding_kernel_list-l.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe :: perf probe -l"
@@ -70,15 +70,18 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe :: perf prob
 
 ### using added probe
 
-$CMD_PERF stat -e probe:$TEST_PROBE -o $LOGS_DIR/adding_kernel_using_probe.log -- cat /proc/uptime > /dev/null
+$CMD_PERF stat -e probe:$TEST_PROBE\* -o $LOGS_DIR/adding_kernel_using_probe.log -- cat /proc/uptime > /dev/null
 PERF_EXIT_CODE=$?
 
 REGEX_STAT_HEADER="\s*Performance counter stats for \'cat /proc/uptime\':"
 # the value should be greater than 1
-REGEX_STAT_VALUES="\s*[1-9][0-9]*\s+probe:$TEST_PROBE"
+REGEX_STAT_VALUES="\s*\d+\s+probe:$TEST_PROBE"
+REGEX_STAT_VALUE_NONZERO="\s*[1-9][0-9]*\s+probe:$TEST_PROBE"
 REGEX_STAT_TIME="\s*$RE_NUMBER\s+seconds time elapsed"
 ../common/check_all_lines_matched.pl "$REGEX_STAT_HEADER" "$REGEX_STAT_VALUES" "$REGEX_STAT_TIME" "$RE_LINE_COMMENT" "$RE_LINE_EMPTY" < $LOGS_DIR/adding_kernel_using_probe.log
 CHECK_EXIT_CODE=$?
+../common/check_all_patterns_found.pl "$REGEX_STAT_HEADER" "$REGEX_STAT_VALUE_NONZERO" "$REGEX_STAT_TIME" < $LOGS_DIR/adding_kernel_using_probe.log
+(( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "using added probe"
 (( TEST_RESULT += $? ))
