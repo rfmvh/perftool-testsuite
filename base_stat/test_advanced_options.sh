@@ -55,7 +55,7 @@ if [ -n "$EVENTS_TO_TEST" ]; then
 		# result sanity
 		FULL_RESULT=`grep -P '^\d' $LOGS_DIR/delay/$event--full.log | awk -F';' '{print $1}'`
 		HALF_RESULT=`grep -P '^\d' $LOGS_DIR/delay/$event--half.log | awk -F';' '{print $1}'`
-		ZERO=`echo "($FULL_RESULT * 0.2 > $HALF_RESULT) + ($FULL_RESULT * 0.49 < $HALF_RESULT)" | bc`
+		ZERO=`echo "($FULL_RESULT * 0.05 > $HALF_RESULT) + ($FULL_RESULT * 0.49 < $HALF_RESULT)" | bc`
 		# ZERO should be equal to 0 if PASS
 
 		print_results 0 $ZERO "delay event $event values OK"
