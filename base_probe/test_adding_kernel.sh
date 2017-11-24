@@ -74,8 +74,8 @@ $CMD_PERF stat -e probe:$TEST_PROBE\* -o $LOGS_DIR/adding_kernel_using_probe.log
 PERF_EXIT_CODE=$?
 
 REGEX_STAT_HEADER="\s*Performance counter stats for \'cat /proc/uptime\':"
-# the value should be greater than 1
 REGEX_STAT_VALUES="\s*\d+\s+probe:$TEST_PROBE"
+# the value should be greater than 1
 REGEX_STAT_VALUE_NONZERO="\s*[1-9][0-9]*\s+probe:$TEST_PROBE"
 REGEX_STAT_TIME="\s*$RE_NUMBER\s+seconds time elapsed"
 ../common/check_all_lines_matched.pl "$REGEX_STAT_HEADER" "$REGEX_STAT_VALUES" "$REGEX_STAT_TIME" "$RE_LINE_COMMENT" "$RE_LINE_EMPTY" < $LOGS_DIR/adding_kernel_using_probe.log
