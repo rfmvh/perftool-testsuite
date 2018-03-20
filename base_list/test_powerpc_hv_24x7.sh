@@ -57,8 +57,9 @@ else
 	fi
 fi
 
-# we can continue only if VIRT is 'LPAR', 'none' or unknown
-if ! [ "$VIRT" = "" -o "$VIRT" = "unknown" -o "$VIRT" = "none" ]; then
+# we can continue only if VIRT is "LPAR" or unknown
+echo "$VIRT" | grep -i -q "lpar"
+if ! [ "$VIRT" = "" -o "$VIRT" = "unknown" -o $? -eq 0 ]; then
 	print_overall_skipped
 	exit 0
 fi
