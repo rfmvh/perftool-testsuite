@@ -76,6 +76,8 @@ REGEX_HV_EVENT="hv_24x7\/$REGEX_HV_EVENTNAME(?:$REGEX_HV_ARG)+\/"
 REGEX_LINE_BASIC="^\s*$REGEX_HV_EVENT\s+\[Kernel\sPMU\sevent\]"
 ../common/check_all_lines_matched.pl "$REGEX_LINE_BASIC" < $LOGS_DIR/hv_24x7_list.log
 CHECK_EXIT_CODE=$?
+../common/check_all_patterns_found.pl "$REGEX_LINE_BASIC" < $LOGS_DIR/hv_24x7_list.log
+(( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing events"
 (( TEST_RESULT += $? ))
