@@ -38,6 +38,7 @@ fi
 disable_nmi_watchdog_if_exists()
 {
 	test -e /proc/sys/kernel/nmi_watchdog || return 9
+	stat -c '%A' /proc/sys/kernel/nmi_watchdog | grep -q 'w' || return 9
 	export NMI_WD_PREVIOUS_VALUE=`cat /proc/sys/kernel/nmi_watchdog`
 	echo 0 > /proc/sys/kernel/nmi_watchdog
 	return $NMI_WD_PREVIOUS_VALUE
