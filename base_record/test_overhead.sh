@@ -138,8 +138,10 @@ fi
 # kill the load processes if there is still some
 LOAD_PIDS=`pidof load`
 kill $LOAD_PIDS &> /dev/null
-! wait $LOAD_PIDS 2> $LOGS_DIR/overhead_kill_all.log
-../common/check_all_patterns_found.pl "Terminated" "99999" "/dev/null" < $LOGS_DIR/overhead_kill_all.log
+! wait $LOAD_PIDS &> /dev/null
+sleep 3
+test -z "`pidof load`" || kill -9 $LOAD_PIDS &> /dev/null
+test -z "`pidof load`"
 CHECK_EXIT_CODE=$?
 
 print_results 0 $CHECK_EXIT_CODE "killing all the load"
