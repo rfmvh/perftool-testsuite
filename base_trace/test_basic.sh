@@ -123,7 +123,7 @@ $CMD_PERF trace -p $! -o $LOGS_DIR/basic_attach.log
 PERF_EXIT_CODE=$?
 
 # sanity check
-REGEX_UNPAIRED="^\s+\?\s*\(\s*\?\s*\):\s+\.\.\.\s+\[continued\]:\s+(?:nano)?sleep\(\)\)\s*=\s*0"
+REGEX_UNPAIRED="^\s+\?\s*\(\s*\??\s*\):\s+\.\.\.\s+\[continued\]:\s+(?:nano)?sleep\(\)\)\s*=\s*0"
 ../common/check_all_lines_matched.pl "$REGEX_UNPAIRED" "$RE_LINE_TRACE_ONE_PROC" "$RE_LINE_TRACE_CONTINUED" "exit" < $LOGS_DIR/basic_attach.log
 CHECK_EXIT_CODE=$?
 
