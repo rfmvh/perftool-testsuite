@@ -48,7 +48,7 @@ done
 $CMD_PERF list probe:\* > $LOGS_DIR/adding_kernel_list.log
 PERF_EXIT_CODE=$?
 
-../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "List of pre-defined events" "probe:${TEST_PROBE}(?:_\d+)?\s+\[Tracepoint event\]" < $LOGS_DIR/adding_kernel_list.log
+../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "List of pre-defined events" "probe:${TEST_PROBE}(?:_\d+)?\s+\[Tracepoint event\]" "Metric Groups:" < $LOGS_DIR/adding_kernel_list.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe :: perf list"
@@ -106,7 +106,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "deleting added probe"
 $CMD_PERF list probe:\* > $LOGS_DIR/adding_kernel_list_removed.log
 PERF_EXIT_CODE=$?
 
-../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "List of pre-defined events" < $LOGS_DIR/adding_kernel_list_removed.log
+../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "List of pre-defined events" "Metric Groups:" < $LOGS_DIR/adding_kernel_list_removed.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing removed probe (should NOT be listed)"
@@ -265,7 +265,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "function with retval :: add"
 (( TEST_RESULT += $? ))
 
 # recording some data
-$CMD_PERF record -e probe:$TEST_PROBE -o $CURRENT_TEST_DIR/perf.data -- cat /proc/cpuinfo > /dev/null 2> $LOGS_DIR/adding_kernel_func_retval_record.err
+$CMD_PERF record -e probe:$TEST_PROBE\* -o $CURRENT_TEST_DIR/perf.data -- cat /proc/cpuinfo > /dev/null 2> $LOGS_DIR/adding_kernel_func_retval_record.err
 PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/adding_kernel_func_retval_record.err
@@ -278,7 +278,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "function with retval :: record"
 $CMD_PERF script -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/adding_kernel_func_retval_script.log
 PERF_EXIT_CODE=$?
 
-REGEX_SCRIPT_LINE="\s*cat\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+$RE_NUMBER:\s+probe:$TEST_PROBE:\s+\($RE_NUMBER_HEX\s+<\-\s+$RE_NUMBER_HEX\)\s+arg1=$RE_NUMBER_HEX"
+REGEX_SCRIPT_LINE="\s*cat\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+$RE_NUMBER:\s+probe:$TEST_PROBE\w*:\s+\($RE_NUMBER_HEX\s+<\-\s+$RE_NUMBER_HEX\)\s+arg1=$RE_NUMBER_HEX"
 ../common/check_all_lines_matched.pl "$REGEX_SCRIPT_LINE" < $LOGS_DIR/adding_kernel_func_retval_script.log
 CHECK_EXIT_CODE=$?
 

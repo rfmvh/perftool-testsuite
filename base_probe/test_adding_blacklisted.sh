@@ -52,7 +52,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "adding blacklisted function $BLA
 $CMD_PERF list probe:\* > $LOGS_DIR/adding_blacklisted_list.log
 PERF_EXIT_CODE=$?
 
-../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "List of pre-defined events" < $LOGS_DIR/adding_blacklisted_list.log
+../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "List of pre-defined events" "Metric Groups:" < $LOGS_DIR/adding_blacklisted_list.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing blacklisted probe (should NOT be listed)"
