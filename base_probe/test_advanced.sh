@@ -98,7 +98,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "function retval probing :: add"
 ### function retval probing :: use
 
 # perf record should catch samples including the function return value
-$CMD_PERF record -e 'probe_advanced:incr' -o $CURRENT_TEST_DIR/perf.data $CURRENT_TEST_DIR/examples/advanced > /dev/null 2> $LOGS_DIR/advanced_funcretval_record.log
+$CMD_PERF record -e 'probe_advanced:incr*' -o $CURRENT_TEST_DIR/perf.data $CURRENT_TEST_DIR/examples/advanced > /dev/null 2> $LOGS_DIR/advanced_funcretval_record.log
 PERF_EXIT_CODE=$?
 
 # perf record should catch exactly 9 samples
@@ -113,7 +113,7 @@ $CMD_PERF script -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/advanced_funcretval_
 PERF_EXIT_CODE=$?
 
 # checking for the perf script output sanity
-REGEX_SCRIPT_LINE="\s*advanced\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+$RE_NUMBER:\s+probe_advanced:incr:\s+\($RE_NUMBER_HEX\s+<\-\s+$RE_NUMBER_HEX\) arg1=0x$RE_NUMBER_HEX"
+REGEX_SCRIPT_LINE="\s*advanced\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+$RE_NUMBER:\s+probe_advanced:incr\w*:\s+\($RE_NUMBER_HEX\s+<\-\s+$RE_NUMBER_HEX\) arg1=0x$RE_NUMBER_HEX"
 ../common/check_all_lines_matched.pl "$REGEX_SCRIPT_LINE" < $LOGS_DIR/advanced_funcretval_script.log
 CHECK_EXIT_CODE=$?
 
