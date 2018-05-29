@@ -90,7 +90,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "number of samples"
 PERF_EXIT_CODE=$?
 
 REGEX_LINE_HOSTNAME="#\s+hostname\s*:\s*$MY_HOSTNAME"
-REGEX_LINE_KERNEL="#\s+os release\s*:\s*$MY_KERNEL_VERSION"
+REGEX_LINE_KERNEL="#\s+os release\s*:\s*${MY_KERNEL_VERSION//+/\\+}"
 REGEX_LINE_PERF="#\s+perf version\s*:\s*"
 REGEX_LINE_ARCH="#\s+arch\s*:\s*$MY_ARCH"
 REGEX_LINE_CPUS_ONLINE="#\s+nrcpus online\s*:\s*$MY_CPUS_ONLINE"
