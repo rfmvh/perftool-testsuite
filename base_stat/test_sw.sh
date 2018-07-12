@@ -17,7 +17,7 @@
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
-EVENTS_TO_TEST=`$CMD_PERF list sw | grep "Software event" | awk '{print $1}' | egrep '^.' | tr '\n' ' '`
+EVENTS_TO_TEST=`$CMD_PERF list sw | grep "Software event" | grep -v "bpf" | awk '{print $1}' | egrep '^.' | tr '\n' ' '`
 if [ -z "$EVENTS_TO_TEST" ]; then
 	print_overall_skipped
 	exit 0
