@@ -31,17 +31,17 @@ int main(int argc, char *argv[])
 
 	/* create */
 	for(i = 0; i < nthreads; i++)
-    {
+	{
 		r = pthread_create (&threads[i], NULL, start, NULL);
 		assert (r == 0);
-    }
+	}
 
 	/* join */
 	for(i = 0; i < nthreads; i++)
-    {
+	{
 		r = pthread_join (threads[i], NULL);
 		assert (r == 0);
-    }
+	}
 
 	return 0;
 }
