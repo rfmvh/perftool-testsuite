@@ -39,7 +39,8 @@ REGEX_SCOPE_FAIL="Failed to find scope of probe point"
 REGEX_SKIP_MESSAGE=" is blacklisted function, skip it\."
 REGEX_NOT_FOUND_MESSAGE="Probe point \'$BLACKFUNC\' not found."
 REGEX_ERROR_MESSAGE="Error: Failed to add events."
-../common/check_all_lines_matched.pl "$REGEX_SKIP_MESSAGE" "$REGEX_NOT_FOUND_MESSAGE" "$REGEX_ERROR_MESSAGE" "$REGEX_SCOPE_FAIL" < $LOGS_DIR/adding_blacklisted.err
+REGEX_INVALID_ARGUMENT="Failed to write event: Invalid argument"
+../common/check_all_lines_matched.pl "$REGEX_SKIP_MESSAGE" "$REGEX_NOT_FOUND_MESSAGE" "$REGEX_ERROR_MESSAGE" "$REGEX_SCOPE_FAIL" "$REGEX_INVALID_ARGUMENT" < $LOGS_DIR/adding_blacklisted.err
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "adding blacklisted function $BLACKFUNC"
