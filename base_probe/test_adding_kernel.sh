@@ -77,7 +77,7 @@ REGEX_STAT_HEADER="\s*Performance counter stats for \'cat /proc/uptime\':"
 REGEX_STAT_VALUES="\s*\d+\s+probe:$TEST_PROBE"
 # the value should be greater than 1
 REGEX_STAT_VALUE_NONZERO="\s*[1-9][0-9]*\s+probe:$TEST_PROBE"
-REGEX_STAT_TIME="\s*$RE_NUMBER\s+seconds time elapsed"
+REGEX_STAT_TIME="\s*$RE_NUMBER\s+seconds (?:time elapsed|user|sys)"
 ../common/check_all_lines_matched.pl "$REGEX_STAT_HEADER" "$REGEX_STAT_VALUES" "$REGEX_STAT_TIME" "$RE_LINE_COMMENT" "$RE_LINE_EMPTY" < $LOGS_DIR/adding_kernel_using_probe.log
 CHECK_EXIT_CODE=$?
 ../common/check_all_patterns_found.pl "$REGEX_STAT_HEADER" "$REGEX_STAT_VALUE_NONZERO" "$REGEX_STAT_TIME" < $LOGS_DIR/adding_kernel_using_probe.log
