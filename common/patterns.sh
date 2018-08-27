@@ -13,6 +13,20 @@ export RE_NUMBER_HEX="[0-9A-Fa-f]+"
 #    deadbeef
 
 
+export RE_ADDRESS="0x$RE_NUMBER_HEX"
+# Memory address
+# Examples:
+#    0x123abc
+#    0xffffffff9abe8ae8
+#    0x0
+
+
+export RE_ADDRESS_NOT_NULL="0x[0-9A-Fa-f]*[1-9A-Fa-f]+[0-9A-Fa-f]*"
+# Memory address (not NULL)
+# Examples:
+#    0xffffffff9abe8ae8
+
+
 export RE_PROCESS_PID="\w+\/\d+"
 # A process with PID
 # Example:
