@@ -47,7 +47,7 @@ if [ -n "$CYCLES_AVAIL" ]; then
 		$CMD_PERF record -a -e $EVENT -o $CURRENT_TEST_DIR/perf.data -F $frq -- $CMD_LONGER_SLEEP > $LOGS_DIR/evlist_freq_record_$frq.log 2> $LOGS_DIR/evlist_freq_record_$frq.err
 		PERF_EXIT_CODE=$?
 
-		../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" "perf.data" < $LOGS_DIR/evlist_freq_record_$frq.err
+		../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2_TOLERANT" "perf.data" < $LOGS_DIR/evlist_freq_record_$frq.err
 		CHECK_EXIT_CODE=$?
 
 		print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "sample frequency check :: record with $frq"
@@ -81,7 +81,7 @@ if [ -n "$EVENTS_TO_TEST" ]; then
 		$CMD_PERF record -a -e $event -o $CURRENT_TEST_DIR/perf.data -- $CMD_LONGER_SLEEP > $LOGS_DIR/evlist_record_$event.log 2> $LOGS_DIR/evlist_record_$event.err
 		PERF_EXIT_CODE=$?
 
-		../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" "perf.data" < $LOGS_DIR/evlist_record_$event.err
+		../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2_TOLERANT" "perf.data" < $LOGS_DIR/evlist_record_$event.err
 		CHECK_EXIT_CODE=$?
 
 		print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "various events :: record $event"

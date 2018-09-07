@@ -116,6 +116,17 @@ export RE_LINE_RECORD2="^\[\s+perf\s+record:\s+Captured and wrote $RE_NUMBER\s*M
 #    [ perf record: Captured and wrote 0.405 MB ./perf.data.3 (109 samples) ]
 
 
+export RE_LINE_RECORD2_TOLERANT="^\[\s+perf\s+record:\s+Captured and wrote $RE_NUMBER\s*MB\s+(?:[\w\+\.-]*(?:$RE_PATH)?\/)?perf\.data(?:\.\d+)?\s*(?:\(~?$RE_NUMBER samples\))?\s+\].*$"
+# The second line of perf-record "OK" output, even no samples is OK here
+# Examples:
+#    [ perf record: Captured and wrote 0.405 MB perf.data (109 samples) ]
+#    [ perf record: Captured and wrote 0.405 MB perf.data (~109 samples) ]
+#    [ perf record: Captured and wrote 0.405 MB /some/temp/dir/perf.data (109 samples) ]
+#    [ perf record: Captured and wrote 0.405 MB ./perf.data (109 samples) ]
+#    [ perf record: Captured and wrote 0.405 MB ./perf.data.3 (109 samples) ]
+#    [ perf record: Captured and wrote 0.405 MB perf.data ]
+
+
 export RE_LINE_TRACE_FULL="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*$RE_PROCESS_PID\s+.*\)\s+=\s+\-?$RE_NUMBER|$RE_NUMBER_HEX.*$"
 # A line of perf-trace output
 # Examples:
