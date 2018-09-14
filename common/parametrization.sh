@@ -36,6 +36,13 @@ export PARAM_STAT_24x7_ALL_DOMAINS=${PARAM_STAT_24x7_ALL_DOMAINS:-n}
 # when you do not want to deep dive.
 export PARAM_STAT_TRACEPOINT_EVENTS_SYNTAX=${PARAM_STAT_TRACEPOINT_EVENTS_SYNTAX:-n}
 
+# If set, the "Kernel PMU events" will be tested with perf stat.
+# These are hardware PMU events, usually defined by the JSON files
+# in tools/perf/pmu-events/ dir tree. Since there might be dozens
+# of events (also because they are specified with all unit masks),
+# this parameter allows you to easily disable the test.
+export PARAM_STAT_ALL_PMU_EVENTS=${PARAM_STAT_ALL_PMU_EVENTS:-y}
+
 
 #### perf_trace
 
