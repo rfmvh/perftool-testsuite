@@ -75,7 +75,7 @@ REGEX_HV_ARG=",(?:domain|core|chip)=\?"
 REGEX_HV_EVENTNAME="[A-Za-z0-9](?:[A-Za-z0-9]|_[A-Za-z0-9])+"
 REGEX_HV_EVENT="hv_24x7\/$REGEX_HV_EVENTNAME(?:$REGEX_HV_ARG)+\/"
 REGEX_LINE_BASIC="^\s*$REGEX_HV_EVENT\s+\[Kernel\sPMU\sevent\]"
-../common/check_all_lines_matched.pl "$REGEX_LINE_BASIC" < $LOGS_DIR/hv_24x7_list.log
+../common/check_all_lines_matched.pl "$REGEX_LINE_BASIC" "$RE_LINE_EMPTY" "Metric Groups:" < $LOGS_DIR/hv_24x7_list.log
 CHECK_EXIT_CODE=$?
 ../common/check_all_patterns_found.pl "$REGEX_LINE_BASIC" < $LOGS_DIR/hv_24x7_list.log
 (( CHECK_EXIT_CODE += $? ))
