@@ -41,7 +41,7 @@ if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
 
 	../common/check_all_patterns_found.pl "PERF-MEM" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "SEE ALSO" < $LOGS_DIR/basic_helpmsg.log
 	CHECK_EXIT_CODE=$?
-	../common/check_all_patterns_found.pl "command" "type" "dump-raw-samples" "field-separator" "cpu-list" < $LOGS_DIR/basic_helpmsg.log
+	../common/check_all_patterns_found.pl "command" "type" "dump-raw-samples" "field-separator" "cpu" < $LOGS_DIR/basic_helpmsg.log
 	(( CHECK_EXIT_CODE += $? ))
 	../common/check_all_patterns_found.pl "perf mem record" "perf mem report" "dump" "raw samples" "delay" < $LOGS_DIR/basic_helpmsg.log
 	(( CHECK_EXIT_CODE += $? ))
