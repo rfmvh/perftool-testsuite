@@ -23,7 +23,7 @@ TEST_RESULT=0
 FULL_DELAY_S=0.4
 FULL_DELAY_MS=`echo "$FULL_DELAY_S * 1000" | bc`
 HALF_DELAY_MS=`echo "scale=0 ; $FULL_DELAY_MS / 2" | bc`
-EVENTS_TO_TEST=`$CMD_PERF list | grep -e cpu-cycles -e instructions -e cpu-clock | perl -ne 'print "$1 " if /^\s\s([\w\-]+)\s/'`
+EVENTS_TO_TEST=`$CMD_PERF list hw sw | grep -e cpu-cycles -e instructions -e cpu-clock | perl -ne 'print "$1 " if /^\s\s([\w\-]+)\s/'`
 if [ -n "$EVENTS_TO_TEST" ]; then
 	test -d $LOGS_DIR/delay || mkdir $LOGS_DIR/delay
 
