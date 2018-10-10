@@ -52,12 +52,12 @@ fi
 #### basic execution
 
 # test that perf stat is even working
-$CMD_PERF stat $CMD_SIMPLE 2> $LOGS_DIR/01.log
+$CMD_PERF stat $CMD_SIMPLE 2> $LOGS_DIR/basic_basic.log
 PERF_EXIT_CODE=$?
 
 REGEX_HEADER="\s*Performance counter stats for 'true':"
 REGEX_LINES="\s*"$RE_NUMBER"\s+"$RE_EVENT"\s+#\s+"$RE_NUMBER"%?.*"
-../common/check_all_patterns_found.pl "$REGEX_HEADER" "$REGEX_LINES" < $LOGS_DIR/01.log
+../common/check_all_patterns_found.pl "$REGEX_HEADER" "$REGEX_LINES" < $LOGS_DIR/basic_basic.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic execution"
@@ -67,13 +67,13 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic execution"
 #### some options
 
 # test some basic options that they change the behaviour
-$CMD_PERF stat -i -a -c -r 3 -o /dev/stdout -- $CMD_BASIC_SLEEP > $LOGS_DIR/02.log
+$CMD_PERF stat -i -a -c -r 3 -o /dev/stdout -- $CMD_BASIC_SLEEP > $LOGS_DIR/basic_someopts.log
 PERF_EXIT_CODE=$?
 
 REGEX_HEADER="^\s*Performance counter stats for '(sleep [\d\.]+|system wide)' \(3 runs\):"
 REGEX_LINES="\s*"$RE_NUMBER"\s+"$RE_EVENT"\s+#\s+"$RE_NUMBER"%?.*\s*"$RE_NUMBER"%?.*"
 REGEX_FOOTER="^\s*$RE_NUMBER\s+(?:\+\-\s+$RE_NUMBER\s+)?seconds time elapsed.*"
-../common/check_all_patterns_found.pl "$REGEX_HEADER" "$REGEX_LINES" "$REGEX_FOOTER" < $LOGS_DIR/02.log
+../common/check_all_patterns_found.pl "$REGEX_HEADER" "$REGEX_LINES" "$REGEX_FOOTER" < $LOGS_DIR/basic_someopts.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "some options"
@@ -83,13 +83,13 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "some options"
 #### CSV output
 
 # with -x'<SEPARATOR>' perf stat should produce a CSV output
-$CMD_PERF stat -x';' -o /dev/stdout -a -- sleep 0.1 > $LOGS_DIR/03.log
+$CMD_PERF stat -x';' -o /dev/stdout -a -- sleep 0.1 > $LOGS_DIR/basic_csv.log
 PERF_EXIT_CODE=$?
 
 REGEX_LINES="^"$RE_NUMBER";+"$RE_EVENT
 REGEX_UNSUPPORTED_LINES="^<not supported>;+"$RE_EVENT
 REGEX_METRIC_LINE="stalled\scycles\sper\sinsn"
-../common/check_all_lines_matched.pl "$REGEX_LINES" "$REGEX_METRIC_LINE" "$REGEX_UNSUPPORTED_LINES" "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" < $LOGS_DIR/03.log
+../common/check_all_lines_matched.pl "$REGEX_LINES" "$REGEX_METRIC_LINE" "$REGEX_UNSUPPORTED_LINES" "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" < $LOGS_DIR/basic_csv.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "CSV output"
