@@ -72,7 +72,7 @@ PERF_EXIT_CODE=$?
 
 REGEX_HEADER="^\s*Performance counter stats for '(sleep [\d\.]+|system wide)' \(3 runs\):"
 REGEX_LINES="\s*"$RE_NUMBER"\s+"$RE_EVENT"\s+#\s+"$RE_NUMBER"%?.*\s*"$RE_NUMBER"%?.*"
-REGEX_FOOTER="^\s*"$RE_NUMBER" seconds time elapsed.*"
+REGEX_FOOTER="^\s*$RE_NUMBER\s+(?:\+\-\s+$RE_NUMBER\s+)?seconds time elapsed.*"
 ../common/check_all_patterns_found.pl "$REGEX_HEADER" "$REGEX_LINES" "$REGEX_FOOTER" < $LOGS_DIR/02.log
 CHECK_EXIT_CODE=$?
 
