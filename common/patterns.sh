@@ -55,7 +55,7 @@ export RE_EVENT_RAW="r$RE_NUMBER_HEX"
 #    r1a
 
 
-export RE_EVENT_CPU="cpu/(\w=""$RE_NUMBER_HEX"",?)+/p*" # FIXME
+export RE_EVENT_CPU="cpu/(\w+=$RE_NUMBER_HEX,?)+/p*"
 # Specification of a CPU event
 # Examples:
 #    cpu/event=12,umask=34/pp
@@ -74,18 +74,30 @@ export RE_EVENT_SUBSYSTEM="[\w\-]+:[\w\-]+"
 #    sched:sched_switch
 
 
-export RE_PATH="(?:\/[\w\+\.-]+)+"
+export RE_FILE_NAME="[\w\+\.-]+"
+# A filename
+# Examples:
+#    libstdc++.so.6
+#!   some/path
+
+
+export RE_PATH_ABSOLUTE="(?:\/$RE_FILE_NAME)+"
 # A full filepath
 # Examples:
 #    /usr/lib64/somelib.so.5.4.0
 #    /lib/modules/4.3.0-rc5/kernel/fs/xfs/xfs.ko
 #    /usr/bin/mv
+#!   some/relative/path
+#!   ./some/relative/path
 
 
-export RE_FILE_NAME="[\w\+\.-]+"
-# A filename
+export RE_PATH="(?:$RE_FILE_NAME)?$RE_PATH_ABSOLUTE"
+# A filepath
 # Examples:
-#    libstdc++.so.6
+#    /usr/lib64/somelib.so.5.4.0
+#    /lib/modules/4.3.0-rc5/kernel/fs/xfs/xfs.ko
+#    ./.emacs
+#    src/fs/file.c
 
 
 export RE_LINE_COMMENT="^#.*"
@@ -160,4 +172,4 @@ export RE_LINE_TRACE_SUMMARY_CONTENT="^\s*\w+\s+(?:$RE_NUMBER\s+){5}$RE_NUMBER%"
 export RE_LINE_REPORT_CONTENT="^\s+$RE_NUMBER%\s+\w+\s+\S+\s+\S+\s+\S+" # FIXME
 # A line from typicap perf report --stdio output
 # Example:
-#    100.00%  sleep    [kernel.vmlinux]  [k] syscall_return_slowpath
+#     100.00%  sleep    [kernel.vmlinux]  [k] syscall_return_slowpath
