@@ -36,6 +36,8 @@ fi
 
 clear_buildid_cache()
 {
-	rm -rf $BUILDIDDIR/.b*
-	rm -rf $BUILDIDDIR/*
+	if [ -n "$BUILDIDDIR" ]; then
+		rm -rf $BUILDIDDIR/.b*
+		rm -rf $BUILDIDDIR/*
+	fi
 }
