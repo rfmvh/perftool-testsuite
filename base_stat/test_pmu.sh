@@ -23,7 +23,7 @@ if [ ! "$PARAM_STAT_ALL_PMU_EVENTS" == "y" ]; then
 	exit 0
 fi
 
-EVENTS_TO_TEST=`$CMD_PERF list --no-desc pmu | grep "Kernel PMU event" | grep -v -e uncore -e offcore -e msr -e intel_bts -e '?' -e hv_gpci | awk '{print $1}' | egrep '^.' | tr '\n' ' '`
+EVENTS_TO_TEST=`$CMD_PERF list --no-desc pmu | grep "Kernel PMU event" | grep -v -e uncore -e offcore -e msr -e '//' -e '?' -e hv_gpci | awk '{print $1}' | egrep '^.' | tr '\n' ' '`
 if [ -z "$EVENTS_TO_TEST" ]; then
 	if [ "$TEST_IGNORE_MISSING_PMU" = "y" ]; then
 		print_overall_skipped
