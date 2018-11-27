@@ -42,10 +42,11 @@ fi
 EVENT="cpu-cycles"
 CYCLES_AVAIL=`$CMD_PERF list | grep "$EVENT"`
 if [ -n "$CYCLES_AVAIL" ]; then
-	# make sure the frequency is not too low
-	SAMPLE_RATE=`cat /proc/sys/kernel/perf_event_max_sample_rate`
-	test $SAMPLE_RATE -lt 2000 && echo 25000 > /proc/sys/kernel/perf_event_max_sample_rate
 	for frq in 100 200 1000; do
+		# make sure the frequency is not too low
+		SAMPLE_RATE=`cat /proc/sys/kernel/perf_event_max_sample_rate`
+		test $SAMPLE_RATE -lt 2000 && echo 25000 > /proc/sys/kernel/perf_event_max_sample_rate
+
 		# record with frequency $frq
 		$CMD_PERF record -a -e $EVENT -o $CURRENT_TEST_DIR/perf.data -F $frq -- $CMD_LONGER_SLEEP > $LOGS_DIR/evlist_freq_record_$frq.log 2> $LOGS_DIR/evlist_freq_record_$frq.err
 		PERF_EXIT_CODE=$?
