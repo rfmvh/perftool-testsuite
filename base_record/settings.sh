@@ -54,3 +54,12 @@ should_test_callgraph_dwarf()
 			;;
 	esac
 }
+
+should_support_intel_pt()
+{
+	# return values
+	# 0 = expected to support Intel Processor Trace
+	# 1 = not expected to support Intel Processor Trace
+
+	$CMD_PERF list | grep -q 'intel_pt'
+}
