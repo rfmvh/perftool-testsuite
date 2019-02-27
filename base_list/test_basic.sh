@@ -29,6 +29,8 @@ if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
 	CHECK_EXIT_CODE=$?
 	../common/check_all_patterns_found.pl "perf\-list \- List all symbolic event types" < $LOGS_DIR/basic_helpmsg.log
 	(( CHECK_EXIT_CODE += $? ))
+	../common/check_all_patterns_found.pl "hw" "sw" "cache" "tracepoint" "metricgroup" "event_glob" < $LOGS_DIR/basic_helpmsg.log
+	(( CHECK_EXIT_CODE += $? ))
 	../common/check_no_patterns_found.pl "No manual entry for" < $LOGS_DIR/basic_helpmsg.err
 	(( CHECK_EXIT_CODE += $? ))
 
