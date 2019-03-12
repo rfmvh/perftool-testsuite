@@ -38,7 +38,7 @@ EXPECTED=$(echo `seq $(( N - 1 ))` | perl -lpe "()=m{\\s(?{\$_+=\$'})}g")
 
 ### record PT data
 rm -f $CURRENT_TEST_DIR/perf.data
-$CMD_PERF record -e intel_pt//u -o $CURRENT_TEST_DIR/perf.data $CURRENT_TEST_DIR/examples/load $NO > /dev/null 2> $LOGS_DIR/intelpt_record.err
+$CMD_PERF record -e intel_pt//u -o $CURRENT_TEST_DIR/perf.data $CURRENT_TEST_DIR/examples/load $N > /dev/null 2> $LOGS_DIR/intelpt_record.err
 PERF_EXIT_CODE=$?
 
 # check the perf record output
@@ -68,10 +68,10 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "script --itrace"
 
 
 ### data sanity
-FUNC_A_CALLS=`perl -ne 'print if /function_F .* => .* function_a/' < $LOGS_DIR/intelpt_script.log | wc -l`
-FUNC_A_RETNS=`perl -ne 'print if /function_a .* => .* function_F/' < $LOGS_DIR/intelpt_script.log | wc -l`
-FUNC_B_CALLS=`perl -ne 'print if /function_F .* => .* function_b/' < $LOGS_DIR/intelpt_script.log | wc -l`
-FUNC_B_RETNS=`perl -ne 'print if /function_b .* => .* function_F/' < $LOGS_DIR/intelpt_script.log | wc -l`
+FUNC_A_CALLS=`perl -ne 'print if /function_F.* => .* function_a/' < $LOGS_DIR/intelpt_script.log | wc -l`
+FUNC_A_RETNS=`perl -ne 'print if /function_a.* => .* function_F/' < $LOGS_DIR/intelpt_script.log | wc -l`
+FUNC_B_CALLS=`perl -ne 'print if /function_F.* => .* function_b/' < $LOGS_DIR/intelpt_script.log | wc -l`
+FUNC_B_RETNS=`perl -ne 'print if /function_b.* => .* function_F/' < $LOGS_DIR/intelpt_script.log | wc -l`
 
 test $FUNC_A_CALLS -eq $EXPECTED
 print_results 0 $? "data sanity :: function_a call count ($FUNC_A_CALLS == $EXPECTED)"
