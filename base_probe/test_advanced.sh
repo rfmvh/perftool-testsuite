@@ -176,7 +176,7 @@ fi
 
 ######## function argument kprobing ########
 
-check_kprobes_available
+check_kprobes_available && test "$MY_ARCH" != "s390x"
 if [ $? -ne 0 ]; then
 	print_testcase_skipped "function string argument kprobing"
 else
@@ -184,6 +184,7 @@ else
 # clean up between the tests
 clear_all_probes
 find . -name perf.data\* | xargs -r rm
+
 
 ### function string argument kprobing :: add
 
