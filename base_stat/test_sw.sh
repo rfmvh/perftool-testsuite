@@ -36,7 +36,7 @@ test -d $LOGS_DIR/sw || mkdir $LOGS_DIR/sw
 for event in $EVENTS_TO_TEST; do
 	$CMD_PERF stat -a -e $event -o $LOGS_DIR/sw/$event.log --append -x';' -- $CMD_LONGER_SLEEP 2> $LOGS_DIR/test_sw.err
 	PERF_EXIT_CODE=$?
-	REGEX_LINES="$RE_NUMBER;+$event;$RE_NUMBER;100\.00"
+	REGEX_LINES="$RE_NUMBER;[^;]*;$event;$RE_NUMBER;100\.00"
 	test -e $LOGS_DIR/sw/$event.log && ../common/check_all_patterns_found.pl "$REGEX_LINES" < $LOGS_DIR/sw/$event.log
 	CHECK_EXIT_CODE=$?
 	if [ $TESTLOG_VERBOSITY -ge 2 -a $PERF_EXIT_CODE -ne 0 ]; then
