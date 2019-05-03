@@ -36,7 +36,7 @@ fi
 $CMD_PERF probe -F > $LOGS_DIR/listing_kernel_functions.log
 PERF_EXIT_CODE=$?
 
-RATE=`../common/check_kallsyms_vs_probes.pl /proc/kallsyms $LOGS_DIR/listing_kernel_functions.log`
+RATE=`../common/check_kallsyms_vs_probes.pl /proc/kallsyms <(cat $LOGS_DIR/listing_kernel_functions.log | grep -P '^\w+$')`
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "kernel functions list ($RATE to kallsyms)"
