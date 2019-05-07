@@ -209,25 +209,6 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "wildcard adding support"
 (( TEST_RESULT += $? ))
 
 
-### out-of-text functions
-
-# out-of-text functions should be skipped
-INITTEXT=init_setup
-grep -q " $INITTEXT" /proc/kallsyms
-if [ $? -eq 0 -a "$MY_ARCH" = "x86_64" ]; then
-	! $CMD_PERF probe $INITTEXT 2> $LOGS_DIR/adding_kernel_outoftext.err
-	PERF_EXIT_CODE=$?
-
-	../common/check_all_patterns_found.pl "init_setup is out of \.text, skip it" < $LOGS_DIR/adding_kernel_outoftext.err
-	CHECK_EXIT_CODE=$?
-
-	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "out-of-text functions"
-	(( TEST_RESULT += $? ))
-else
-	print_testcase_skipped "out-of-text functions"
-fi
-
-
 ### non-existing variable
 
 # perf probe should survive a non-existing variable probing attempt
