@@ -199,7 +199,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "removing multiple probes"
 
 ### wildcard adding support
 
-$CMD_PERF probe -nf --max-probes=512 -a 'vfs_* $params' 2> $LOGS_DIR/adding_kernel_adding_wildcard.err
+$CMD_PERF probe -nf --max-probes=512 -a 'vfs_*' 2> $LOGS_DIR/adding_kernel_adding_wildcard.err
 PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "probe:vfs_mknod" "probe:vfs_create" "probe:vfs_rmdir" "probe:vfs_link" "probe:vfs_write" < $LOGS_DIR/adding_kernel_adding_wildcard.err
