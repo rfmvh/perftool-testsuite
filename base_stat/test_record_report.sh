@@ -52,7 +52,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "report"
 
 # the reported output should match the original perf stat output
 # (however, there is one difference in the header line)
-diff -u <(grep -v "Performance counter stats" $LOGS_DIR/record_report_record.log | perl -pe 'exit if /seconds user/') <(grep -v "Performance counter stats" $LOGS_DIR/record_report_report.log) > $LOGS_DIR/record_report_diff.log
+diff -u <(grep -v -e "Performance counter stats" -e '^\s*$' $LOGS_DIR/record_report_record.log | perl -ne 'print unless /seconds (?:user|sys)/') <(grep -v -e "Performance counter stats" -e '^\s*$' $LOGS_DIR/record_report_report.log) > $LOGS_DIR/record_report_diff.log
 CHECK_EXIT_CODE=$?
 test $TESTLOG_VERBOSITY -ge 2 && cat $LOGS_DIR/record_report_diff.log
 
