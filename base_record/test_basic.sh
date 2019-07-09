@@ -90,6 +90,21 @@ else
 	(( TEST_RESULT += $? ))
 fi
 
+
+### BUG: perf record -k mono crashes with perf.data stream redirected to stdout
+
+# when perf record detects that stdout is piped, it puts the data there instead of to perf.data
+# when there is '-k mono' option, it used to segfault
+# this testcase tests, whether the segfault is fixed
+sh -c "$CMD_PERF record -k mono -- true | cat" > $LOGS_DIR/basic_kmono_crash.out 2> $LOGS_DIR/basic_kmono_crash.err
+
+../common/check_no_patterns_found.pl "Segmentation fault" "SIGSEGV" "core" "dumped" "segfault" < $LOGS_DIR/basic_kmono_crash.err
+PERF_EXIT_STATUS=$?
+
+print_results $PERF_EXIT_STATUS 0 "-k mono crash"
+(( TEST_RESULT += $? ))
+
+
 # print overall results
 print_overall_results "$TEST_RESULT"
 exit $?
