@@ -81,7 +81,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "list"
 ### basic sampling
 
 # perf record --intr-regs=$REG should save the register's value to samples
-$CMD_PERF record --intr-regs=$INTR_REG0 $CMD_SIMPLE > /dev/null 2> $LOGS_DIR/intr_basic_record.err
+$CMD_PERF record --intr-regs=$INTR_REG0 $CURRENT_TEST_DIR/examples/load > /dev/null 2> $LOGS_DIR/intr_basic_record.err
 PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" "perf.data" < $LOGS_DIR/intr_basic_record.err
@@ -116,7 +116,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic sampling ($INTR_REG0) :: r
 ### using all registers
 
 # without specifying the register, perf should capture values of all of them
-$CMD_PERF record -I $CMD_SIMPLE > /dev/null 2> $LOGS_DIR/intr_all_regs_record.err
+$CMD_PERF record -I $CURRENT_TEST_DIR/examples/load > /dev/null 2> $LOGS_DIR/intr_all_regs_record.err
 PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" "perf.data" < $LOGS_DIR/intr_all_regs_record.err
