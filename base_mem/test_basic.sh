@@ -99,7 +99,7 @@ if [ "$MEM_LOADS_SUPPORTED" = "yes" ]; then
 	PERF_EXIT_CODE=$?
 
 	# check the perf mem report output
-	REGEX_MEM_REPORT_LINE="\s*$RE_NUMBER%\s+$RE_NUMBER\s+$RE_NUMBER\s+.*\s+\[[ku\.]\]\s\w+"
+	REGEX_MEM_REPORT_LINE="\s*$RE_NUMBER%\s+$RE_NUMBER\s+$RE_NUMBER\s+.*\s+\[[kuH\.]\]\s\w+"
 	../common/check_all_lines_matched.pl "$REGEX_MEM_REPORT_LINE" "$RE_LINE_COMMENT" "$RE_LINE_EMPTY" < $LOGS_DIR/basic_loads_report.log
 	CHECK_EXIT_CODE=$?
 	../common/check_all_patterns_found.pl "dummy" "hit" "stack" < $LOGS_DIR/basic_loads_report.log
@@ -160,7 +160,7 @@ if [ "$MEM_STORES_SUPPORTED" = "yes" ]; then
 	PERF_EXIT_CODE=$?
 
 	# check the perf mem report output
-	REGEX_MEM_REPORT_LINE="\s*$RE_NUMBER%\s+$RE_NUMBER\s+$RE_NUMBER\s+.*\s+\[[ku\.]\]\s\w+"
+	REGEX_MEM_REPORT_LINE="\s*$RE_NUMBER%\s+$RE_NUMBER\s+$RE_NUMBER\s+.*\s+\[[kuH\.]\]\s\w+"
 	../common/check_all_lines_matched.pl "$REGEX_MEM_REPORT_LINE" "$RE_LINE_COMMENT" "$RE_LINE_EMPTY" < $LOGS_DIR/basic_stores_report.log
 	CHECK_EXIT_CODE=$?
 	../common/check_all_patterns_found.pl "dummy" "hit" "stack" < $LOGS_DIR/basic_stores_report.log
@@ -221,7 +221,7 @@ if [ "$MEM_LOADS_SUPPORTED" = "yes" -a "$MEM_STORES_SUPPORTED" = "yes" ]; then
 	PERF_EXIT_CODE=$?
 
 	# check the perf mem report output
-	REGEX_MEM_REPORT_LINE="\s*$RE_NUMBER%\s+$RE_NUMBER\s+$RE_NUMBER\s+.*\s+\[[ku\.]\]\s\w+"
+	REGEX_MEM_REPORT_LINE="\s*$RE_NUMBER%\s+$RE_NUMBER\s+$RE_NUMBER\s+.*\s+\[[kuH\.]\]\s\w+"
 	../common/check_all_lines_matched.pl "$REGEX_MEM_REPORT_LINE" "$RE_LINE_COMMENT" "$RE_LINE_EMPTY" < $LOGS_DIR/basic_stores_report.log
 	CHECK_EXIT_CODE=$?
 	../common/check_all_patterns_found.pl "dummy" "hit" "stack" < $LOGS_DIR/basic_both_report.log
