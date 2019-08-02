@@ -43,6 +43,17 @@ export PARAM_STAT_TRACEPOINT_EVENTS_SYNTAX=${PARAM_STAT_TRACEPOINT_EVENTS_SYNTAX
 # this parameter allows you to easily disable the test.
 export PARAM_STAT_ALL_PMU_EVENTS=${PARAM_STAT_ALL_PMU_EVENTS:-y}
 
+# If seet, the "metrics" will be tested. A "metric" is a set of
+# two or more events that together make something meaningful.For
+# example "cpi" (= cycles per instruction ratio). To obtain such
+# value, both cycles and instructions events need to be counted
+# at the same time. The machine has to support all the necessary
+# events and also it should have enough counters to handle them
+# all. Although the metrics are designed to work, sometimes one
+# can hit a not-supported metric. Due to quite a high occurrence
+# of such cases, this test is disabled by default.
+export PARAM_STAT_TEST_METRICS=${PARAM_STAT_TEST_METRICS:-n}
+
 
 #### perf_trace
 
