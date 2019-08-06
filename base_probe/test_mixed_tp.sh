@@ -28,6 +28,7 @@ if [ $? -ne 0 ]; then
 fi
 
 clear_all_probes
+echo 28000 > /proc/sys/kernel/perf_event_max_sample_rate
 
 
 ### add uprobe
