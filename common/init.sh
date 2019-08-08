@@ -66,6 +66,21 @@ print_overall_skipped()
 	return 0
 }
 
+# this function should skip a testcase if the testsuite is not run in
+# a runmode that fits the testcase --> if the suite runs in BASIC mode
+# all STANDARD and EXPERIMENTAL testcases will be skipped; if the suite
+# runs in STANDARD mode, all EXPERIMENTAL testcases will be skipped and
+# if the suite runs in EXPERIMENTAL mode, nothing is skipped
+consider_skipping()
+{
+	TESTCASE_RUNMODE="$1"
+	# the runmode of a testcase needs to be at least the current suite's runmode
+	if [ $PERFTOOL_TESTSUITE_RUNMODE -lt $TESTCASE_RUNMODE ]; then
+		print_overall_skipped
+		exit 0
+	fi
+}
+
 detect_baremetal()
 {
 	# return values:

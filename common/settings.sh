@@ -23,6 +23,14 @@ export CMD_DOUBLE_LONGER_SLEEP="sleep 4"
 export CMD_VERY_LONG_SLEEP="sleep 30"
 export CMD_SIMPLE="true"
 
+#### testsuite run mode
+# define constants:
+export RUNMODE_BASIC=0
+export RUNMODE_STANDARD=1
+export RUNMODE_EXPERIMENTAL=2
+# default runmode is STANDARD
+export PERFTOOL_TESTSUITE_RUNMODE=${PERFTOOL_TESTSUITE_RUNMODE:-$RUNMODE_STANDARD}
+
 #### common settings
 export TESTLOG_VERBOSITY=${TESTLOG_VERBOSITY:-2}
 export TESTLOG_FORCE_COLOR=${TESTLOG_FORCE_COLOR:-n}
@@ -58,6 +66,10 @@ fi
 
 #### test parametrization
 if [ ! -d ./common ]; then
-	# FIXME nasty hack
+	# set parameters based on runmode
+	if [ -f ../common/parametrization.$PERFTOOL_TESTSUITE_RUNMODE.sh ]; then
+		. ../common/parametrization.$PERFTOOL_TESTSUITE_RUNMODE.sh
+	fi
+	# if some parameters haven't been set until now, set them to default
 	. ../common/parametrization.sh
 fi
