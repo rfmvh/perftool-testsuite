@@ -57,16 +57,8 @@ export PARAM_STAT_TEST_METRICS=${PARAM_STAT_TEST_METRICS:-n}
 
 #### perf_trace
 
-# If set, some heavy load tests are run. That might be not always
-# desired behaviour.
-export PARAM_TRACE_OVERLOAD=${PARAM_TRACE_OVERLOAD:-y}
-
 
 #### perf_record
-
-# If set, some heavy load tests are run. That might be not always
-# desired behaviour.
-export PARAM_RECORD_OVERLOAD=${PARAM_RECORD_OVERLOAD:-n}
 
 # If set to "y", "fp" callgraph will be used in perf-record overhead
 # test; if set to "n", it will not be used. If not set/empty, it will

@@ -17,12 +17,8 @@
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
-
-# skip if not enabled
-if [ "$PARAM_TRACE_OVERLOAD" = "n" ]; then
-	print_overall_skipped
-	exit 0
-fi
+# skip if not running in at least standard runmode
+consider_skipping $RUNMODE_STANDARD
 
 
 #### systemwide

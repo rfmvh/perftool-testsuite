@@ -17,12 +17,9 @@
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
+# skip if not running in EXPERIMENTAL runmode
+consider_skipping $RUNMODE_EXPERIMENTAL
 
-# skip if not enabled
-if [ "$PARAM_RECORD_OVERLOAD" = "n" ]; then
-	print_overall_skipped
-	exit 0
-fi
 
 # cause some load
 for i in `seq 1 $MY_CPUS_ONLINE`; do
