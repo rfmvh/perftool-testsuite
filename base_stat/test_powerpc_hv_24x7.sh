@@ -17,6 +17,8 @@
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
+consider_skipping $RUNMODE_STANDARD
+
 EVENTS_TO_TEST=`$CMD_PERF list | grep "24x7" | grep "core" | awk '{print $1}' | tr '\n' ' '`
 if [ -z "$EVENTS_TO_TEST" ]; then
 	print_overall_skipped
