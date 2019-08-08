@@ -17,6 +17,12 @@
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
+# skip if not running on an Intel
+if ! detect_intel; then
+	print_overall_skipped
+	exit 0
+fi
+
 EVENTS_TO_TEST=`$CMD_PERF list | grep "PMU" | grep "power" | awk '{print $1}' | tr '\n' ' '`
 if [ -z "$EVENTS_TO_TEST" ]; then
 	if should_support_intel_rapl; then
