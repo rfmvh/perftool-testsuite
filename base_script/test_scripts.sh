@@ -17,6 +17,7 @@
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
+consider_skipping $RUNMODE_EXPERIMENTAL
 
 #### sanity test all scripts shipped with perf
 
