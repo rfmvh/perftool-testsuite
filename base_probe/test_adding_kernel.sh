@@ -267,6 +267,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "function argument probing :: scr
 (( TEST_RESULT += $? ))
 
 
+clear_all_probes
 
 # print overall results
 print_overall_results "$TEST_RESULT"
