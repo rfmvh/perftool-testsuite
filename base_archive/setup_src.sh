@@ -19,7 +19,11 @@ THIS_TEST_NAME="setup"
 # clear the cache
 clear_buildid_cache
 
-$CMD_PERF --buildid-dir $BUILDIDDIR record -a -o $CURRENT_TEST_DIR/perf.data -- $CMD_LONGER_SLEEP 2> $LOGS_DIR/setup.log
+make -s -C examples
+print_results $? 0 "building the example code"
+TEST_RESULT=$?
+
+$CMD_PERF --buildid-dir $BUILDIDDIR record -a -o $CURRENT_TEST_DIR/perf.data -- $CURRENT_TEST_DIR/examples/load > /dev/null 2> $LOGS_DIR/setup.log
 PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/setup.log
