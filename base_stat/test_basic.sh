@@ -67,7 +67,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic execution"
 #### some options
 
 # test some basic options that they change the behaviour
-$CMD_PERF stat -i -a -c -r 3 -o /dev/stdout -- $CMD_BASIC_SLEEP > $LOGS_DIR/basic_someopts.log
+$CMD_PERF stat -i -a -r 3 -o /dev/stdout -- $CMD_BASIC_SLEEP > $LOGS_DIR/basic_someopts.log
 PERF_EXIT_CODE=$?
 
 REGEX_HEADER="^\s*Performance counter stats for '(sleep [\d\.]+|system wide)' \(3 runs\):"
