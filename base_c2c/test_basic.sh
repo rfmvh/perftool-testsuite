@@ -255,7 +255,7 @@ if [ "$LDLAT_LOADS_SUPPORTED" = "yes" -a "$LDLAT_STORES_SUPPORTED" = "yes" ]; th
 	CHECK_EXIT_CODE=$?
 
 	# little logging
-	test $TESTLOG_VERBOSITY -ge 2 && echo "$LOAD_OPS + $STORE_OPS + $UNPARSED_OPS should be equal to $TOTAL_SAMPLES"
+	test $TESTLOG_VERBOSITY -ge 2 -a $CHECK_EXIT_CODE -ne 0 && echo "$LOAD_OPS + $STORE_OPS + $UNPARSED_OPS should be equal to $TOTAL_SAMPLES"
 
 	print_results 0 $CHECK_EXIT_CODE "ldlat-loads&ldlat-stores verification"
 	(( TEST_RESULT += $? ))
