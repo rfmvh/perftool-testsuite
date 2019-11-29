@@ -250,8 +250,12 @@ if [ "$LDLAT_LOADS_SUPPORTED" = "yes" -a "$LDLAT_STORES_SUPPORTED" = "yes" ]; th
 	# load + stores should equal the number of all samples
 	LOAD_OPS=`perl -ne 'print $1 if /^\s*Load Operations\s+:\s+(\d+)/' < $LOGS_DIR/basic_both_report.log`
 	STORE_OPS=`perl -ne 'print $1 if /^\s*Store Operations\s+:\s+(\d+)/' < $LOGS_DIR/basic_both_report.log`
-	test $(( LOAD_OPS + STORE_OPS )) -eq $TOTAL_SAMPLES
+	UNPARSED_OPS=`perl -ne 'print $1 if /^\s*Unable to parse data source\s+:\s+(\d+)/' < $LOGS_DIR/basic_both_report.log`
+	test $(( LOAD_OPS + STORE_OPS + UNPARSED_OPS )) -eq $TOTAL_SAMPLES
 	CHECK_EXIT_CODE=$?
+
+	# little logging
+	test $TESTLOG_VERBOSITY -ge 2 && echo "$LOAD_OPS + $STORE_OPS + $UNPARSED_OPS should be equal to $TOTAL_SAMPLES"
 
 	print_results 0 $CHECK_EXIT_CODE "ldlat-loads&ldlat-stores verification"
 	(( TEST_RESULT += $? ))
