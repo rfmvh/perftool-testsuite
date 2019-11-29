@@ -174,8 +174,14 @@ if [ "$LDLAT_STORES_SUPPORTED" = "yes" ]; then
 	TOTAL_SAMPLES=`perl -ne 'print $1 if /Captured and wrote[^\(]+\((\d+)\ssamples\)/' < $LOGS_DIR/basic_stores_record.err`
 	../common/check_all_patterns_found.pl "Total records\s+:\s+$TOTAL_SAMPLES" < $LOGS_DIR/basic_stores_report.log
 	CHECK_EXIT_CODE=$?
-	../common/check_all_patterns_found.pl "Store Operations\s+:\s+$TOTAL_SAMPLES" < $LOGS_DIR/basic_stores_report.log
+	STORE_OPS=`perl -ne 'print $1 if /^\s*Store Operations\s+:\s+(\d+)/' < $LOGS_DIR/basic_stores_report.log`
+	UNPARSED_OPS=`perl -ne 'print $1 if /^\s*Unable to parse data source\s+:\s+(\d+)/' < $LOGS_DIR/basic_stores_report.log`
+	test $(( STORE_OPS + UNPARSED_OPS )) -eq $TOTAL_SAMPLES
 	(( CHECK_EXIT_CODE += $? ))
+
+	# little logging
+	test $TESTLOG_VERBOSITY -ge 2 -a $CHECK_EXIT_CODE -ne 0 && echo "$STORE_OPS + $UNPARSED_OPS should be equal to $TOTAL_SAMPLES"
+
 	../common/check_all_patterns_found.pl "Load Operations\s+:\s+0" < $LOGS_DIR/basic_stores_report.log
 	(( CHECK_EXIT_CODE += $? ))
 	
