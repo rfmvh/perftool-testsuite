@@ -34,10 +34,10 @@ echo 28000 > /proc/sys/kernel/perf_event_max_sample_rate
 ### add uprobe
 
 # we need a uprobe
-$CMD_PERF probe -x $CURRENT_TEST_DIR/examples/advanced 'main' > $LOGS_DIR/mixed_tp_add.log 2> $LOGS_DIR/mixed_tp_add.err
+$CMD_PERF probe -x $CURRENT_TEST_DIR/examples/load 'main' > $LOGS_DIR/mixed_tp_add.log 2> $LOGS_DIR/mixed_tp_add.err
 PERF_EXIT_CODE=$?
 
-../common/check_all_patterns_found.pl "probe_advanced:main" "examples/advanced" < $LOGS_DIR/mixed_tp_add.err
+../common/check_all_patterns_found.pl "probe_load:main" "examples/load" < $LOGS_DIR/mixed_tp_add.err
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "add uprobe"
@@ -48,7 +48,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "add uprobe"
 
 # record the uprobe
 PROBE_PREFIX=`head -n 2 $LOGS_DIR/mixed_tp_add.err | perl -ne 'print "$1" if /\s+(\w+):\w/'`
-$CMD_PERF record -e "$PROBE_PREFIX:"'*' $CURRENT_TEST_DIR/examples/advanced > /dev/null 2> $LOGS_DIR/mixed_tp_record_uprobe.err
+$CMD_PERF record -e "$PROBE_PREFIX:"'*' $CURRENT_TEST_DIR/examples/load 17 > /dev/null 2> $LOGS_DIR/mixed_tp_record_uprobe.err
 PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/mixed_tp_record_uprobe.err
@@ -66,7 +66,7 @@ PERF_EXIT_CODE=$?
 
 ../common/check_no_patterns_found.pl "non matching" "sample_id_all" < $LOGS_DIR/mixed_tp_script_uprobe.err
 CHECK_EXIT_CODE=$?
-REGEX_SCRIPT_LINE="\s*advanced\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+$RE_NUMBER:\s+$PROBE_PREFIX"
+REGEX_SCRIPT_LINE="\s*load\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+$RE_NUMBER:\s+$PROBE_PREFIX"
 ../common/check_all_lines_matched.pl "$REGEX_SCRIPT_LINE" < $LOGS_DIR/mixed_tp_script_uprobe.log 
 (( CHECK_EXIT_CODE += $? ))
 
@@ -77,7 +77,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "script uprobe"
 ### record mixed events
 
 # record mixed uprobes
-$CMD_PERF record -e '{cpu-clock'",$PROBE_PREFIX:"'*}:S' $CURRENT_TEST_DIR/examples/advanced > /dev/null 2> $LOGS_DIR/mixed_tp_record_mixed.err
+$CMD_PERF record -e '{cpu-clock'",$PROBE_PREFIX:"'*}:S' $CURRENT_TEST_DIR/examples/load 17 > /dev/null 2> $LOGS_DIR/mixed_tp_record_mixed.err
 PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/mixed_tp_record_mixed.err
@@ -95,8 +95,8 @@ PERF_EXIT_CODE=$?
 
 ../common/check_no_patterns_found.pl "non matching" "sample_id_all" < $LOGS_DIR/mixed_tp_script_mixed.err
 CHECK_EXIT_CODE=$?
-REGEX_SCRIPT_LINE_PROBE="\s*advanced\s+$RE_NUMBER\s+\[[\d\-]+\]\s+$RE_NUMBER:\s+$PROBE_PREFIX:"
-REGEX_SCRIPT_LINE_SOFTWARE="\s*advanced\s+$RE_NUMBER\s+$RE_NUMBER:\s+$RE_NUMBER\s+cpu-clock:?\s+$RE_NUMBER_HEX"
+REGEX_SCRIPT_LINE_PROBE="\s*load\s+$RE_NUMBER\s+(?:\[[\d\-]+\]\s+)?$RE_NUMBER:\s+$PROBE_PREFIX:"
+REGEX_SCRIPT_LINE_SOFTWARE="\s*load\s+$RE_NUMBER\s+$RE_NUMBER:\s+$RE_NUMBER\s+cpu-clock:?\s+$RE_NUMBER_HEX"
 ../common/check_all_lines_matched.pl "$REGEX_SCRIPT_LINE_PROBE" "$REGEX_SCRIPT_LINE_SOFTWARE" < $LOGS_DIR/mixed_tp_script_mixed.log 
 (( CHECK_EXIT_CODE += $? ))
 ../common/check_all_patterns_found.pl "$REGEX_SCRIPT_LINE_PROBE" "$REGEX_SCRIPT_LINE_SOFTWARE" < $LOGS_DIR/mixed_tp_script_mixed.log 
