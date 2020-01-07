@@ -107,7 +107,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "archive creation"
 ### archive file sanity
 
 # get the DSOs that were hit by samples
-REGEX_MODULE="$RE_PATH_ABSOLUTE/modules/`uname -r`/$RE_PATH/.*\.ko(?:\.gz|\.xz)?$"
+REGEX_MODULE="$RE_PATH_ABSOLUTE/modules/`uname -r | perl -pe 's/\+/\\\+/'`/$RE_PATH/.*\.ko(?:\.gz|\.xz)?$"
 $CMD_PERF script -i $CURRENT_TEST_DIR/perf.data 2> $LOGS_DIR/basic_archive_sanity.err | perl -ne 'print "$1\n" if /\(([^\)]+)\)$/' | sort -u | grep -v -P "$REGEX_MODULE" | grep -P '^/' > $CURRENT_TEST_DIR/basic_dsos_hit.list
 test $TESTLOG_VERBOSITY -ge 2 && cat $LOGS_DIR/basic_archive_sanity.err
 # get the DSOs that were saved to the archive
