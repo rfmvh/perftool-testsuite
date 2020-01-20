@@ -222,9 +222,9 @@ PERF_EXIT_CODE=$?
 # check that the error message is reasonable
 ../common/check_all_patterns_found.pl "Failed to find" "somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64" < $LOGS_DIR/adding_kernel_nonexisting.err
 CHECK_EXIT_CODE=$?
-../common/check_all_patterns_found.pl "in this function" "Error" "Failed to add events" < $LOGS_DIR/adding_kernel_nonexisting.err
+../common/check_all_patterns_found.pl "in this function|at this address" "Error" "Failed to add events" < $LOGS_DIR/adding_kernel_nonexisting.err
 (( CHECK_EXIT_CODE += $? ))
-../common/check_all_lines_matched.pl "Failed to find" "Error" "Probe point .+ not found" < $LOGS_DIR/adding_kernel_nonexisting.err
+../common/check_all_lines_matched.pl "Failed to find" "Error" "Probe point .+ not found" "optimized out" "Use.+\-\-range option to show.+location range" < $LOGS_DIR/adding_kernel_nonexisting.err
 (( CHECK_EXIT_CODE += $? ))
 ../common/check_no_patterns_found.pl "Segmentation" "fault" "SIGSEGV" "segfault" < $LOGS_DIR/adding_kernel_nonexisting.err
 (( CHECK_EXIT_CODE += $? ))
