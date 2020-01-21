@@ -97,7 +97,8 @@ PERF_EXIT_CODE=$?
 CHECK_EXIT_CODE=$?
 REGEX_SCRIPT_LINE_PROBE="\s*load\s+$RE_NUMBER\s+(?:\[[\d\-]+\]\s+)?$RE_NUMBER:\s+$PROBE_PREFIX:"
 REGEX_SCRIPT_LINE_SOFTWARE="\s*load\s+$RE_NUMBER\s+$RE_NUMBER:\s+$RE_NUMBER\s+cpu-clock:?\s+$RE_NUMBER_HEX"
-../common/check_all_lines_matched.pl "$REGEX_SCRIPT_LINE_PROBE" "$REGEX_SCRIPT_LINE_SOFTWARE" < $LOGS_DIR/mixed_tp_script_mixed.log 
+REGEX_SCRIPT_LINE_RUBBISH="\s*perf\s+$RE_NUMBER\s+$RE_NUMBER:\s+$RE_NUMBER\s+cpu-clock:?\s+$RE_NUMBER_HEX"
+../common/check_all_lines_matched.pl "$REGEX_SCRIPT_LINE_PROBE" "$REGEX_SCRIPT_LINE_SOFTWARE" "$REGEX_SCRIPT_LINE_RUBBISH" < $LOGS_DIR/mixed_tp_script_mixed.log
 (( CHECK_EXIT_CODE += $? ))
 ../common/check_all_patterns_found.pl "$REGEX_SCRIPT_LINE_PROBE" "$REGEX_SCRIPT_LINE_SOFTWARE" < $LOGS_DIR/mixed_tp_script_mixed.log 
 (( CHECK_EXIT_CODE += $? ))
