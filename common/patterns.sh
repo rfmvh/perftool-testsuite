@@ -25,7 +25,8 @@ export RE_ADDRESS_NOT_NULL="0x[0-9A-Fa-f]*[1-9A-Fa-f]+[0-9A-Fa-f]*"
 # Memory address (not NULL)
 # Examples:
 #    0xffffffff9abe8ae8
-
+#!   0x0
+#!   0x0000000000000000
 
 export RE_PROCESS_PID="\w+\/\d+"
 # A process with PID
