@@ -93,7 +93,7 @@ $CMD_PERF probe -L vfs_read > $LOGS_DIR/listing_kernel_lines.log 2> $LOGS_DIR/li
 PERF_EXIT_CODE=$?
 
 test $TESTLOG_VERBOSITY -ge 2 && cat $LOGS_DIR/listing_kernel_lines.err
-../common/check_all_patterns_found.pl "\d+\s+\{" "\d+\s+\}" "0\s+ssize_t\svfs_read" "\d+\s+\w+" < $LOGS_DIR/listing_kernel_lines.log
+../common/check_all_patterns_found.pl "0\s+ssize_t\svfs_read" "\d+\s+\w+" "\d+\s+if\s?\(" "\d+\s+if\s?\(!?ret" < $LOGS_DIR/listing_kernel_lines.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "kernel lines list"
@@ -107,7 +107,7 @@ $CMD_PERF probe -L fs/read_write.c > $LOGS_DIR/listing_kernel_source_lines.log 2
 PERF_EXIT_CODE=$?
 
 test $TESTLOG_VERBOSITY -ge 2 && cat $LOGS_DIR/listing_kernel_source_lines.err
-../common/check_all_patterns_found.pl "linux/fs/read_write.c" "\d+\s+\{" "\d+\s+\}" "\d+\s+\w+" "\d+\s+.*vfs_read" "\d+\s+.*vfs_write" "Linus Torvalds" < $LOGS_DIR/listing_kernel_source_lines.log
+../common/check_all_patterns_found.pl "linux/fs/read_write.c" "\d+\s+\w+" "\d+\s+if\s?\(" "\d+\s+if\s?\(!?ret" "\d+\s+.*vfs_read" "\d+\s+.*vfs_write" "Linus Torvalds" < $LOGS_DIR/listing_kernel_source_lines.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "kernel source lines list"
