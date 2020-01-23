@@ -6,6 +6,7 @@ $quiet = 0 if (defined $ENV{TESTLOG_VERBOSITY} && $ENV{TESTLOG_VERBOSITY} ge 2);
 $passed = 1;
 
 $koef = 0.003;
+$koef = 0.03 if (defined $ENV{PERFTOOL_TESTSUITE_RUNMODE} && defined $ENV{RUNMODE_BASIC} && $ENV{PERFTOOL_TESTSUITE_RUNMODE} eq $ENV{RUNMODE_BASIC});
 
 $k = -1;
 $u = -1;
