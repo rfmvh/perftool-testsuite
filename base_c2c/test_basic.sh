@@ -66,6 +66,15 @@ if [ "$MY_ARCH" = "x86_64" ]; then
 fi
 
 
+### invalid args
+
+! $CMD_PERF c2c report -input 2> /dev/null
+PERF_EXIT_CODE=$?
+
+print_results $PERF_EXIT_CODE 0 "invalid args"
+(( TEST_RESULT += $? ))
+
+
 ### loads record, loads event check, loads report
 
 if [ "$LDLAT_LOADS_SUPPORTED" = "yes" ]; then
