@@ -89,16 +89,37 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "number of samples"
 ( cd $CURRENT_TEST_DIR ; $CMD_PERF report --stdio --header-only > $LOGS_DIR/basic_header.log )
 PERF_EXIT_CODE=$?
 
+REGEX_LINE_TIMESTAMP="#\s+captured on\s* $RE_DATE_TIME"
 REGEX_LINE_HOSTNAME="#\s+hostname\s*:\s*$MY_HOSTNAME"
 REGEX_LINE_KERNEL="#\s+os release\s*:\s*${MY_KERNEL_VERSION//+/\\+}"
 REGEX_LINE_PERF="#\s+perf version\s*:\s*"
 REGEX_LINE_ARCH="#\s+arch\s*:\s*$MY_ARCH"
 REGEX_LINE_CPUS_ONLINE="#\s+nrcpus online\s*:\s*$MY_CPUS_ONLINE"
 REGEX_LINE_CPUS_AVAIL="#\s+nrcpus avail\s*:\s*$MY_CPUS_AVAILABLE"
-../common/check_all_patterns_found.pl "$REGEX_LINE_HOSTNAME" "$REGEX_LINE_KERNEL" "$REGEX_LINE_PERF" "$REGEX_LINE_ARCH" "$REGEX_LINE_CPUS_ONLINE" "$REGEX_LINE_CPUS_AVAIL" < $LOGS_DIR/basic_header.log
+../common/check_all_patterns_found.pl "$REGEX_LINE_TIMESTAMP" "$REGEX_LINE_HOSTNAME" "$REGEX_LINE_KERNEL" "$REGEX_LINE_PERF" "$REGEX_LINE_ARCH" "$REGEX_LINE_CPUS_ONLINE" "$REGEX_LINE_CPUS_AVAIL" < $LOGS_DIR/basic_header.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "header"
+(( TEST_RESULT += $? ))
+
+# '--header' and '--header-only' should use creation time
+OLD_TIMESTAMP=`$CMD_PERF report --stdio --header-only $LOGS_DIR/perf.data | grep "captured on"`
+PERF_EXIT_CODE=$?
+
+( tar c $CURRENT_TEST_DIR/perf.data | xz > perf.data.tar.xz ; cd $HEADER_TAR_DIR ; xzcat ../perf.data.tar.xz | tar x )
+(( PERF_EXIT_CODE += $? ))
+cd $HEADER_TAR_DIR
+(( PERF_EXIT_CODE += $? ))
+NEW_TIMESTAMP=`$CMD_PERF report --stdio --header-only perf.data | grep "captured on"`
+(( PERF_EXIT_CODE += $? ))
+
+cd ..
+(( PERF_EXIT_CODE += $? ))
+
+test "$OLD_TIMESTAMP" = "$NEW_TIMESTAMP"
+(( PERF_EXIT_CODE += $? ))
+
+print_results $PERF_EXIT_CODE 0 "header timestamp"
 (( TEST_RESULT += $? ))
 
 

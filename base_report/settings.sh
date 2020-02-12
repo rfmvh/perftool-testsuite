@@ -23,8 +23,12 @@ if [ -n "$PERFSUITE_RUN_DIR" ]; then
 	test -d "$CURRENT_TEST_DIR" || mkdir -p "$CURRENT_TEST_DIR"
 	export LOGS_DIR="$PERFSUITE_RUN_DIR/$TEST_NAME/logs"
 	test -d "$LOGS_DIR" || mkdir -p "$LOGS_DIR"
+	export HEADER_TAR_DIR="$PERFSUITE_RUN_DIR/$TEST_NAME/header_tar"
+	test -d "$HEADER_TAR_DIR" || mkdir -p "$HEADER_TAR_DIR"
 else
 	# when $PERFSUITE_RUN_DIR is not set, logs will be placed here
 	export CURRENT_TEST_DIR="."
 	export LOGS_DIR="."
+	export HEADER_TAR_DIR="./header_tar"
+	test -d "$HEADER_TAR_DIR" || mkdir -p "$HEADER_TAR_DIR"
 fi

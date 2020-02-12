@@ -17,6 +17,7 @@ fi
 
 find . -name \*.log | xargs -r rm
 find . -name \*.err | xargs -r rm
+rm -r header_tar
 rm -f perf.data*
 RM_EXIT_CODE=$?
 

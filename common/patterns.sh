@@ -13,6 +13,14 @@ export RE_NUMBER_HEX="[0-9A-Fa-f]+"
 #    deadbeef
 
 
+export RE_DATE_TIME="\w+ \w+ $RE_NUMBER $RE_NUMBER:$RE_NUMBER:$RE_NUMBER $RE_NUMBER"
+# Time and date
+# Examples:
+#    Wed Feb 12 10:46:26 2020
+#!   St úno 12 10:57:21 CET 2020
+#!   Po úno 14 15:17:32 2010
+
+
 export RE_ADDRESS="0x$RE_NUMBER_HEX"
 # Memory address
 # Examples:
