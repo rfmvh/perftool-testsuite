@@ -121,6 +121,9 @@ should_support_hw_breakpoints()
 	# ppc64le does not support hw breakpoints on Linux
 	test "$MY_ARCH" = "ppc64le" && return 1
 
+	# s390x does not support hw breakpoints on Linux
+	test "$MY_ARCH" = "s390x" && return 1
+
 	# when mem:<addr>[/len][:access] event is listed, we expect it
 	# to be supported (currently, this is always true in perf)
 	$CMD_PERF list | grep -q '\[Hardware breakpoint\]'
@@ -135,6 +138,9 @@ should_support_hw_watchpoints()
 	# POWER9 does not support hw watchpoints due to a HW bug
 	# POWER8 should support them
 	test "$MY_ARCH" = "ppc64le" && grep -q 'POWER9' /proc/cpuinfo && return 1
+
+	# s390x does not support hw watchpoints on Linux
+	test "$MY_ARCH" = "s390x" && return 1
 
 	# when mem:<addr>[/len][:access] event is listed, we expect it
 	# to be supported (currently, this is always true in perf)
