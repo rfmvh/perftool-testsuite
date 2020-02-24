@@ -2,14 +2,17 @@
 
 ### test for rw-by-pid script
 
-# rw-by-pid script records ADD HERE
+# rw-by-pid script displays r/w activity for all processes or
+# for specified process
 
 
 script="rw-by-pid"
 
 
 # record
-$CMD_PERF script record $script -a -o $CURRENT_TEST_DIR/perf.data -- $CMD_QUICK_SLEEP 2> $LOGS_DIR/script__${script}__record.log
+REAL_COUNT=10
+
+$CMD_PERF script record $script -o $CURRENT_TEST_DIR/perf.data -- dd if=/dev/zero of=/dev/null bs=1024 count=$REAL_COUNT 2> $LOGS_DIR/script__${script}__record.log
 PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" "perf.data" < $LOGS_DIR/script__${script}__record.log
