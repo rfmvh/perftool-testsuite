@@ -40,3 +40,29 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "script $script :: report"
 (( TEST_RESULT += $? ))
 
 # sample count check
+READ_PLUS_CHECK=`perl -ne 'BEGIN{$n=0;$en=0;}{$n+=$1 if ($en&&/\s*\d+\s+\S+\s+(\d+)\s+\d+\s+\d+/);$en=1 if /^\s+pid\s+comm\s+#\s+reads\s+bytes_requested\s+bytes_read/;$en=0 if /^\s*$/} END{print "$n";}' < $LOGS_DIR/script__${script}__report.log`
+(( READ_PLUS_CHECK -= $REAL_COUNT ))
+
+WRITE_PLUS_CHECK=`perl -ne 'BEGIN{$n=0;$en=0;}{$n+=$1 if ($en&&/\s*\d+\s+\S+\s+(\d+)\s+\d+/);$en=1 if /^\s+pid\s+comm\s+#\s+writes\s+bytes_written/;$en=0 if /^\s*$/} END{print "$n";}' < $LOGS_DIR/script__${script}__report.log`
+(( WRITE_PLUS_CHECK -= $REAL_COUNT ))
+
+for COUNT in "0" "1" "10" "20" "120" "125" "4000"; do
+	PERF_EXIT_CDOE=0
+	$CMD_PERF script record $script -o $CURRENT_TEST_DIR/perf.data -- dd if=/dev/zero of=/dev/null bs=1024 count=$COUNT 2> /dev/null
+	(( PERF_EXIT_CODE += $? ))
+
+	$CMD_PERF script report $script -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/script__${script}__report__${COUNT}.log 2> /dev/null
+	(( PERF_EXIT_CODE += $? ))
+
+	READ_COUNT=`perl -ne 'BEGIN{$n=0;$en=0;}{$n+=$1 if ($en&&/\s*\d+\s+\S+\s+(\d+)\s+\d+\s+\d+/);$en=1 if /^\s+pid\s+comm\s+#\s+reads\s+bytes_requested\s+bytes_read/;$en=0 if /^\s*$/} END{print "$n";}' < $LOGS_DIR/script__${script}__report__${COUNT}.log`
+	(( READ_COUNT -= $READ_PLUS_CHECK ))
+	test $COUNT -eq $READ_COUNT
+	print_results $PERF_EXIT_CODE $? "script $script :: $COUNT # reads count check ($COUNT == $READ_COUNT)"
+	(( TEST_RESULT += $? ))
+
+	WRITE_COUNT=`perl -ne 'BEGIN{$n=0;$en=0;}{$n+=$1 if ($en&&/\s*\d+\s+\S+\s+(\d+)\s+\d+/);$en=1 if /^\s+pid\s+comm\s+#\s+writes\s+bytes_written/;$en=0 if /^\s*$/} END{print "$n";}' < $LOGS_DIR/script__${script}__report__${COUNT}.log`
+	(( WRITE_COUNT -= $WRITE_PLUS_CHECK ))
+	test $COUNT -eq $WRITE_COUNT
+	print_results $PERF_EXIT_CODE $? "script $script :: $COUNT # writes count check ($COUNT == $WRITE_COUNT)"
+	(( TEST_RESULT += $? ))
+done
