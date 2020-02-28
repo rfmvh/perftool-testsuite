@@ -29,6 +29,8 @@ if [ ! -n "$PERFSUITE_RUN_DIR" ]; then
 	find . -name \*.err | xargs -r rm
 	test -e perf.data && rm -rf perf.data
 	test -e perf.data.old && rm -rf perf.data.old
+	test -e perfnew.data && rm -rf perfnew.data
+	test -e perfnew.data.old && rm -rf perfnew.data.old
 fi
 
 print_overall_results 0
