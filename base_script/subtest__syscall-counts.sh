@@ -26,8 +26,10 @@ PERF_EXIT_CODE=$?
 CHECK_EXIT_CODE=$?
 ../common/check_all_patterns_found.pl "^\w+\s+\d+$" < $LOGS_DIR/script__${script}__report.log
 (( CHECK_EXIT_CODE += $? ))
-../common/check_all_patterns_found.pl "open" "close" "read" "exit" "sleep" < $LOGS_DIR/script__${script}__report.log
-(( CHECK_EXIT_CODE += $? ))
+if should_support_syscall_translations; then
+	../common/check_all_patterns_found.pl "open" "close" "read" "exit" "sleep" < $LOGS_DIR/script__${script}__report.log
+	(( CHECK_EXIT_CODE += $? ))
+fi
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "script $script :: report"
 (( TEST_RESULT += $? ))
