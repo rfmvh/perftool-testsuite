@@ -89,7 +89,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "number of samples"
 ( cd $CURRENT_TEST_DIR ; $CMD_PERF report --stdio --header-only > $LOGS_DIR/basic_header.log )
 PERF_EXIT_CODE=$?
 
-REGEX_LINE_TIMESTAMP="#\s+captured on\s* $RE_DATE_TIME"
+REGEX_LINE_TIMESTAMP="#\s+captured on\s*:\s*$RE_DATE_TIME"
 REGEX_LINE_HOSTNAME="#\s+hostname\s*:\s*$MY_HOSTNAME"
 REGEX_LINE_KERNEL="#\s+os release\s*:\s*${MY_KERNEL_VERSION//+/\\+}"
 REGEX_LINE_PERF="#\s+perf version\s*:\s*"
