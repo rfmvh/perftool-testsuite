@@ -30,10 +30,14 @@ PERF_EXIT_CODE=$?
 cd $OLDPWD
 (( CHECK_EXIT_CODE += $? ))
 
-REGEX_DATA_LINE=".*\s+(\d+)"
+REGEX_DATA_LINE="[\w\-~#:]+\s(\d+)"
+REGEX_SLEEP_LINE="sleep\s\d+"
+REGEX_PERF_LINE="perf\s\d+"
 
 ../common/check_all_lines_matched.pl "$REGEX_DATA_LINE" < $LOGS_DIR/script__${script}__report.log
 CHECK_EXIT_CODE=$?
+../common/check_all_patterns_found.pl "$REGEX_SLEEP_LINE" "$REGEX_PERF_LINE" < $LOGS_DIR/script__${script}__report.log
+(( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "script $script :: report"
 (( TEST_RESULT += $? ))
@@ -41,7 +45,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "script $script :: report"
 
 # sample count check
 N_SAMPLES=`perl -ne 'print "$1" if /\((\d+) samples\)/' $LOGS_DIR/script__${script}__record.log`
-CNT=`perl -ne 'BEGIN{$n=0;} {$n+=$1 if (/\w+\s(\d+)/)} END{print "$n";}' $LOGS_DIR/script__${script}__report.log`
+CNT=`perl -ne 'BEGIN{$n=0;} {$n+=$1 if (/[\w-~#:]+\s(\d+)/)} END{print "$n";}' $LOGS_DIR/script__${script}__report.log`
 
 test $N_SAMPLES -eq $CNT
 print_results 0 $? "script $script :: sample count check ($CNT = $N_SAMPLES)"
