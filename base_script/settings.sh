@@ -36,3 +36,16 @@ should_support_syscall_translations()
 	test -z "$PYTHON" && export PYTHON="python"
 	$PYTHON -c "import audit" 2>/dev/null
 }
+
+detect_Qt_Python_bindings()
+{
+	# return values
+	# 0 = PySide package is installed
+	# 1 = PySide package is not installed
+	test -z "$PYTHON" && /usr/bin/env python -V &>/dev/null && export PYTHON="/usr/bin/env python"
+	test -z "$PYTHON" && /usr/bin/env python3 -V &>/dev/null && export PYTHON="/usr/bin/env python3"
+	test -z "$PYTHON" && /usr/bin/env python2 -V &>/dev/null && export PYTHON="/usr/bin/env python2"
+	test -z "$PYTHON" && /usr/libexec/platform-python -V &>/dev/null && export PYTHON="/usr/libexec/platform-python"
+	test -z "$PYTHON" && export PYTHON="python"
+	$PYTHON -c "import PySide" 2> /dev/null
+}
