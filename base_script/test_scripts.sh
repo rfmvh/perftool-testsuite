@@ -23,7 +23,23 @@ consider_skipping $RUNMODE_EXPERIMENTAL
 
 AVAILABLE_SCRIPTS=`$CMD_PERF script -l | awk '{print $1}'`
 
-for scr in $AVAILABLE_SCRIPTS; do
+if [ $# -ge 1 ]; then
+	# if there are args, consider them as substrings of names of scripts we want to run
+	# e.g. `./test_scripts.sh rw` should run "rwtop", "rw-by-pid" and "rw-by-file"
+	# --> perf does this in a similar way with tests (see perf-test)
+	TESTED_SCRIPTS=""
+	while test -n "$1"; do
+		TESTED_SCRIPTS="$TESTED_SCRIPTS `echo "$AVAILABLE_SCRIPTS" | tr ' ' '\n' | grep "$1"`"
+		shift
+	done
+	# squash dups if any
+	TESTED_SCRIPTS=`echo $TESTED_SCRIPTS | tr ' ' '\n' | sort -u | tr '\n' ' '`
+else
+	# without arguments, run all
+	TESTED_SCRIPTS="$AVAILABLE_SCRIPTS"
+fi
+
+for scr in $TESTED_SCRIPTS; do
 	if [ ! -f $CURRENT_TEST_DIR/subtest__$scr.sh ]; then
 		print_testcase_skipped "script $scr"
 		continue
