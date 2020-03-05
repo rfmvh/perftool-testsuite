@@ -47,5 +47,5 @@ detect_Qt_Python_bindings()
 	test -z "$PYTHON" && /usr/bin/env python2 -V &>/dev/null && export PYTHON="/usr/bin/env python2"
 	test -z "$PYTHON" && /usr/libexec/platform-python -V &>/dev/null && export PYTHON="/usr/libexec/platform-python"
 	test -z "$PYTHON" && export PYTHON="python"
-	$PYTHON -c "import PySide" 2> /dev/null
+	$PYTHON -c "import PySide.QtSql" 2> /dev/null || $PYTHON -c "import PySide2.QtSql" 2> /dev/null
 }
