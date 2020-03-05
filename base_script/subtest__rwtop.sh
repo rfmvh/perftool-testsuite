@@ -39,6 +39,32 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "script $script :: report"
 (( TEST_RESULT += $? ))
 
 
+# requested and written bytes check
+$CMD_PERF script -F event,trace > $LOGS_DIR/script__${script}.log 2> /dev/null
+(( PERF_EXIT_CODE += $?))
+
+# count all requested bytes from perf script
+BYTES_REQUESTED_COUNT=`cat $LOGS_DIR/script__${script}.log | grep syscalls:sys_enter_read | grep -o 'count: 0x[0-9a-fA-F]*' | cut -d' ' -f2 | perl -ne 'BEGIN{$n=0;}{$n += hex $1 if (/(0x[0-9a-fA-F]+)/);} END{print "$n\n";}'`
+
+# take requested bytes from perf report script
+BYTES_REQUESTED_REPORT=`perl -ne 'BEGIN{$n=0;$en=0;}{$n+=$1 if ($en&&/\s*\d+\s+\S+\s+\d+\s+(\d+)\s+\d+/);$en=1 if /\s*pid\s+comm\s+# reads\s+bytes_req\s+bytes_read/;$en=0 if /^\s*$/} END{print "$n";}' < $LOGS_DIR/script__${script}__report.log`
+
+test $BYTES_REQUESTED_COUNT -eq $BYTES_REQUESTED_REPORT
+print_results $PERF_EXIT_CODE $? "script $script :: bytes requested count check ($BYTES_REQUESTED_REPORT = $BYTES_REQUESTED_COUNT)"
+(( TEST_RESULT += $? ))
+
+
+# count all written bytes from perf script
+BYTES_WRITTEN_COUNT=`cat $LOGS_DIR/script__${script}.log | grep syscalls:sys_enter_write | grep -o 'count: 0x[0-9a-fA-F]*' | cut -d' ' -f2 | perl -ne 'BEGIN{$n=0;}{$n += hex $1 if (/(0x[0-9a-fA-F]+)/);} END{print "$n\n";}'`
+
+# take written bytes from perf report script
+BYTES_WRITTEN_REPORT=`perl -ne 'BEGIN{$n=0;$en=0;}{$n+=$1 if ($en&&/\s*\d+\s+\S+\s+\d+\s+(\d+)/);$en=1 if /\s*pid\s+comm\s+# writes\s+bytes_written/;$en=0 if /^\s*$/} END{print "$n";}' < $LOGS_DIR/script__${script}__report.log`
+
+test $BYTES_WRITTEN_COUNT -eq $BYTES_WRITTEN_REPORT
+print_results $PERF_EXIT_CODE $? "script $script :: bytes written count check ($BYTES_WRITTEN_REPORT = $BYTES_WRITTEN_COUNT)"
+(( TEST_RESULT += $? ))
+
+
 # sample count check
 READ_PLUS_CHECK=`perl -ne 'BEGIN{$n=0;$en=0;}{$n+=$1 if ($en&&/\s*\d+\s+\S+\s+(\d+)\s+\d+\s+\d+/);$en=1 if /^\s+pid\s+comm\s+#\s+reads\s+bytes_req\s+bytes_read/;$en=0 if /^\s*$/} END{print "$n";}' < $LOGS_DIR/script__${script}__report.log`
 
