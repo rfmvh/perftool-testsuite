@@ -21,7 +21,7 @@ consider_skipping $RUNMODE_EXPERIMENTAL
 
 #### sanity test all scripts shipped with perf
 
-AVAILABLE_SCRIPTS=`$CMD_PERF script -l | awk '{print $1}'`
+AVAILABLE_SCRIPTS=`$CMD_PERF script -l | perl -ne 'print "$1 " if /^\s\s([\w\-]+)\s/'`
 
 if [ $# -ge 1 ]; then
 	# if there are args, consider them as substrings of names of scripts we want to run
