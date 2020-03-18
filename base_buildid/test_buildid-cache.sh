@@ -7,7 +7,7 @@
 #       Description:
 #
 #               This test checks tests functionality of perf buildid-cache
-#       command, which manages buildid-cache. 
+#       command, which manages buildid-cache.
 #
 
 # include working environment
@@ -44,63 +44,78 @@ fi
 
 ### buildids check
 
-# test that perf cache list is working
-$CMD_PERF --buildid-dir $BUILDIDDIR buildid-cache -l > $LOGS_DIR/cache_buildids.log 2> $LOGS_DIR/cache_buildids.err
+# test that perf buildid-cache --list works
+$CMD_PERF --buildid-dir $BUILDIDDIR buildid-cache -l > $LOGS_DIR/cache_list.log 2> $LOGS_DIR/cache_list.err
 PERF_EXIT_CODE=$?
 
 # output sanity checks
 REGEX_LINE_BASIC="\w{40}\s+$RE_PATH"
 REGEX_LINE_KALLSYMS="\w{40}\s+\[kernel\.kallsyms\]"
 REGEX_LINE_VDSO="\w{40}\s+\[\w+\]"
-../common/check_all_lines_matched.pl "$REGEX_LINE_BASIC" "$REGEX_LINE_KALLSYMS" "$REGEX_LINE_VDSO" < $LOGS_DIR/cache_buildids.log
-
+../common/check_all_lines_matched.pl "$REGEX_LINE_BASIC" "$REGEX_LINE_KALLSYMS" "$REGEX_LINE_VDSO" < $LOGS_DIR/cache_list.log
 CHECK_EXIT_CODE=$?
-test ! -s $LOGS_DIR/basic_buildids.err
+../common/check_all_patterns_found.pl "$REGEX_LINE_BASIC" < $LOGS_DIR/cache_list.log
+(( CHECK_EXIT_CODE += $? ))
+
+# error output should be empty
+test ! -s $LOGS_DIR/cache_list.err
 (( CHECK_EXIT_CODE += $? ))
 
 # output semantics check
-../common/check_buildids_vs_files.pl < $LOGS_DIR/cache_buildids.log
+../common/check_buildids_vs_files.pl < $LOGS_DIR/cache_list.log
 (( CHECK_EXIT_CODE += $? ))
 
-print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "buildids check"
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "list"
 (( TEST_RESULT += $? ))
 
 
-### check $HOME/.debug structure
+### check $HOME/.debug-`date +%s` ($BUILDIDDIR) structure
 
 # hex numbers are "stored" in elf files
-cat $LOGS_DIR/cache_buildids.log | perl -ne 'BEGIN{$BUILDIDDIR=shift;} print "$1 ${BUILDIDDIR}$2/$1/elf\n" if /^(\w{40})\s+((\/[\w\+.-]+)+)$/; print "$1 ${BUILDIDDIR}/$2/$1/elf\n" if /^(\w{40})\s+(\[[\w\.]+\])$/' $BUILDIDDIR > $LOGS_DIR/cache_debug_buildids.log
+cat $LOGS_DIR/cache_list.log | perl -ne 'BEGIN{$BUILDIDDIR=shift;} print "$1 ${BUILDIDDIR}$2/$1/elf\n" if /^(\w{40})\s+((\/[\w\+.-]+)+)$/; print "$1 ${BUILDIDDIR}/$2/$1/elf\n" if /^(\w{40})\s+(\[[\w\.]+\])$/' $BUILDIDDIR > $LOGS_DIR/cache_debug_structure.log
 CHECK_EXIT_CODE=$?
 
-../common/check_buildids_vs_files.pl < $LOGS_DIR/cache_debug_buildids.log
+../common/check_buildids_vs_files.pl < $LOGS_DIR/cache_debug_structure.log
 (( CHECK_EXIT_CODE += $? ))
 
-print_results 0 $CHECK_EXIT_CODE "buildids check in $HOME/.debug"
+print_results 0 $CHECK_EXIT_CODE "check $BUILDIDDIR structure"
 (( TEST_RESULT += $? ))
 
 
 ### remove test
 
-# we need only the files
-REMOVED_FILES=`cat $LOGS_DIR/cache_buildids.log | head -n 5 | awk '{print $2}'`
-CHECK_EXIT_CODE=$?
+# let's pick some files to remove
+COUNT=`cat $LOGS_DIR/cache_list.log | wc -l`
+(( PART = COUNT / 2 ))
+test $PART -gt 4 && PART=4
+
+REMOVED_FILES=`awk '{print $2}' < $LOGS_DIR/cache_list.log | ../common/pick_random.pl $PART`
 
 # remove files
 PERF_EXIT_CODE=0
 for FILE in $REMOVED_FILES; do
-        $CMD_PERF --buildid-dir $BUILDIDDIR buildid-cache -p $FILE
-        (( PERF_EXIT_CODE += $? ))
+	$CMD_PERF --buildid-dir $BUILDIDDIR buildid-cache -r $FILE
+	(( PERF_EXIT_CODE += $? ))
 done
 
-$CMD_PERF --buildid-dir $BUILDIDDIR buildid-cache -l > $LOGS_DIR/cache_buildids_removed.log 2> $LOGS_DIR/cache_builddis_removed.err
+$CMD_PERF --buildid-dir $BUILDIDDIR buildid-cache -l > $LOGS_DIR/cache_remove_list.log 2> $LOGS_DIR/cache_remove_list.err
 (( PERF_EXIT_CODE += $? ))
 
 # check if were the files removed
+CHECK_EXIT_CODE=0
 for FILE in $REMOVED_FILES; do
-        cat $LOGS_DIR/cache_buildids_removed.log | grep -q $FILE
+        cat $LOGS_DIR/cache_remove_list.log | grep -q $FILE
         test $? -ne 0
         (( CHECK_EXIT_CODE += $? ))
 done
+
+# check if there still are some files
+../common/check_all_patterns_found.pl "$REGEX_LINE_BASIC" < $LOGS_DIR/cache_remove_list.log
+(( CHECK_EXIT_CODE += $? ))
+REMAINING_LINES=`cat $LOGS_DIR/cache_remove_list.log | wc -l`
+(( EXPECTED_LINES = REMAINING_LINES + PART ))
+test $EXPECTED_LINES -eq $COUNT
+(( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "remove test"
 (( TEST_RESULT += $? ))
@@ -110,20 +125,24 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "remove test"
 
 # add removed files
 PERF_EXIT_CODE=0
-for FILE in $PURGED_FILES; do
+for FILE in $REMOVED_FILES; do
 	$CMD_PERF --buildid-dir $BUILDIDDIR buildid-cache -a $FILE
 	(( PERF_EXIT_CODE += $? ))
 done
 
-$CMD_PERF --buildid-dir $BUILDIDDIR buildid-cache -l > $LOGS_DIR/cache_buildids_added.log 2> $LOGS_DIR/cache_buildids_added.err
+$CMD_PERF --buildid-dir $BUILDIDDIR buildid-cache -l > $LOGS_DIR/cache_added_list.log 2> $LOGS_DIR/cache_added_list.err
 (( PERF_EXIT_CODE += $? ))
 
 # check if were the files added
 CHECK_EXIT_CODE=0
-for FILE in $PURGED_FILES; do
-	cat $LOGS_DIR/cache_buildids_added.log | grep -q $FILE
+for FILE in $REMOVED_FILES; do
+	cat $LOGS_DIR/cache_added_list.log | grep -q $FILE
 	(( CHECK_EXIT_CODE += $? ))
 done
+
+ALL_LINES=`cat $LOGS_DIR/cache_added_list.log | wc -l`
+test $ALL_LINES -eq $COUNT
+(( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "add test"
 
@@ -137,63 +156,60 @@ PERF_EXIT_CODE=$?
 MISSING_IDS=`$CMD_PERF --buildid-dir $BUILDIDDIR buildid-cache -M $CURRENT_TEST_DIR/perfnew.data 2> /dev/null`
 (( PERF_EXIT_CODE += $? ))
 
-# check if the missing buildids not in cache
-CHECK_EXIT_CODE=0
-for FILE in $MISSING_IDS; do
-	cat $LOGS_DIR/cache_buildids_added.log | grep -q $FILE
-	test $? -ne 0
-	(( CHECK_EXIT_CODE += $? ))
-done
+if [ -z "$MISSING_IDS" ]; then
+	print_testcase_skipped "missing buildid test (nothing was missing)"
+else
+	# check if the missing buildids not in cache
+	CHECK_EXIT_CODE=0
+	for BUILDID in $MISSING_IDS; do
+		cat $LOGS_DIR/cache_added_list.log | grep -q $BUILDID
+		test $? -ne 0
+		(( CHECK_EXIT_CODE += $? ))
+	done
 
-print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "missing build ids test"
+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "missing buildid test"
+fi
 
 
 ### update test
 
-# get files from buildids
-MISSING_FILES=`echo $MISSING_IDS | tr ' ' '\n' | grep /`
-CHECK_EXIT_CODE=$?
-
-# update the cache
-PERF_EXIT_CODE=0
-for FILE in $MISSING_FILES; do
-	$CMD_PERF --buildid-dir $BUILDIDDIR buildid-cache -u $FILE
-	(( PERF_EXIT_CODE += $? ))
-done
-
-$CMD_PERF --buildid-dir $BUILDIDDIR buildid-cache -l > $LOGS_DIR/cache_buildids_missing_added.log 2> $LOGS_DIR/cache_buildids_missing_added.err
-(( PERF_EXIT_CODE += $? ))
-
-# check if were the files added
-for FILE in $MISSING_FILES; do
-        cat $LOGS_DIR/cache_buildids_missing_added.log | grep -q $FILE
-        (( CHECK_EXIT_CODE += $? ))
-done
-
-print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "update file test"
+print_testcase_skipped "update file test"
 
 
 ### purge test
 
-# we need only the files
-PURGED_FILES=`cat $LOGS_DIR/cache_buildids_missing_added.log | head -n 5 | awk '{print $2}'`
-CHECK_EXIT_CODE=$?
+# let's pick some files to remove
+COUNT=`cat $LOGS_DIR/cache_list.log | wc -l`
+(( PART = COUNT / 2 ))
+test $PART -gt 3 && PART=3
 
+PURGED_FILES=`awk '{print $2}' < $LOGS_DIR/cache_added_list.log | ../common/pick_random.pl $PART`
+
+# purge files
 PERF_EXIT_CODE=0
 for FILE in $PURGED_FILES; do
-        $CMD_PERF --buildid-dir $BUILDIDDIR buildid-cache -p $FILE
-        (( PERF_EXIT_CODE += $? ))
+	$CMD_PERF --buildid-dir $BUILDIDDIR buildid-cache -p $FILE
+	(( PERF_EXIT_CODE += $? ))
 done
 
-$CMD_PERF --buildid-dir $BUILDIDDIR buildid-cache -l > $LOGS_DIR/cache_buildids_purged.log 2> $LOGS_DIR/cache_builddis_purged.err
+$CMD_PERF --buildid-dir $BUILDIDDIR buildid-cache -l > $LOGS_DIR/cache_purge_list.log 2> $LOGS_DIR/cache_purge_list.err
 (( PERF_EXIT_CODE += $? ))
 
-# check if the files were purged
+# check if were the files purged
+CHECK_EXIT_CODE=0
 for FILE in $PURGED_FILES; do
-        cat $LOGS_DIR/cache_buildids_purged.log | grep -q $FILE
+        cat $LOGS_DIR/cache_purge_list.log | grep -q $FILE
         test $? -ne 0
         (( CHECK_EXIT_CODE += $? ))
 done
+
+# check if there still are some files
+../common/check_all_patterns_found.pl "$REGEX_LINE_BASIC" < $LOGS_DIR/cache_purge_list.log
+(( CHECK_EXIT_CODE += $? ))
+REMAINING_LINES=`cat $LOGS_DIR/cache_purge_list.log | wc -l`
+(( EXPECTED_LINES = REMAINING_LINES + PART ))
+test $EXPECTED_LINES -eq $COUNT
+(( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "purge test"
 (( TEST_RESULT += $? ))
@@ -204,11 +220,11 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "purge test"
 $CMD_PERF --buildid-dir $BUILDIDDIR buildid-cache -P &> /dev/null
 PERF_EXIT_CODE=$?
 
-$CMD_PERF --buildid-dir $BUILDIDDIR buildid-cache -l > $LOGS_DIR/cache_buildids_all_purged.log 2> $LOGS_DIR/cache_buildids_all_purged.err
+$CMD_PERF --buildid-dir $BUILDIDDIR buildid-cache -l > $LOGS_DIR/cache_purgeall_list.log 2> $LOGS_DIR/cache_purgeall_list.err
 (( PERF_EXIT_CODE += $? ))
 
 # check if was the cache flushed
-test ! -s $LOGS_DIR/cache_buildids_all_purged.log
+test ! -s $LOGS_DIR/cache_purgeall_list.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "purge all test"
