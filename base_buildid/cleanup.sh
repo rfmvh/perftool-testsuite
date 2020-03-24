@@ -31,6 +31,7 @@ if [ ! -n "$PERFSUITE_RUN_DIR" ]; then
 	test -e perf.data.old && rm -rf perf.data.old
 	test -e perfnew.data && rm -rf perfnew.data
 	test -e perfnew.data.old && rm -rf perfnew.data.old
+	test -e empty && rm -rf empty
 fi
 
 print_overall_results 0
