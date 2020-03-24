@@ -145,6 +145,7 @@ test $ALL_LINES -eq $COUNT
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "add test"
+(( TEST_RESULT += $? ))
 
 
 ### missing build ids test
@@ -168,12 +169,34 @@ else
 	done
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "missing buildid test"
+	(( TEST_RESULT += $? ))
 fi
 
 
 ### update test
 
-print_testcase_skipped "update file test"
+# create a simple binary file
+echo "int main(void) { return 0; }" | gcc -o $CURRENT_TEST_DIR/empty -xc -O1 - &> /dev/null
+
+$CMD_PERF buildid-cache -a $CURRENT_TEST_DIR/empty
+PERF_EXIT_CODE=$?
+BUILDID_BEFORE=`$CMD_PERF buildid-cache -l | grep $CURRENT_TEST_DIR/empty`
+CHECK_EXIT_CODE=$?
+
+# update the created file
+echo "int main(void) { return 0; }" | gcc -o $CURRENT_TEST_DIR/empty -xc -O2 - &> /dev/null
+
+$CMD_PERF buildid-cache -u $CURRENT_TEST_DIR/empty
+(( PERF_EXIT_CODE += $? ))
+BUILDID_AFTER=`$CMD_PERF buildid-cache -l | grep $CURRENT_TEST_DIR/empty`
+(( CHECK_EXIT_CODE += $?))
+
+# buildids should be different
+test "$BUILDID_BEFORE" != "$BUILDID_AFTER"
+(( CHECK_EXIT_CODE += $? ))
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "update file test"
+(( TEST_RESULT += $?))
 
 
 ### purge test
@@ -228,6 +251,7 @@ test ! -s $LOGS_DIR/cache_purgeall_list.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "purge all test"
+(( TEST_RESULT += $? ))
 
 
 # print overall results
