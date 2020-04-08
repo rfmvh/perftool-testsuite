@@ -1,5 +1,5 @@
 #
-#	settings.sh of perf_sched test
+#	settings.sh of perf_data test
 #	Author: Michael Petlan <mpetlan@redhat.com>
 #
 #	Description:
@@ -23,3 +23,11 @@ else
 	export CURRENT_TEST_DIR="."
 	export LOGS_DIR="."
 fi
+
+should_support_ctf_conversion()
+{
+	# return value
+	# 0 = expected to support CTF conversion
+	# 1 = not expected to support CTF conversion
+	ldd `which $CMD_PERF` | grep -q 'libbabeltrace'
+}

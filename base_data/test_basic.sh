@@ -17,6 +17,13 @@
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
+# skip if the CTF conversion is not compiled in
+if ! should_support_ctf_conversion; then
+	print_overall_skipped
+	exit $?
+fi
+
+
 ### help message
 
 if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
