@@ -33,19 +33,8 @@ else
 	print_testcase_skipped "help message"
 fi
 
+
 ### basic execution
-
-# record some data
-
-$CMD_PERF record -a -o $CURRENT_TEST_DIR/perf.data -- $CMD_LONGER_SLEEP 2> $LOGS_DIR/basic_record.log
-PERF_EXIT_CODE=$?
-
-../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" "perf.data" < $LOGS_DIR/basic_record.log
-CHECK_EXIT_CODE=$?
-
-print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "record"
-(( TEST_RESULT += $? ))
-
 
 # convert --to-ctf
 
@@ -68,7 +57,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "convert --to-ctf"
 
 # convert --to-ctl sample count check
 
-RECORD_SAMPLES=`perl -ne 'print "$1" if /\((\d+) samples\)/' $LOGS_DIR/basic_record.log`
+RECORD_SAMPLES=`perl -ne 'print "$1" if /\((\d+) samples\)/' $LOGS_DIR/setup_record.log`
 DATA_SAMPLES=`perl -ne 'print "$1" if /\((\d+) samples\)/' $LOGS_DIR/basic_convert_ctf.log`
 
 test $RECORD_SAMPLES -eq $DATA_SAMPLES &> /dev/null
