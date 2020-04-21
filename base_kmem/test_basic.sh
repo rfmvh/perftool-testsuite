@@ -41,10 +41,8 @@ fi
 
 # basic kmem record test
 
-cd $CURRENT_TEST_DIR
-$CMD_PERF kmem record -- $CMD_SIMPLE 2> $LOGS_DIR/basic_record.log
+$CMD_PERF kmem record -- -o $CURRENT_TEST_DIR/perf.data -- $CMD_SIMPLE 2> $LOGS_DIR/basic_record.log
 PERF_EXIT_CODE=$?
-cd $OLDPWD
 
 ../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" "perf.data" < $LOGS_DIR/basic_record.log
 CHECK_EXIT_CODE=$?
@@ -162,10 +160,8 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "stat --alloc ($CHECK_EXIT_CODE w
 # kmem stat --page
 
 # record - rewriting perf.data
-cd $CURRENT_TEST_DIR
-$CMD_PERF kmem record --page -- $CMD_SIMPLE 2> $LOGS_DIR/basic_record_page.log
+$CMD_PERF kmem record --page -- -o $CURRENT_TEST_DIR/perf.data -- $CMD_SIMPLE 2> $LOGS_DIR/basic_record_page.log
 PERF_EXIT_CODE=$?
-cd $OLDPWD
 
 ../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" "perf.data" < $LOGS_DIR/basic_record_page.log
 CHECK_EXIT_CODE=$?
