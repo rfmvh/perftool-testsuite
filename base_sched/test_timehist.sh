@@ -163,7 +163,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "--with-summary"
 $CMD_PERF sched timehist -V > $LOGS_DIR/timehist_visual.log 2> /dev/null
 PERF_EXIT_CODE=$?
 
-REGEX_V_HEADER_LINE="\s+time\s+cpu\s+\d+\s+task name\s+wait time\s+sch delay\s+run time"
+REGEX_V_HEADER_LINE="\s+time\s+cpu\s+[\da-f]+\s+task name\s+wait time\s+sch delay\s+run time"
 REGEX_V_DATA_LINE="\s+$RE_NUMBER\s+\[\d+\]\s+s\s+[\w~\[\]\/ \+:#-]+\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
 REGEX_V_IDLE_LINE="\s+$RE_NUMBER\s+\[\d+\]\s+i\s+<idle>\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
 
