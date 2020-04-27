@@ -17,14 +17,6 @@
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
-# skip the testcase if $PERFSUITE_RUN_DIR is set, since we
-# cannot guarantee not writting into the current tree (we
-# miss '-o' option in 'perf mem record'
-if [ -n "$PERFSUITE_RUN_DIR" ]; then
-	print_overall_skipped
-	exit 0
-fi
-
 # skip the testcase if there are no suitable events to be used
 if [ "$MEM_LOADS_SUPPORTED" = "no" -a "$MEM_STORES_SUPPORTED" = "no" ]; then
 	print_overall_skipped
@@ -61,7 +53,7 @@ if [ "$MEM_LOADS_SUPPORTED" = "yes" ]; then
 	### loads record
 
 	# test that perf mem record can record mem-loads
-	$CMD_PERF mem -t load record examples/dummy > /dev/null 2> $LOGS_DIR/basic_loads_record.err
+	$CMD_PERF mem -t load record -o $CURRENT_TEST_DIR/perf.data examples/dummy > /dev/null 2> $LOGS_DIR/basic_loads_record.err
 	PERF_EXIT_CODE=$?
 
 	# check the perf mem record output
@@ -77,7 +69,7 @@ if [ "$MEM_LOADS_SUPPORTED" = "yes" ]; then
 	### loads event check
 
 	# we need to check, whether the correct event has been used
-	$CMD_PERF evlist > $LOGS_DIR/basic_loads_evlist.log 2> $LOGS_DIR/basic_loads_evlist.err
+	$CMD_PERF evlist -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_loads_evlist.log 2> $LOGS_DIR/basic_loads_evlist.err
 	PERF_EXIT_CODE=$?
 
 	# check the events used
@@ -95,7 +87,7 @@ if [ "$MEM_LOADS_SUPPORTED" = "yes" ]; then
 	### loads report
 
 	# test that something got recorded here
-	$CMD_PERF mem report --stdio > $LOGS_DIR/basic_loads_report.log 2> $LOGS_DIR/basic_loads_report.err
+	$CMD_PERF mem report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_loads_report.log 2> $LOGS_DIR/basic_loads_report.err
 	PERF_EXIT_CODE=$?
 
 	# check the perf mem report output
@@ -122,7 +114,7 @@ if [ "$MEM_STORES_SUPPORTED" = "yes" ]; then
 	### stores record
 
 	# test that perf mem record can record mem-stores
-	$CMD_PERF mem -t store record examples/dummy > /dev/null 2> $LOGS_DIR/basic_stores_record.err
+	$CMD_PERF mem -t store record -o $CURRENT_TEST_DIR/perf.data examples/dummy > /dev/null 2> $LOGS_DIR/basic_stores_record.err
 	PERF_EXIT_CODE=$?
 
 	# check the perf mem record output
@@ -138,7 +130,7 @@ if [ "$MEM_STORES_SUPPORTED" = "yes" ]; then
 	### stores event check
 
 	# we need to check, whether the correct event has been used
-	$CMD_PERF evlist > $LOGS_DIR/basic_stores_evlist.log 2> $LOGS_DIR/basic_stores_evlist.err
+	$CMD_PERF evlist -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stores_evlist.log 2> $LOGS_DIR/basic_stores_evlist.err
 	PERF_EXIT_CODE=$?
 
 	# check the events used
@@ -156,7 +148,7 @@ if [ "$MEM_STORES_SUPPORTED" = "yes" ]; then
 	### stores report
 
 	# test that something got recorded here
-	$CMD_PERF mem report --stdio > $LOGS_DIR/basic_stores_report.log 2> $LOGS_DIR/basic_stores_report.err
+	$CMD_PERF mem report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stores_report.log 2> $LOGS_DIR/basic_stores_report.err
 	PERF_EXIT_CODE=$?
 
 	# check the perf mem report output
@@ -183,7 +175,7 @@ if [ "$MEM_LOADS_SUPPORTED" = "yes" -a "$MEM_STORES_SUPPORTED" = "yes" ]; then
 	### both loads and stores record
 
 	# test that perf mem record can record both mem-loads and mem-stores
-	$CMD_PERF mem -t load,store record examples/dummy > /dev/null 2> $LOGS_DIR/basic_both_record.err
+	$CMD_PERF mem -t load,store record -o $CURRENT_TEST_DIR/perf.data examples/dummy > /dev/null 2> $LOGS_DIR/basic_both_record.err
 	PERF_EXIT_CODE=$?
 
 	# check the perf mem record output
@@ -199,7 +191,7 @@ if [ "$MEM_LOADS_SUPPORTED" = "yes" -a "$MEM_STORES_SUPPORTED" = "yes" ]; then
 	### loads&stores event check
 
 	# we need to check, whether the correct events have been used
-	$CMD_PERF evlist > $LOGS_DIR/basic_both_evlist.log 2> $LOGS_DIR/basic_both_evlist.err
+	$CMD_PERF evlist -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_both_evlist.log 2> $LOGS_DIR/basic_both_evlist.err
 	PERF_EXIT_CODE=$?
 
 	# check the events used
@@ -217,7 +209,7 @@ if [ "$MEM_LOADS_SUPPORTED" = "yes" -a "$MEM_STORES_SUPPORTED" = "yes" ]; then
 	### loads&stores report
 
 	# test that something got recorded here
-	$CMD_PERF mem report --stdio > $LOGS_DIR/basic_both_report.log 2> $LOGS_DIR/basic_both_report.err
+	$CMD_PERF mem report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_both_report.log 2> $LOGS_DIR/basic_both_report.err
 	PERF_EXIT_CODE=$?
 
 	# check the perf mem report output

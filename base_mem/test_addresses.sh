@@ -19,14 +19,6 @@
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
-# skip the testcase if $PERFSUITE_RUN_DIR is set, since we
-# cannot guarantee not writting into the current tree (we
-# miss '-o' option in 'perf mem record'
-if [ -n "$PERFSUITE_RUN_DIR" ]; then
-	print_overall_skipped
-	exit 0
-fi
-
 # skip the testcase if there are no suitable events to be used
 if [ "$MEM_LOADS_SUPPORTED" = "no" -a "$MEM_STORES_SUPPORTED" = "no" ]; then
 	print_overall_skipped
@@ -37,7 +29,7 @@ fi
 ### record --data --phys-data
 
 # test that perf mem record can record virtual and physical addresses along with samples
-$CMD_PERF mem record --data --phys-data examples/dummy > /dev/null 2> $LOGS_DIR/addresses_record.err
+$CMD_PERF mem record --data --phys-data -o $CURRENT_TEST_DIR/perf.data examples/dummy > /dev/null 2> $LOGS_DIR/addresses_record.err
 PERF_EXIT_CODE=$?
 
 # check the perf mem record output
@@ -56,7 +48,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "record --data --phys-data"
 ### report check
 
 # we need to check, whether each sample has data (virtual address) entry
-$CMD_PERF report -D > $LOGS_DIR/addresses_report.log 2> $LOGS_DIR/addresses_report.err
+$CMD_PERF report -i $CURRENT_TEST_DIR/perf.data -D > $LOGS_DIR/addresses_report.log 2> $LOGS_DIR/addresses_report.err
 PERF_EXIT_CODE=$?
 
 # check the events used
