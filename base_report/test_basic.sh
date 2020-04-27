@@ -86,7 +86,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "number of samples"
 ### header
 
 # '--header' and '--header-only' should show perf report header
-( cd $CURRENT_TEST_DIR ; $CMD_PERF report --stdio --header-only > $LOGS_DIR/basic_header.log )
+$CMD_PERF report -i $CURRENT_TEST_DIR/perf.data --stdio --header-only > $LOGS_DIR/basic_header.log
 PERF_EXIT_CODE=$?
 
 REGEX_LINE_TIMESTAMP="#\s+captured on\s*:\s*$RE_DATE_TIME"
@@ -126,7 +126,7 @@ print_results $PERF_EXIT_CODE 0 "header timestamp"
 ### show CPU utilization
 
 # '--showcpuutilization' should show percentage for both system and userspace mode
-( cd $CURRENT_TEST_DIR ; $CMD_PERF report --stdio --showcpuutilization > $LOGS_DIR/basic_cpuut.log 2> $LOGS_DIR/basic_cpuut.err )
+$CMD_PERF report -i $CURRENT_TEST_DIR/perf.data --stdio --showcpuutilization > $LOGS_DIR/basic_cpuut.log 2> $LOGS_DIR/basic_cpuut.err
 PERF_EXIT_CODE=$?
 
 REGEX_LINES_HEADER="#\s*Children\s+Self\s+sys\s+usr\s+Command\s+Shared Object\s+Symbol"
