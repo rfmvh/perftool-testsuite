@@ -103,14 +103,14 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "header"
 (( TEST_RESULT += $? ))
 
 # '--header' and '--header-only' should use creation time
-OLD_TIMESTAMP=`$CMD_PERF report --stdio --header-only $LOGS_DIR/perf.data | grep "captured on"`
+OLD_TIMESTAMP=`$CMD_PERF report --stdio --header-only -i $CURRENT_TEST_DIR/perf.data | grep "captured on"`
 PERF_EXIT_CODE=$?
 
 ( tar c $CURRENT_TEST_DIR/perf.data | xz > perf.data.tar.xz ; cd $HEADER_TAR_DIR ; xzcat ../perf.data.tar.xz | tar x )
 (( PERF_EXIT_CODE += $? ))
 cd $HEADER_TAR_DIR
 (( PERF_EXIT_CODE += $? ))
-NEW_TIMESTAMP=`$CMD_PERF report --stdio --header-only perf.data | grep "captured on"`
+NEW_TIMESTAMP=`$CMD_PERF report --stdio --header-only -i ./perf.data | grep "captured on"`
 (( PERF_EXIT_CODE += $? ))
 
 cd ..
