@@ -52,7 +52,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "record PT data"
 
 
 ### script --itrace
-$CMD_PERF script --itrace -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/intelpt_script.log
+$CMD_PERF script --itrace=be -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/intelpt_script.log
 PERF_EXIT_CODE=$?
 
 # check perf script output
