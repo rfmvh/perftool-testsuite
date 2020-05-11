@@ -167,16 +167,18 @@ export RE_LINE_TRACE_CONTINUED="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*\.
 #    0.000 ( 0.000 ms):  ... [continued]: nanosleep()) = 0
 #    0.000 ( 0.000 ms):  ... [continued]: nanosleep()) = 0x00000000
 
-export RE_LINE_TRACE_SUMMARY_HEADER="\s*syscall\s+calls\s+total\s+min\s+avg\s+max\s+stddev"
+export RE_LINE_TRACE_SUMMARY_HEADER="\s*syscall\s+calls\s+(?:errors\s+)?total\s+min\s+avg\s+max\s+stddev"
 # A header of a perf-trace summary table
 # Example:
 #    syscall            calls    total       min       avg       max      stddev
+#    syscall            calls  errors  total       min       avg       max       stddev
 
 
-export RE_LINE_TRACE_SUMMARY_CONTENT="^\s*\w+\s+(?:$RE_NUMBER\s+){5}$RE_NUMBER%"
+export RE_LINE_TRACE_SUMMARY_CONTENT="^\s*\w+\s+(?:$RE_NUMBER\s+){5,6}$RE_NUMBER%"
 # A line of a perf-trace summary table
 # Example:
 #    open                   3     0.017     0.005     0.006     0.007     10.90%
+#    openat                 2      0     0.017     0.008     0.009     0.010     12.29%
 
 
 export RE_LINE_REPORT_CONTENT="^\s+$RE_NUMBER%\s+\w+\s+\S+\s+\S+\s+\S+" # FIXME
