@@ -201,7 +201,7 @@ head -n 11 $LOGS_DIR/basic_stat_page.log | awk '{print $5}' | tr '\n' ' ' > $LOG
 
 CHECK_EXIT_CODE=`cat $LOGS_DIR/basic_stat_page_count.log | perl -ne 'BEGIN{$n=1;} {$n=0 if (/\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+\d+/ and $1 == $3 + $4 and $2 == $3 + $5);} END{print "$n";}'`
 
-print_results 0 $CHECK_EXIT_CODE "stat --page {$CHECK_EXIT_CODE wrong counts}"
+print_results 0 $CHECK_EXIT_CODE "stat --page ($CHECK_EXIT_CODE wrong counts)"
 (( TEST_RESULT += $? ))
 
 # sample count check
