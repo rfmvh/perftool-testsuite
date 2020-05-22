@@ -103,7 +103,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "stat --caller"
 (( TEST_RESULT += $? ))
 
 # count check
-CHECK_EXIT_CODE=`cat $LOGS_DIR/basic_stat_caller.log | cut -s -d'|' -f2-4 | perl -ne 'BEGIN{$n=0;}{$n+=1 if (/\s+(\d+)\/(\d+)\s+\|\s+(\d+)\/(\d+)\s+\|\s+(\d+)/) and (($2 * $5) != $1) or (($4 * $5) != $3);} END{print "$n";}'`
+CHECK_EXIT_CODE=`cat $LOGS_DIR/basic_stat_caller.log | cut -s -d'|' -f2-4 | perl -ne 'BEGIN{$n=0;}{$n+=1 if (/\s+(\d+)\/(\d+)\s+\|\s+(\d+)\/(\d+)\s+\|\s+(\d+)/) and ((int($1 / $5) != $2) or (int($3 / $5) != $4));} END{print "$n";}'`
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "stat --caller ($CHECK_EXIT_CODE wrong counts)"
 (( TEST_RESULT += $? ))
@@ -127,7 +127,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "stat --caller --raw-ip"
 (( TEST_RESULT += $? ))
 
 # count check
-CHECK_EXIT_CODE=`cat $LOGS_DIR/basic_stat_raw-ip.log | cut -s -d'|' -f2-4 | perl -ne 'BEGIN{$n=0;}{$n+=1 if (/\s+(\d+)\/(\d+)\s+\|\s+(\d+)\/(\d+)\s+\|\s+(\d+)/) and (($2 * $5) != $1) or (($4 * $5) != $3);} END{print "$n";}'`
+CHECK_EXIT_CODE=`cat $LOGS_DIR/basic_stat_raw-ip.log | cut -s -d'|' -f2-4 | perl -ne 'BEGIN{$n=0;}{$n+=1 if (/\s+(\d+)\/(\d+)\s+\|\s+(\d+)\/(\d+)\s+\|\s+(\d+)/) and ((int($1 / $5) != $2) or (int($3 / $5) != $4));} END{print "$n";}'`
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "stat --caller --raw-ip ($CHECK_EXIT_CODE wrong counts)"
 (( TEST_RESULT += $? ))
@@ -151,7 +151,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "stat --alloc"
 (( TEST_RESULT += $? ))
 
 # count check
-CHECK_EXIT_CODE=`cat $LOGS_DIR/basic_stat_alloc.log | cut -s -d'|' -f2-4 | perl -ne 'BEGIN{$n=0;}{$n+=1 if (/\s+(\d+)\/(\d+)\s+\|\s+(\d+)\/(\d+)\s+\|\s+(\d+)/) and (($2 * $5) != $1) or (($4 * $5) != $3);} END{print "$n";}'`
+CHECK_EXIT_CODE=`cat $LOGS_DIR/basic_stat_alloc.log | cut -s -d'|' -f2-4 | perl -ne 'BEGIN{$n=0;}{$n+=1 if (/\s+(\d+)\/(\d+)\s+\|\s+(\d+)\/(\d+)\s+\|\s+(\d+)/) and ((int($1 / $5) != $2) or (int($3 / $5) != $4));} END{print "$n\n";}'`
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "stat --alloc ($CHECK_EXIT_CODE wrong counts)"
 (( TEST_RESULT += $? ))
