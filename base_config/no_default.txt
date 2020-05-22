@@ -1,0 +1,10 @@
+hist.percentage=absolute
+ui.show-headers=true
+call-graph.record-mode=fp
+call-graph.dump-size=8192
+call-graph.print-type=graph
+call-graph.order=callee
+call-graph.sort-key=function
+call-graph.threshold=0.5
+call-graph.print-limit=0
+llvm.dump-obj=true
