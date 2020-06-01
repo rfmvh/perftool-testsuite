@@ -66,9 +66,9 @@ else
 	REGEX_SLEEP_PID_TID=$REGEX_SLEEP_PID
 fi
 
-REGEX_IDLE_LINE="\s+$RE_NUMBER\s+\[\d+\]\s+<idle>\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
-REGEX_PERF_LINE="\s+$RE_NUMBER\s+\[\d+\]\s+perf\[$REGEX_PERF_PID_TID\]\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
-REGEX_SLEEP_LINE="\s+$RE_NUMBER\s+\[\d+\]\s+sleep\[$REGEX_SLEEP_PID_TID\]\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
+REGEX_IDLE_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+<idle>\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
+REGEX_PERF_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+perf\[$REGEX_PERF_PID_TID\]\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
+REGEX_SLEEP_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+sleep\[$REGEX_SLEEP_PID_TID\]\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
 
 # 0 is pid for idle
 $CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist --pid=0,$REGEX_PERF_PID,$REGEX_SLEEP_PID > $LOGS_DIR/timehist_pid.log 2> /dev/null
@@ -163,9 +163,9 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "--with-summary"
 $CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -V > $LOGS_DIR/timehist_visual.log 2> /dev/null
 PERF_EXIT_CODE=$?
 
-REGEX_V_HEADER_LINE="\s+time\s+cpu\s+[\da-f]+\s+task name\s+wait time\s+sch delay\s+run time"
-REGEX_V_DATA_LINE="\s+$RE_NUMBER\s+\[\d+\]\s+s\s+[\w~\[\]\/ \+:#-]+\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
-REGEX_V_IDLE_LINE="\s+$RE_NUMBER\s+\[\d+\]\s+i\s+<idle>\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
+REGEX_V_HEADER_LINE="\s*time\s+cpu\s+[\da-f]+\s+task name\s+wait time\s+sch delay\s+run time"
+REGEX_V_DATA_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+s\s+[\w~\[\]\/ \+:#-]+\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
+REGEX_V_IDLE_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+i\s+<idle>\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
 
 ../common/check_all_lines_matched.pl "^\s*$" "$REGEX_V_HEADER_LINE" "$REGEX_HEADER_NOTES" "$REGEX_HEADER_UNDERLINE" "$REGEX_V_DATA_LINE" "$REGEX_V_IDLE_LINE" < $LOGS_DIR/timehist_visual.log
 CHECK_EXIT_CODE=$?
@@ -181,7 +181,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "--visual-cpu"
 $CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -w > $LOGS_DIR/timehist_wakeups.log 2> /dev/null
 PERF_EXIT_CODE=$?
 
-REGEX_W_AWAKENED_LINE="\s+$RE_NUMBER\s+\[\d+\]\s+[\w~\[\]\/ \+:#-]+\s+awakened: [\w~\[\]\/ \+:#-]+"
+REGEX_W_AWAKENED_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+[\w~\[\]\/ \+:#-]+\s+awakened: [\w~\[\]\/ \+:#-]+"
 
 ../common/check_all_lines_matched.pl "^\s*$" "$REGEX_HEADER_LINE" "$REGEX_HEADER_NOTES" "$REGEX_HEADER_UNDERLINE" "$REGEX_DATA_LINE" "$REGEX_W_AWAKENED_LINE" < $LOGS_DIR/timehist_wakeups.log
 CHECK_EXIT_CODE=$?
@@ -197,7 +197,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "--wakeups"
 $CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -M > $LOGS_DIR/timehist_migration.log 2> /dev/null
 PERF_EXIT_CODE=$?
 
-REGEX_M_MIGRATED_LINE="\s+$RE_NUMBER\s+\[\d+\]\s+[\w~\[\]\/ \+:#-]+\s+migrated: [\w~\[\]\/ \+:#-]+"
+REGEX_M_MIGRATED_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+[\w~\[\]\/ \+:#-]+\s+migrated: [\w~\[\]\/ \+:#-]+"
 
 ../common/check_all_lines_matched.pl "^\s*$" "$REGEX_HEADER_LINE" "$REGEX_HEADER_NOTES" "$REGEX_HEADER_UNDERLINE" "$REGEX_DATA_LINE" "$REGEX_M_MIGRATED_LINE" < $LOGS_DIR/timehist_migration.log
 CHECK_EXIT_CODE=$?
@@ -213,7 +213,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "--migration"
 $CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -n > $LOGS_DIR/timehist_next.log 2> /dev/null
 PERF_EXIT_CODE=$?
 
-REGEX_N_NEXT_LINE="\s+$RE_NUMBER\s+\[\d+\]\s+[\w~\[\]\/ \+:#-]+\s+next: [\w~\[\]\/ \+:#-]+"
+REGEX_N_NEXT_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+[\w~\[\]\/ \+:#-]+\s+next: [\w~\[\]\/ \+:#-]+"
 
 ../common/check_all_lines_matched.pl "^\s*$" "$REGEX_HEADER_LINE" "$REGEX_HEADER_NOTES" "$REGEX_HEADER_UNDERLINE" "$REGEX_DATA_LINE" "$REGEX_N_NEXT_LINE" < $LOGS_DIR/timehist_next.log
 CHECK_EXIT_CODE=$?
@@ -229,8 +229,8 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "--next"
 $CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -I > $LOGS_DIR/timehist_idle-hist.log 2> /dev/null
 PERF_EXIT_CODE=$?
 
-REGEX_I_DATA_LINE="\s+$RE_NUMBER\s+\[\d+\]\s+[\w~\[\]\/ \+:#-]+\s+[0\.]+\s+[0\.]+\s+[0\.]+"
-REGEX_I_IDLE_LINE="\s+$RE_NUMBER\s+\[\d+\]\s+<idle>\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
+REGEX_I_DATA_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+[\w~\[\]\/ \+:#-]+\s+[0\.]+\s+[0\.]+\s+[0\.]+"
+REGEX_I_IDLE_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+<idle>\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
 
 ../common/check_all_lines_matched.pl "^\s*$" "$REGEX_HEADER_LINE" "$REGEX_HEADER_NOTES" "$REGEX_HEADER_UNDERLINE" "$REGEX_I_DATA_LINE" "$REGEX_I_IDLE_LINE" < $LOGS_DIR/timehist_idle-hist.log
 CHECK_EXIT_CODE=$?
@@ -248,13 +248,13 @@ PERF_EXIT_CODE=$?
 
 REGEX_ST_HEADER_LINE="$REGEX_HEADER_LINE\s+state"
 
-REGEX_ST_DATA_LINE="\s+$RE_NUMBER\s+\[\d+\]\s+[\w~\[\]\/ \+:#-]+\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+[RSDTtZXxKWP]"
-REGEX_ST_IDLE_LINE="\s+$RE_NUMBER\s+\[\d+\]\s+<idle>\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+I"
+REGEX_ST_DATA_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+[\w~\[\]\/ \+:#-]+\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+[RSDTtZXxKWP]"
+REGEX_ST_IDLE_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+<idle>\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+I"
 
 ../common/check_all_lines_matched.pl "$REGEX_ST_HEADER_LINE" "$REGEX_HEADER_NOTES" "$REGEX_HEADER_UNDERLINE" "$REGEX_ST_DATA_LINE" "$REGEX_ST_IDLE_LINE" < $LOGS_DIR/timehist_state.log
 CHECK_EXIT_CODE=$?
 
-REGEX_ST_SLEEP_LINE="\s+$RE_NUMBER\s+\[\d+\]\s+sleep\[\d+\]\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+[Xx]"
+REGEX_ST_SLEEP_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+sleep\[\d+\]\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+[Xx]"
 ../common/check_all_patterns_found.pl "$REGEX_ST_SLEEP_LINE" < $LOGS_DIR/timehist_state.log
 (( CHECK_EXIT_CODE += $? ))
 
