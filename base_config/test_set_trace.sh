@@ -29,8 +29,9 @@ REGEX_CONTINUED="\.{3}\s*\[continued\]:\s+\w+\(\)\)"
 REGEX_DURATION="\(\s*$RE_NUMBER\s*ms\)"
 REGEX_EMPTY_DURATION="\(\s+\)"
 REGEX_COMMAND="ls\/\d+"
-REGEX_FUNCTION_ARGS="\w+\((?:(?:\w+: [\w\|\/<>-]+, )+)?(?:\w+: [\w\|\/<>-]+)?\)"
-REGEX_FUNCTION_NO_ARGS="\w+\((?:(?:[\w\|\/<>-]+, )+)?(?:[\w\|\/<>-]+)?\)"
+REGEX_ARG="[\w\|\/\.<>-]+"
+REGEX_FUNCTION_ARGS="\w+\((?:\w+:\s+$REGEX_ARG, )*(?:\w+:\s+$REGEX_ARG)\)"
+REGEX_FUNCTION_NO_ARGS="\w+\((?:$REGEX_ARG, )*(?:$REGEX_ARG)\)"
 REGEX_RESULT="(?:\-?$RE_NUMBER)|(?:0x$RE_NUMBER_HEX)"
 
 
