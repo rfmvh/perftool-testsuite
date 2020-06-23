@@ -105,10 +105,10 @@ print_results 0 $CHECK_EXIT_CODE "sched latency avg <= max check"
 # replay
 
 # easier load, so replay will not last so long
-$CMD_PERF sched record -a -o $CURRENT_TEST_DIR/perf.data.new -- $CMD_SIMPLE &> /dev/null
+$CMD_PERF sched record -a -o $CURRENT_TEST_DIR/perf.data.new -- $CMD_SIMPLE > $LOGS_DIR/basic_replay_record.log 2> $LOGS_DIR/basic_replay_record.err
 PERF_EXIT_CODE=$?
 
-$CMD_PERF sched replay -i $CURRENT_TEST_DIR/perf.data.new > $LOGS_DIR/basic_replay.log 2> /dev/null
+$CMD_PERF sched replay -i $CURRENT_TEST_DIR/perf.data.new > $LOGS_DIR/basic_replay.log 2> $LOGS_DIR/basic_replay.err
 (( PERF_EXIT_CODE += $? ))
 
 REGEX_RUN_MEAS="run measurement overhead: \d+ nsecs"
