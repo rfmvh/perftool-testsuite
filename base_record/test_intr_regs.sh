@@ -131,6 +131,7 @@ PERF_EXIT_CODE=$?
 
 # check that the report contains enough values of all the registers
 NO_OF_SAMPLES=`cat $LOGS_DIR/intr_all_regs_record.err | perl -ne 'print "$1" if /(\d+)\ssamples\)/'`
+test -z "$NO_OF_SAMPLES" && NO_OF_SAMPLES=0
 ALL_REGISTERS=`cat $LOGS_DIR/intr_list.err | grep available | sed 's/available registers: //'`
 if [ -z "$ALL_REGISTERS" ]; then
 	# if there are no available registers, we cannot check anything and it means a failure
@@ -141,7 +142,11 @@ else
 	for rg in $ALL_REGISTERS; do
 		REGEX_INTR_RESULT="\.+\s$rg\s+0x$RE_NUMBER_HEX"
 		NO_OF_VALUES=`cat $LOGS_DIR/intr_all_regs_report.log | grep -P "$REGEX_INTR_RESULT" | wc -l`
-		test -z "$NO_OF_SAMPLES" && NO_OF_SAMPLES=0
+
+		# 128bit register tweak: XMM registers appear twice in the log, since their 128 valules are
+		# stored as 64bit pairs
+		echo $rg | grep -q -P '^XMM\d+$' && (( NO_OF_VALUES /= 2 ))
+
 		test $NO_OF_VALUES -eq $NO_OF_SAMPLES
 		(( CHECK_EXIT_CODE += $? ))
 	done
