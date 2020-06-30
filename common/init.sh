@@ -66,6 +66,13 @@ print_overall_skipped()
 	return 0
 }
 
+print_warning()
+{
+	WARN_COMMENT="$@"
+	_echo "$MWARN-- [ WARN ] --$MEND $TEST_NAME :: $THIS_TEST_NAME :: $WARN_COMMENT"
+	return 0
+}
+
 # this function should skip a testcase if the testsuite is not run in
 # a runmode that fits the testcase --> if the suite runs in BASIC mode
 # all STANDARD and EXPERIMENTAL testcases will be skipped; if the suite
