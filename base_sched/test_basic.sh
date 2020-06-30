@@ -108,8 +108,13 @@ print_results 0 $CHECK_EXIT_CODE "sched latency avg <= max check"
 $CMD_PERF sched record -a -o $CURRENT_TEST_DIR/perf.data.new -- $CMD_SIMPLE > $LOGS_DIR/basic_replay_record.log 2> $LOGS_DIR/basic_replay_record.err
 PERF_EXIT_CODE=$?
 
+# perf sched replay might hit the casual open fd limits (1024 might be too little)
+bump_fd_limit_if_needed
+
 $CMD_PERF sched replay -i $CURRENT_TEST_DIR/perf.data.new > $LOGS_DIR/basic_replay.log 2> $LOGS_DIR/basic_replay.err
 (( PERF_EXIT_CODE += $? ))
+
+restore_fd_limit_if_needed
 
 REGEX_RUN_MEAS="run measurement overhead: \d+ nsecs"
 REGEX_SLEEP_MEAS="sleep measurement overhead: \d+ nsecs"

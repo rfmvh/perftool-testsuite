@@ -23,3 +23,23 @@ else
 	export CURRENT_TEST_DIR="."
 	export LOGS_DIR="."
 fi
+
+NECESSARY_FD_LIMIT=8192
+
+bump_fd_limit_if_needed()
+{
+	ORIGINAL_FD_LIMIT=`ulimit -n 2> /dev/null`
+	if [ $ORIGINAL_FD_LIMIT -lt $NECESSARY_FD_LIMIT ]; then
+		# current fd limit is too low, let's try to bump it
+		ulimit -n $NECESSARY_FD_LIMIT
+		# according to man pages, changing `ulimit -n` might be not supported
+		# let's detect it and log if logging is verbose
+		CURRENT_FD_LIMIT=`ulimit -n`
+		test $CURRENT_FD_LIMIT -eq $ORIGINAL_FD_LIMIT && print_warning "open FD limit could not be set to $NECESSARY_FD_LIMIT and remains $CURRENT_FD_LIMIT"
+	fi
+}
+
+restore_fd_limit_if_needed()
+{
+	test $CURRENT_FD_LIMIT -ne $ORIGINAL_FD_LIMIT && ulimit -n $ORIGINAL_FD_LIMIT
+}
