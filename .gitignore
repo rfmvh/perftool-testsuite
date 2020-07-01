@@ -1,0 +1,16 @@
+# Ignore all
+*
+
+# Unignore all with extensions
+!*.*
+
+# Unignore all dirs
+!*/
+
+# Ignore logs
+*.log
+*.err
+*.out
+
+# Ignode perf.data
+perf.data*
