@@ -84,7 +84,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "stat"
 
 # --caller
 
-$CMD_PERF kmem stat --caller -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_caller.log 2> /dev/null
+$CMD_PERF kmem stat --caller -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_caller.log 2> $LOGS_DIR/basic_stat_caller.err
 PERF_EXIT_CODE=$?
 
 REGEX_CALLER_HEADER_LINE="\s+Callsite\s+\|\s+Total_alloc\/Per\s+\|\s+Total_req\/Per\s+\|\s+Hit\s+\|\s+Ping-pong\s+\|\s+Frag"
@@ -111,7 +111,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "stat --caller ($CHECK_EXIT_CODE 
 
 # --raw-ip
 
-$CMD_PERF kmem stat --caller --raw-ip -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_raw-ip.log 2> /dev/null
+$CMD_PERF kmem stat --caller --raw-ip -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_raw-ip.log 2> $LOGS_DIR/basic_stat_raw-ip.err
 PERF_EXIT_CODE=$?
 
 REGEX_RAW_IP_DATA_LINE="\s+${RE_ADDRESS}\s+\|\s+\d+\/\d+\s+\|\s+\d+\/\d+\s+\|\s+\d+\s+\|\s+\d+\s+\|\s+\d+\.\d+%"
@@ -135,7 +135,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "stat --caller --raw-ip ($CHECK_E
 
 # kmem stat --alloc
 
-$CMD_PERF kmem stat --alloc -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_alloc.log 2> /dev/null
+$CMD_PERF kmem stat --alloc -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_alloc.log 2> $LOGS_DIR/basic_stat_alloc.err
 PERF_EXIT_CODE=$?
 
 REGEX_ALLOC_HEADER_LINE="\s+Alloc Ptr\s+\|\s+Total_alloc\/Per\s+\|\s+Total_req\/Per\s+\|\s+Hit\s+\|\s+Ping-pong\s+\|\s+Frag"
@@ -170,7 +170,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "record --page"
 (( TEST_RESULT += $? ))
 
 # stat
-$CMD_PERF kmem stat --page -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_page.log 2> /dev/null
+$CMD_PERF kmem stat --page -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_page.log 2> $LOGS_DIR/basic_stat_page.err
 PERF_EXIT_CODE=$?
 
 REGEX_PAGE_HEADER_LINE="SUMMARY \(page allocator\)"
