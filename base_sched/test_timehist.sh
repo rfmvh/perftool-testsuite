@@ -19,13 +19,13 @@ TEST_RESULT=0
 
 
 # record
-$CMD_PERF sched record -a -o $CURRENT_TEST_DIR/perf.data -- $CMD_BASIC_SLEEP 2> /dev/null
+$CMD_PERF sched record -a -o $CURRENT_TEST_DIR/perf.data -- $CMD_BASIC_SLEEP 2> $LOGS_DIR/timehist_record.log
 PERF_EXIT_CODE=$?
 
 
 # no options
 
-$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist > $LOGS_DIR/timehist_general.log 2> /dev/null
+$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist > $LOGS_DIR/timehist_general.log 2> $LOGS_DIR/timehist_general.err
 (( PERF_EXIT_CODE += $? ))
 
 REGEX_HEADER_LINE="\s+time\s+cpu\s+task name\s+wait time\s+sch delay\s+run time"
@@ -71,14 +71,14 @@ REGEX_PERF_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+perf\[$REGEX_PERF_PID_TID\]\s+$RE_NUM
 REGEX_SLEEP_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+sleep\[$REGEX_SLEEP_PID_TID\]\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
 
 # 0 is pid for idle
-$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist --pid=0,$REGEX_PERF_PID,$REGEX_SLEEP_PID > $LOGS_DIR/timehist_pid.log 2> /dev/null
+$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist --pid=0,$REGEX_PERF_PID,$REGEX_SLEEP_PID > $LOGS_DIR/timehist_pid.log 2>  $LOGS_DIR/timehist_pid.err
 PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "$REGEX_HEADER_LINE" "$REGEX_HEADER_NOTES" "$REGEX_HEADER_UNDERLINE" "$REGEX_IDLE_LINE" "$REGEX_PERF_LINE" "$REGEX_SLEEP_LINE" < $LOGS_DIR/timehist_pid.log
 CHECK_EXIT_CODE=$?
 
 # 0 is tid for idle
-$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist --tid=0,$REGEX_PERF_TID,$REGEX_SLEEP_TID > $LOGS_DIR/timehist_tid.log 2> /dev/null
+$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist --tid=0,$REGEX_PERF_TID,$REGEX_SLEEP_TID > $LOGS_DIR/timehist_tid.log 2> $LOGS_DIR/timehist_tid.err
 (( PERF_EXIT_CODE += $? ))
 
 ../common/check_all_patterns_found.pl "$REGEX_HEADER_LINE" "$REGEX_HEADER_NOTES" "$REGEX_HEADER_UNDERLINE" "$REGEX_IDLE_LINE" "$REGEX_PERF_LINE" "$REGEX_SLEEP_LINE" < $LOGS_DIR/timehist_tid.log
@@ -90,7 +90,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "--pid and --tid"
 
 # -s (summary) option
 
-$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -s > $LOGS_DIR/timehist_summary.log 2> /dev/null
+$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -s > $LOGS_DIR/timehist_summary.log 2> $LOGS_DIR/timehist_summary.err
 PERF_EXIT_CODE=$?
 
 REGEX_S_HEADER_LINE="\s+comm\s+parent\s+sched-in\s+run-time\s+min-run\s+avg-run\s+max-run\s+stddev\s+migrations"
@@ -133,7 +133,7 @@ print_results 0 $CHECK_EXIT_CODE "--summary runtime inequalities check ($CHECK_E
 
 # -S (with summary) option
 
-$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -S > $LOGS_DIR/timehist_with-summary.log 2> /dev/null
+$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -S > $LOGS_DIR/timehist_with-summary.log 2> $LOGS_DIR/timehist_with-summary.err
 PERF_EXIT_CODE=$?
 
 # should be the same as with -s option
@@ -160,7 +160,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "--with-summary"
 
 # -V (visual cpu) option
 
-$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -V > $LOGS_DIR/timehist_visual.log 2> /dev/null
+$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -V > $LOGS_DIR/timehist_visual.log 2> $LOGS_DIR/timehist_visual.err
 PERF_EXIT_CODE=$?
 
 REGEX_V_HEADER_LINE="\s*time\s+cpu\s+[\da-f]+\s+task name\s+wait time\s+sch delay\s+run time"
@@ -178,7 +178,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "--visual-cpu"
 
 # -w (wakeups) option
 
-$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -w > $LOGS_DIR/timehist_wakeups.log 2> /dev/null
+$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -w > $LOGS_DIR/timehist_wakeups.log 2> $LOGS_DIR/timehist_wakeups.err
 PERF_EXIT_CODE=$?
 
 REGEX_W_AWAKENED_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+[\w~\[\]\/ \+:#-]+\s+awakened: [\w~\[\]\/ \+:#-]+"
@@ -194,7 +194,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "--wakeups"
 
 # -M (migrations) option
 
-$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -M > $LOGS_DIR/timehist_migration.log 2> /dev/null
+$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -M > $LOGS_DIR/timehist_migration.log 2> $LOGS_DIR/timehist_migration.err
 PERF_EXIT_CODE=$?
 
 REGEX_M_MIGRATED_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+[\w~\[\]\/ \+:#-]+\s+migrated: [\w~\[\]\/ \+:#-]+"
@@ -210,7 +210,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "--migration"
 
 # -n (next) option
 
-$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -n > $LOGS_DIR/timehist_next.log 2> /dev/null
+$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -n > $LOGS_DIR/timehist_next.log 2> $LOGS_DIR/timehist_next.err
 PERF_EXIT_CODE=$?
 
 REGEX_N_NEXT_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+[\w~\[\]\/ \+:#-]+\s+next: [\w~\[\]\/ \+:#-]+"
@@ -226,7 +226,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "--next"
 
 # -I (idle hist) option
 
-$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -I > $LOGS_DIR/timehist_idle-hist.log 2> /dev/null
+$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -I > $LOGS_DIR/timehist_idle-hist.log 2> $LOGS_DIR/timehist_idle-hist.err
 PERF_EXIT_CODE=$?
 
 REGEX_I_DATA_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+[\w~\[\]\/ \.\+:#-]+\s+[0\.]+\s+[0\.]+\s+[0\.]+"
@@ -243,7 +243,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "--idle-hist"
 
 # --state option
 
-$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist --state > $LOGS_DIR/timehist_state.log 2> /dev/null
+$CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist --state > $LOGS_DIR/timehist_state.log 2> $LOGS_DIR/timehist_state.err
 PERF_EXIT_CODE=$?
 
 REGEX_ST_HEADER_LINE="$REGEX_HEADER_LINE\s+state"

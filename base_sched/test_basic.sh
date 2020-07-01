@@ -53,7 +53,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "sched record"
 
 # latency
 
-$CMD_PERF sched latency -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_latency.log 2> /dev/null
+$CMD_PERF sched latency -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_latency.log 2> $LOGS_DIR/basic_latency.err
 PERF_EXIT_CODR=$?
 
 REGEX_SEP="\s*\|\s*"
@@ -167,14 +167,14 @@ print_results 0 $? "sched replay count check ($CNT == $NR_EVENTS)"
 
 # script
 
-$CMD_PERF sched script -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_script.log 2> /dev/null
+$CMD_PERF sched script -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_sched_script.log 2> $LOGS_DIR/basic_sched_script.err
 PERF_EXIT_CODE=$?
 
-$CMD_PERF script -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/perf_script.log 2> /dev/null
+$CMD_PERF script -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_script.log 2> $LOGS_DIR/basic_script.err
 (( PERF_EXIT_CODE += $? ))
 
 # it is aliased to perf script
-cmp $LOGS_DIR/basic_script.log $LOGS_DIR/perf_script.log &> /dev/null
+cmp $LOGS_DIR/basic_sched_script.log $LOGS_DIR/basic_script.log &> /dev/null
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "sched script"
@@ -183,7 +183,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "sched script"
 
 # map
 
-$CMD_PERF sched map -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_map.log 2> /dev/null
+$CMD_PERF sched map -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_map.log 2> $LOGS_DIR/basic_map.err
 PERF_EXIT_CODE=$?
 
 REGEX_ALL_CPUS_LINE="\s+(?: \.  | \w{2} |    |\*\.  |\*\w{2} )+\s+\d+\.\d+ secs (?:(?:\w{2}|\. ) => [\w\-:\/~ #]+)?"
@@ -194,7 +194,7 @@ CHECK_EXIT_CODE=$?
 (( CHECK_EXIT_CODE += $? ))
 
 # --cpu option
-$CMD_PERF sched map --cpu 0 -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_map_cpu.log 2> /dev/null
+$CMD_PERF sched map --cpu 0 -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_map_cpu.log 2> $LOGS_DIR/basic_map_cpu.err
 (( PERF_EXIT_CODE += $? ))
 
 REGEX_ONE_CPU_LINE="\s+(?:\.|\w{2})|\*(?:\.|\w{2})\s+\d+\.\d+ secs (?:(?:\. |\w{2}) => [\w\-:\/~ #]+:\d+)?"
