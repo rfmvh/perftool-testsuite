@@ -108,7 +108,7 @@ if [ $? -eq 0 ]; then
 	$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/set_report_limit.log 2> $LOGS_DIR/set_report_limit.err
 	PERF_EXIT_CODE=$?
 
-	CHECK_EXIT_CODE=`perl -ne 'BEGIN{$n=0;} {$n+=1 if (/\s*('$RE_NUMBER')%\s*\w+\s*/ and $1 < '$PERCENTAGE');} END{print "$n";}' < $LOGS_DIR/set_report_limit.log`
+	CHECK_EXIT_CODE=`perl -ne 'BEGIN{$n=0;} {$n+=1 if (/^\s*('$RE_NUMBER')%\s*\w+\s*/ and $1 < '$PERCENTAGE');} END{print "$n";}' < $LOGS_DIR/set_report_limit.log`
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "checking report.percent-limit variable"
 	(( TEST_RESULT += $? ))
