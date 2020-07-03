@@ -40,94 +40,112 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "without config - setup"
 
 ### call-graph.sort-key variable
 
-# set the variable
-$CMD_PERF config --user call-graph.sort-key=address
-PERF_EXIT_CODE=$?
+grep -q call-graph.sort-key $LOGS_DIR/config_all_variables.log &> /dev/null
+if [ $? -eq 0 ]; then
+	# set the variable
+	$CMD_PERF config --user call-graph.sort-key=address
+	PERF_EXIT_CODE=$?
 
-$CMD_PERF config --user --list > $LOGS_DIR/set_call-graph_list.log
-(( PERF_EXIT_CODE += $? ))
+	$CMD_PERF config --user --list > $LOGS_DIR/set_call-graph_list.log
+	(( PERF_EXIT_CODE += $? ))
 
-# check if the variable is set
-grep -q call-graph.sort-key=address < $LOGS_DIR/set_call-graph_list.log
-CHECK_EXIT_CODE=$?
+	# check if the variable is set
+	grep -q call-graph.sort-key=address < $LOGS_DIR/set_call-graph_list.log
+	CHECK_EXIT_CODE=$?
 
-print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "setting call-graph.sort-key variable"
-(( TEST_RESULT += $? ))
-
-
-# check if the variable changed sorting
-$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data 2> /dev/null | head -n -3 > $LOGS_DIR/set_call-graph_sort.log 2> /dev/null
-PERF_EXIT_CODE=$?
-
-! cmp $LOGS_DIR/set_call-graph_no_cfg.log $LOGS_DIR/set_call-graph_sort.log 2> /dev/null
-CHECK_EXIT_CODE=$?
-
-print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "checking call-graph.sort-key variable"
-(( TEST_RESULT += $? ))
+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "setting call-graph.sort-key variable"
+	(( TEST_RESULT += $? ))
 
 
-# set back to default
-$CMD_PERF config --user call-graph.sort-key=function
+	# check if the variable changed sorting
+	$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data 2> /dev/null | head -n -3 > $LOGS_DIR/set_call-graph_sort.log 2> /dev/null
+	PERF_EXIT_CODE=$?
+
+	! cmp $LOGS_DIR/set_call-graph_no_cfg.log $LOGS_DIR/set_call-graph_sort.log 2> /dev/null
+	CHECK_EXIT_CODE=$?
+
+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "checking call-graph.sort-key variable"
+	(( TEST_RESULT += $? ))
+
+
+	# set back to default
+	$CMD_PERF config --user call-graph.sort-key=function
+else
+	# variable is unsupported
+	print_testcase_skipped "call-graph.sort-key variable is unsupported"
+fi
 
 
 ### call-graph.threshold
 
 PERCENTAGE=5
 
-# set the variable
-$CMD_PERF config --user call-graph.threshold=$PERCENTAGE
-PERF_EXIT_CODE=$?
+grep -q call-graph.threshold $LOGS_DIR/config_all_variables.log &> /dev/null
+if [ $? -eq 0 ]; then
+	# set the variable
+	$CMD_PERF config --user call-graph.threshold=$PERCENTAGE
+	PERF_EXIT_CODE=$?
 
-$CMD_PERF config --user --list > $LOGS_DIR/set_call-graph_list.log
-(( PERF_EXIT_CODE += $? ))
+	$CMD_PERF config --user --list > $LOGS_DIR/set_call-graph_list.log
+	(( PERF_EXIT_CODE += $? ))
 
-# check if the variable is set
-grep -q call-graph.threshold=5 < $LOGS_DIR/set_call-graph_list.log
-CHECK_EXIT_CODE=$?
+	# check if the variable is set
+	grep -q call-graph.threshold=5 < $LOGS_DIR/set_call-graph_list.log
+	CHECK_EXIT_CODE=$?
 
-print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "setting call-graph.threshold variable"
-(( TEST_RESULT += $? ))
-
-
-# check if the variable changed percentage threshold
-$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/set_call-graph_threshold.log 2> /dev/null
-PERF_EXIT_CODE=$?
-
-CHECK_EXIT_CODE=`perl -ne 'BEGIN{$n=0;} {$n+=1 if (/--('$RE_NUMBER')%--'$RE_ADDRESS'/ and $1 < '$PERCENTAGE')} END{print "$n";}' < $LOGS_DIR/set_call-graph_threshold.log`
-
-print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "checking call-graph.threshold variable"
-(( TEST_RESULT += $? ))
+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "setting call-graph.threshold variable"
+	(( TEST_RESULT += $? ))
 
 
-# set back to default
-$CMD_PERF config --user call-graph.threshold=0.5
+	# check if the variable changed percentage threshold
+	$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/set_call-graph_threshold.log 2> /dev/null
+	PERF_EXIT_CODE=$?
+
+	CHECK_EXIT_CODE=`perl -ne 'BEGIN{$n=0;} {$n+=1 if (/--('$RE_NUMBER')%--'$RE_ADDRESS'/ and $1 < '$PERCENTAGE')} END{print "$n";}' < $LOGS_DIR/set_call-graph_threshold.log`
+
+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "checking call-graph.threshold variable"
+	(( TEST_RESULT += $? ))
+
+
+	# set back to default
+	$CMD_PERF config --user call-graph.threshold=0.5
+else
+	# variable is unsupported
+	print_testcase_skipped "call-graph.threshold variable is unsupported"
+fi
 
 
 ### call-graph.print-limit
 
-# set the variable
-$CMD_PERF config --user call-graph.print-limit=1
-PERF_EXIT_CODE=$?
+grep -q call-graph.print-limit $LOGS_DIR/config_all_variables.log &> /dev/null
+if [ $? -eq 0 ]; then
+	# set the variable
+	$CMD_PERF config --user call-graph.print-limit=1
+	PERF_EXIT_CODE=$?
 
-$CMD_PERF config --user --list > $LOGS_DIR/set_call-graph_list.log
-(( PERF_EXIT_CODE += $? ))
+	$CMD_PERF config --user --list > $LOGS_DIR/set_call-graph_list.log
+	(( PERF_EXIT_CODE += $? ))
 
-# check if the variable is set
-grep -q call-graph.print-limit=1 < $LOGS_DIR/set_call-graph_list.log
-CHECK_EXIT_CODE=$?
+	# check if the variable is set
+	grep -q call-graph.print-limit=1 < $LOGS_DIR/set_call-graph_list.log
+	CHECK_EXIT_CODE=$?
 
-print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "setting call-graph.print-limit variable"
-(( TEST_RESULT += $? ))
+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "setting call-graph.print-limit variable"
+	(( TEST_RESULT += $? ))
 
 
-$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/set_call-graph_print-limit.log 2> /dev/null
-PERF_EXIT_CODE=$?
+	$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/set_call-graph_print-limit.log 2> /dev/null
+	PERF_EXIT_CODE=$?
 
-# there should not be two events with percentage in the same depth
-CHECK_EXIT_CODE=`perl -ne 'BEGIN{$n=0;$beg=0;} {$n+=1 if (/^([\s\|]+)\|?--'$RE_NUMBER'%--'$RE_EVENT_ANY'/ and $beg >= length($1)); $beg=0 if /^\s+'$RE_NUMBER'%/; $beg=length($1) if (/^([\s\|]+)\|?--'$RE_NUMBER'%--'$RE_EVENT_ANY'/ and $beg < length($1));} END{print "$n";}' < $LOGS_DIR/set_call-graph_print-limit.log`
+	# there should not be two events with percentage in the same depth
+	CHECK_EXIT_CODE=`perl -ne 'BEGIN{$n=0;$beg=0;} {$n+=1 if (/^([\s\|]+)\|?--'$RE_NUMBER'%--'$RE_EVENT_ANY'/ and $beg >= length($1)); $beg=0 if /^\s+'$RE_NUMBER'%/; $beg=length($1) if (/^([\s\|]+)\|?--'$RE_NUMBER'%--'$RE_EVENT_ANY'/ and $beg < length($1));} END{print "$n";}' < $LOGS_DIR/set_call-graph_print-limit.log`
 
-print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "checking call-graph.print-limit variable"
-(( TEST_RESULT += $? ))
+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "checking call-graph.print-limit variable"
+	(( TEST_RESULT += $? ))
+else
+	# variable is unsupported
+	print_testcase_skipped "call-graph.print_limit is unsupported"
+fi
 
 
 # restore the config file before tests
