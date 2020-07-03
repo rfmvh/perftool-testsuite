@@ -31,7 +31,7 @@ PERF_EXIT_CODE=$?
 ../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" "perf.data" < $LOGS_DIR/set_report_record.log
 CHECK_EXIT_CODE=$?
 
-$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/set_report_report_no_cfg.log 2> /dev/null
+$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/set_report_report_no_cfg.log 2> $LOGS_DIR/set_report_report_no_cfg.err
 (( PERF_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "general setup"
@@ -46,7 +46,7 @@ if [ $? -eq 0 ]; then
 	$CMD_PERF config --user report.sort_order=sym,dso
 	PERF_EXIT_CODE=$?
 
-	$CMD_PERF config --user --list > $LOGS_DIR/set_report_list.log
+	$CMD_PERF config --user --list > $LOGS_DIR/set_report_list.log 2> $LOGS_DIR/set_report_list.err
 	(( PERF_EXIT_CODE += $? ))
 
 	# check if the variable is set
@@ -58,7 +58,7 @@ if [ $? -eq 0 ]; then
 
 
 	# check if the variable changed sorting
-	$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/set_report_sort.log 2> /dev/null
+	$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/set_report_sort.log 2> $LOGS_DIR/set_report_sort.err
 	PERF_EXIT_CODE=$?
 
 	! cmp $LOGS_DIR/set_report_no_cfg.log $LOGS_DIR/set_report_sort.log 2> /dev/null
@@ -93,7 +93,7 @@ if [ $? -eq 0 ]; then
 	$CMD_PERF config --user report.percent-limit=$PERCENTAGE
 	PERF_EXIT_CODE=$?
 
-	$CMD_PERF config --user --list > $LOGS_DIR/set_report_list.log
+	$CMD_PERF config --user --list > $LOGS_DIR/set_report_list.log 2> $LOGS_DIR/set_report_list.err
 	(( PERF_EXIT_CODE += $? ))
 
 	# check if the variable is set
@@ -105,7 +105,7 @@ if [ $? -eq 0 ]; then
 
 
 	# check if the variable changed percentage limit
-	$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/set_report_limit.log
+	$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/set_report_limit.log 2> $LOGS_DIR/set_report_limit.err
 	PERF_EXIT_CODE=$?
 
 	CHECK_EXIT_CODE=`perl -ne 'BEGIN{$n=0;} {$n+=1 if (/\s*('$RE_NUMBER')%\s*\w+\s*/ and $1 < '$PERCENTAGE');} END{print "$n";}' < $LOGS_DIR/set_report_limit.log`
@@ -132,7 +132,7 @@ PERF_EXIT_CODE=$?
 ../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" "perf.data" < $LOGS_DIR/set_report_record_cg.log
 CHECK_EXIT_CODE=$?
 
-$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/set_report_report_no_cfg_cg.log 2> /dev/null
+$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/set_report_report_no_cfg_cg.log 2> $LOGS_DIR/set_report_report_no_cfg_cg.err
 (( PERF_EXIT_CODE += $? ))
 
 CHILDREN_PERCENTAGE=`perl -ne 'BEGIN{$n=0;} {$n+=$1 if /^\s*('$RE_NUMBER')%\s*'$RE_NUMBER'%\s*/;} END{print "$n";}' < $LOGS_DIR/set_report_report_no_cfg_cg.log`
@@ -147,7 +147,7 @@ if [ $? -eq 0 ]; then
 	$CMD_PERF config --user report.children=false
 	PERF_EXIT_CODE=$?
 
-	$CMD_PERF config --user --list > $LOGS_DIR/set_report_list.log
+	$CMD_PERF config --user --list > $LOGS_DIR/set_report_list.log 2> $LOGS_DIR/set_report_list.err
 	(( PREF_EXIT_CODE += $? ))
 
 	# check if the variable is set
@@ -159,7 +159,7 @@ if [ $? -eq 0 ]; then
 
 
 	# check if there are no children percentages
-	$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/set_report_children.log
+	$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/set_report_children.log 2> $LOGS_DIR/set_report_children.err
 	PERF_EXIT_CODE=$?
 
 	OVERHEAD_PERCENTAGE=`perl -ne 'BEGIN{$n=0;} {$n+=$1 if /^\s*('$RE_NUMBER')%\s*/;} END{print "$n";}' < $LOGS_DIR/set_report_children.log`

@@ -31,7 +31,7 @@ PERF_EXIT_CODE=$?
 ../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" "perf.data" < $LOGS_DIR/set_call-graph_record.log
 CHECK_EXIT_CODE=$?
 
-$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data 2> /dev/null | head -n -3 > $LOGS_DIR/set_call-graph_report_no_cfg.log 2> /dev/null
+$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data 2> $LOGS_DIR/set_call-graph_report_no_cfg.err | head -n -3 > $LOGS_DIR/set_call-graph_report_no_cfg.log
 (( PERF_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "without config - setup"
@@ -46,7 +46,7 @@ if [ $? -eq 0 ]; then
 	$CMD_PERF config --user call-graph.sort-key=address
 	PERF_EXIT_CODE=$?
 
-	$CMD_PERF config --user --list > $LOGS_DIR/set_call-graph_list.log
+	$CMD_PERF config --user --list > $LOGS_DIR/set_call-graph_list.log 2> $LOGS_DIR/set_call-graph_list.err
 	(( PERF_EXIT_CODE += $? ))
 
 	# check if the variable is set
@@ -58,7 +58,7 @@ if [ $? -eq 0 ]; then
 
 
 	# check if the variable changed sorting
-	$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data 2> /dev/null | head -n -3 > $LOGS_DIR/set_call-graph_sort.log 2> /dev/null
+	$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data 2> $LOGS_DIR/set_call-graph_sort.err | head -n -3 > $LOGS_DIR/set_call-graph_sort.log
 	PERF_EXIT_CODE=$?
 
 	! cmp $LOGS_DIR/set_call-graph_no_cfg.log $LOGS_DIR/set_call-graph_sort.log 2> /dev/null
@@ -86,7 +86,7 @@ if [ $? -eq 0 ]; then
 	$CMD_PERF config --user call-graph.threshold=$PERCENTAGE
 	PERF_EXIT_CODE=$?
 
-	$CMD_PERF config --user --list > $LOGS_DIR/set_call-graph_list.log
+	$CMD_PERF config --user --list > $LOGS_DIR/set_call-graph_list.log 2> $LOGS_DIR/set_call-graph_list.err
 	(( PERF_EXIT_CODE += $? ))
 
 	# check if the variable is set
@@ -98,7 +98,7 @@ if [ $? -eq 0 ]; then
 
 
 	# check if the variable changed percentage threshold
-	$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/set_call-graph_threshold.log 2> /dev/null
+	$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/set_call-graph_threshold.log 2> $LOGS_DIR/set_call-graph_threshold.err
 	PERF_EXIT_CODE=$?
 
 	CHECK_EXIT_CODE=`perl -ne 'BEGIN{$n=0;} {$n+=1 if (/--('$RE_NUMBER')%--'$RE_ADDRESS'/ and $1 < '$PERCENTAGE')} END{print "$n";}' < $LOGS_DIR/set_call-graph_threshold.log`
@@ -123,7 +123,7 @@ if [ $? -eq 0 ]; then
 	$CMD_PERF config --user call-graph.print-limit=1
 	PERF_EXIT_CODE=$?
 
-	$CMD_PERF config --user --list > $LOGS_DIR/set_call-graph_list.log
+	$CMD_PERF config --user --list > $LOGS_DIR/set_call-graph_list.log 2> $LOGS_DIR/set_call-graph_list.err
 	(( PERF_EXIT_CODE += $? ))
 
 	# check if the variable is set
@@ -134,7 +134,7 @@ if [ $? -eq 0 ]; then
 	(( TEST_RESULT += $? ))
 
 
-	$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/set_call-graph_print-limit.log 2> /dev/null
+	$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/set_call-graph_print-limit.log 2> $LOGS_DIR/set_call-graph_print-limit.err
 	PERF_EXIT_CODE=$?
 
 	# there should not be two events with percentage in the same depth

@@ -22,7 +22,7 @@ TEST_RESULT=0
 
 if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
 	# test that a help message is shown and looks reasonable
-	$CMD_PERF config --help > $LOGS_DIR/basic_helpmsg.log 2> /dev/null
+	$CMD_PERF config --help > $LOGS_DIR/basic_helpmsg.log 2> $LOGS_DIR/basic_helpmsg.err
 	PERF_EXIT_CODE=$?
 
 	../common/check_all_patterns_found.pl "PERF-CONFIG" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "CONFIGURATION FILE" "SEE ALSO" < $LOGS_DIR/basic_helpmsg.log
@@ -39,7 +39,7 @@ fi
 
 ### --list option
 
-$CMD_PERF config --list > $LOGS_DIR/basic_list.log 2> /dev/null
+$CMD_PERF config --list > $LOGS_DIR/basic_list.log 2> $LOGS_DIR/basic_list.err
 PERF_EXIT_CODE=$?
 
 if [ -s $LOGS_DIR/basic_list.log ]; then

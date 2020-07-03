@@ -35,7 +35,7 @@ for VAR in `cat $LOGS_DIR/config_all_variables.log 2> /dev/null`; do
 	$CMD_PERF config --user $VARSET
 	PERF_EXIT_CODE=$?
 
-	$CMD_PERF config --user --list > $LOGS_DIR/set_all_set.log
+	$CMD_PERF config --user --list > $LOGS_DIR/set_all_set.log 2> $LOGS_DIR/set_all_set.err
 	(( PERF_EXIT_CODE += $? ))
 
 	# check if the variable is set

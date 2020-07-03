@@ -45,11 +45,11 @@ if [ $? -eq 0 ]; then
 	$CMD_PERF config --user trace.args_alignment=$ALIGNMENT
 	PERF_EXIT_CODE=$?
 
-	$CMD_PERF config --user --list > $LOGS_DIR/set_trace_list.log
+	$CMD_PERF config --user --list > $LOGS_DIR/set_trace_alignment_list.log 2> $LOGS_DIR/set_trace_alignment_list.err
 	(( PERF_EXIT_CODE += $? ))
 
 	# check if the variable is set
-	grep -q trace.args_alignment=$ALIGNMENT < $LOGS_DIR/set_trace_list.log
+	grep -q trace.args_alignment=$ALIGNMENT < $LOGS_DIR/set_trace_alignment_list.log
 	CHECK_EXIT_CODE=$?
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "setting trace.args_alignment variable"
@@ -94,11 +94,11 @@ if [ $? -eq 0 ]; then
 	$CMD_PERF config --user trace.no_inherit=true
 	PERF_EXIT_CODE=$?
 
-	$CMD_PERF config --user --list > $LOGS_DIR/set_trace_list.log
+	$CMD_PERF config --user --list > $LOGS_DIR/set_trace_inherit_list.log 2> $LOGS_DIR/set_trace_inherit_list.err
 	(( PERF_EXIT_CODE += $? ))
 
 	# check if the variable is set
-	grep -q trace.no_inherit=true < $LOGS_DIR/set_trace_list.log
+	grep -q trace.no_inherit=true < $LOGS_DIR/set_trace_inherit_list.log
 	CHECK_EXIT_CODE=$?
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "setting trace.no_inherit variable"
@@ -138,11 +138,11 @@ if [ $? -eq 0 ]; then
 	$CMD_PERF config --user trace.show_arg_names=false
 	PERF_EXIT_CODE=$?
 
-	$CMD_PERF config --user --list > $LOGS_DIR/set_trace_list.log
+	$CMD_PERF config --user --list > $LOGS_DIR/set_trace_arg_names_list.log 2> $LOGS_DIR/set_trace_arg_names_list.err
 	(( PERF_EXIT_CODE += $? ))
 
 	# check if the variable is set
-	grep -q trace.show_arg_names=false < $LOGS_DIR/set_trace_list.log
+	grep -q trace.show_arg_names=false < $LOGS_DIR/set_trace_arg_names_list.log
 	CHECK_EXIT_CODE=$?
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "setting trace.show_arg_names variable"
@@ -182,11 +182,11 @@ if [ $? -eq 0 ]; then
 	$CMD_PERF config --user trace.show_duration=false
 	PERF_EXIT_CODE=$?
 
-	$CMD_PERF config --user --list > $LOGS_DIR/set_trace_list.log
+	$CMD_PERF config --user --list > $LOGS_DIR/set_trace_duration_list.log 2> $LOGS_DIR/set_trace_duration_list.err
 	(( PERF_EXIT_CODE += $? ))
 
 	# check if the variable is set
-	grep -q trace.show_duration=false < $LOGS_DIR/set_trace_list.log
+	grep -q trace.show_duration=false < $LOGS_DIR/set_trace_duration_list.log
 	CHECK_EXIT_CODE=$?
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "setting trace.show_duration variable"
@@ -226,11 +226,11 @@ if [ $? -eq 0 ]; then
 	$CMD_PERF config --user trace.show_timestamp=false
 	PERF_EXIT_CODE=$?
 
-	$CMD_PERF config --user --list > $LOGS_DIR/set_trace_list.log
+	$CMD_PERF config --user --list > $LOGS_DIR/set_trace_timestamp_list.log 2> $LOGS_DIR/set_trace_timestamp_list.err
 	(( PERF_EXIT_CODE += $? ))
 
 	# check if the variable is set
-	grep -q trace.show_timestamp=false < $LOGS_DIR/set_trace_list.log
+	grep -q trace.show_timestamp=false < $LOGS_DIR/set_trace_timestamp_list.log
 	CHECK_EXIT_CODE=$?
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "setting trace.show_timestamp variable"
