@@ -65,7 +65,7 @@ if [ $? -eq 0 ]; then
 	CHECK_EXIT_CODE=$?
 
 	REGEX_COMMENT_LINE="^#.*$"
-	REGEX_DATA_LINE="\s*$RE_NUMBER%\s*\[[kH\.]\]\s*[\w]+\s*[\[\]\.\w]+"
+	REGEX_DATA_LINE="\s*$RE_NUMBER%\s*\[[kH\.]\]\s*[\w\.]+\s*[\[\]\.\w]+"
 
 	# only data line is important for us
 	../common/check_all_lines_matched.pl "^\s*$" "$REGEX_COMMENT_LINE" "$REGEX_DATA_LINE" < $LOGS_DIR/set_report_sort.log
