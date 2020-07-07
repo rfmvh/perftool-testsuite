@@ -63,7 +63,7 @@ if [ $? -eq 0 ]; then
 	CHECK_EXIT_CODE=`awk '{print length}' < $LOGS_DIR/set_trace_alignment.log | perl -ne 'BEGIN{$n=0;} {$n+=1 if ($_ < '$ALIGNMENT')} END{print "$n";}'`
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "checking trace.args_alignment variable - alignment"
-	(( TEST_RESULTS += $? ))
+	(( TEST_RESULT += $? ))
 
 	REGEX_ALIGN_CONTINUED_LINE="\s*(?:\?|$RE_NUMBER)\s*$REGEX_EMPTY_DURATION:\s*$REGEX_COMMAND\s*$REGEX_CONTINUED\s*=\s*$REGEX_RESULT"
 	REGEX_ALIGN_DATA_LINE="\s*$RE_NUMBER\s*$REGEX_DURATION:\s*$REGEX_COMMAND\s*$REGEX_FUNCTION_ARGS\s*=\s*$REGEX_RESULT"
@@ -75,7 +75,7 @@ if [ $? -eq 0 ]; then
 	(( CHECK_EXIT_CODE += $? ))
 
 	print_results 0 $CHECK_EXIT_CODE "checking trace.args_alignment variable - output"
-	(( TEST_RESULTS += $? ))
+	(( TEST_RESULT += $? ))
 
 
 	# set back to default
@@ -119,7 +119,7 @@ if [ $? -eq 0 ]; then
 	(( CHECK_EXIT_CODE += $? ))
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "checking trace.no_inherit variable"
-	(( TEST_RESULTS += $? ))
+	(( TEST_RESULT += $? ))
 
 
 	# set back to default
@@ -146,7 +146,7 @@ if [ $? -eq 0 ]; then
 	CHECK_EXIT_CODE=$?
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "setting trace.show_arg_names variable"
-	(( TEST_RESULTS += $? ))
+	(( TEST_RESULT += $? ))
 
 
 	# check if perf trace shows function arguments
@@ -163,7 +163,7 @@ if [ $? -eq 0 ]; then
 	(( CHECK_EXIT_CODE += $? ))
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "checking trace.show_arg_names variable"
-	(( TEST_RESULTS += $? ))
+	(( TEST_RESULT += $? ))
 
 
 	# set back to default
@@ -190,7 +190,7 @@ if [ $? -eq 0 ]; then
 	CHECK_EXIT_CODE=$?
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "setting trace.show_duration variable"
-	(( TEST_RESULTS += $? ))
+	(( TEST_RESULT += $? ))
 
 
 	# check if perf trace shows duration field
@@ -207,7 +207,7 @@ if [ $? -eq 0 ]; then
 	(( CHECK_EXIT_CODE += $? ))
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "checking trace.show_duration variable"
-	(( TEST_RESULTS += $? ))
+	(( TEST_RESULT += $? ))
 
 
 	# set back to default
@@ -234,7 +234,7 @@ if [ $? -eq 0 ]; then
 	CHECK_EXIT_CODE=$?
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "setting trace.show_timestamp variable"
-	(( TEST_RESULTS += $? ))
+	(( TEST_RESULT += $? ))
 
 
 	# check if perf trace shows timestamp field
@@ -251,7 +251,7 @@ if [ $? -eq 0 ]; then
 	(( CHECK_EXIT_CODE += $? ))
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "checking trace.show_timestamp variable"
-	(( TEST_RESULTS += $? ))
+	(( TEST_RESULT += $? ))
 else
 	# variable is unsupported
 	print_testcase_skipped "trace.show_timestamp variable is unsupported"
