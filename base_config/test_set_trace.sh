@@ -71,7 +71,7 @@ if [ $? -eq 0 ]; then
 
 	../common/check_all_lines_matched.pl "$REGEX_ALIGN_CONTINUED_LINE" "$REGEX_ALIGN_DATA_LINE" "$REGEX_ALIGN_EXIT_LINE" "^\s*$" < $LOGS_DIR/set_trace_alignment.log
 	CHECK_EXIT_CODE=$?
-	../common/check_all_patterns_found.pl "$REGEX_ALIGN_CONTINUED_LINE" "$REGEX_ALIGN_DATA_LINE" "$REGEX_ALIGN_EXIT_LINE" < $LOGS_DIR/set_trace_alignment.log
+	../common/check_all_patterns_found.pl "$REGEX_ALIGN_DATA_LINE" "$REGEX_ALIGN_EXIT_LINE" < $LOGS_DIR/set_trace_alignment.log
 	(( CHECK_EXIT_CODE += $? ))
 
 	print_results 0 $CHECK_EXIT_CODE "checking trace.args_alignment variable - output"
@@ -115,7 +115,7 @@ if [ $? -eq 0 ]; then
 
 	../common/check_all_lines_matched.pl "$REGEX_INHERIT_CONTINUED_LINE" "$REGEX_INHERIT_DATA_LINE" "$REGEX_INHERIT_EXIT_LINE" "^\s*$" < $LOGS_DIR/set_trace_inherit.log
 	CHECK_EXIT_CODE=$?
-	../common/check_all_patterns_found.pl "$REGEX_INHERIT_CONTINUED_LINE" "$REGEX_INHERIT_DATA_LINE" "$REGEX_INHERIT_EXIT_LINE" < $LOGS_DIR/set_trace_inherit.log
+	../common/check_all_patterns_found.pl "$REGEX_INHERIT_DATA_LINE" "$REGEX_INHERIT_EXIT_LINE" < $LOGS_DIR/set_trace_inherit.log
 	(( CHECK_EXIT_CODE += $? ))
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "checking trace.no_inherit variable"
@@ -159,7 +159,7 @@ if [ $? -eq 0 ]; then
 
 	../common/check_all_lines_matched.pl "$REGEX_ARG_NAMES_CONTINUED_LINE" "$REGEX_ARG_NAMES_DATA_LINE" "$REGEX_ARG_NAMES_EXIT_LINE" "^\s*$" < $LOGS_DIR/set_trace_arg_names.log
 	CHECK_EXIT_CODE=$?
-	../common/check_all_patterns_found.pl "$REGEX_ARG_NAMES_CONTINUED_LINE" "$REGEX_ARG_NAMES_DATA_LINE" "$REGEX_ARG_NAMES_EXIT_LINE" < $LOGS_DIR/set_trace_arg_names.log
+	../common/check_all_patterns_found.pl "$REGEX_ARG_NAMES_DATA_LINE" "$REGEX_ARG_NAMES_EXIT_LINE" < $LOGS_DIR/set_trace_arg_names.log
 	(( CHECK_EXIT_CODE += $? ))
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "checking trace.show_arg_names variable"
@@ -203,7 +203,7 @@ if [ $? -eq 0 ]; then
 
 	../common/check_all_lines_matched.pl "$REGEX_DURATION_CONTINUED_LINE" "$REGEX_DURATION_DATA_LINE" "$REGEX_DURATION_EXIT_LINE" "^\s*$" < $LOGS_DIR/set_trace_duration.log
 	CHECK_EXIT_CODE=$?
-	../common/check_all_patterns_found.pl "$REGEX_DURATION_CONTINUED_LINE" "$REGEX_DURATION_DATA_LINE" "$REGEX_DURATION_EXIT_LINE" < $LOGS_DIR/set_trace_duration.log
+	../common/check_all_patterns_found.pl "$REGEX_DURATION_DATA_LINE" "$REGEX_DURATION_EXIT_LINE" < $LOGS_DIR/set_trace_duration.log
 	(( CHECK_EXIT_CODE += $? ))
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "checking trace.show_duration variable"
@@ -247,7 +247,7 @@ if [ $? -eq 0 ]; then
 
 	../common/check_all_lines_matched.pl "$REGEX_TIMESTAMP_CONTINUED_LINE" "$REGEX_TIMESTAMP_DATA_LINE" "$REGEX_TIMESTAMP_EXIT_LINE" "^\s*$" < $LOGS_DIR/set_trace_timestamp.log
 	CHECK_EXIT_CODE=$?
-	../common/check_all_patterns_found.pl "$REGEX_TIMESTAMP_CONTINUED_LINE" "$REGEX_TIMESTAMP_DATA_LINE" "$REGEX_TIMESTAMP_EXIT_LINE" < $LOGS_DIR/set_trace_timestamp.log
+	../common/check_all_patterns_found.pl "$REGEX_TIMESTAMP_DATA_LINE" "$REGEX_TIMESTAMP_EXIT_LINE" < $LOGS_DIR/set_trace_timestamp.log
 	(( CHECK_EXIT_CODE += $? ))
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "checking trace.show_timestamp variable"
