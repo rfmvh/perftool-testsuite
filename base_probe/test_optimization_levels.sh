@@ -70,6 +70,8 @@ for prg in $CURRENT_TEST_DIR/examples/test_opts_*; do
 	REGEX_SCRIPT_LINE="\s*$FILENAME\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+$RE_NUMBER:\s+probe_test_opts\w*:foo\w*:\s+\($RE_NUMBER_HEX\) e=55"
 	../common/check_all_lines_matched.pl "$REGEX_SCRIPT_LINE" < $LOGS_DIR/opt_levels_${OPT_LEVEL}_script.log
 	CHECK_EXIT_CODE=$?
+	../common/check_all_patterns_found.pl "$REGEX_SCRIPT_LINE" < $LOGS_DIR/opt_levels_${OPT_LEVEL}_script.log
+	(( CHECK_EXIT_CODE += $? ))
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "function argument with -O$OPT_LEVEL :: script"
 	(( TEST_RESULT += $? ))
