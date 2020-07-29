@@ -203,7 +203,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "function string argument kprobin
 
 # perf record should catch samples including the argument's value even if it is a string
 FILE_TO_BE_OPEN="/proc/cmdline"
-$CMD_PERF record -e 'probe:do_sys_open' -o $CURRENT_TEST_DIR/perf.data -- cat $FILE_TO_BE_OPEN > /dev/null 2> $LOGS_DIR/advanced_k_funcstrargs_record.log
+$CMD_PERF record -e 'probe:do_sys_open*' -o $CURRENT_TEST_DIR/perf.data -- cat $FILE_TO_BE_OPEN > /dev/null 2> $LOGS_DIR/advanced_k_funcstrargs_record.log
 PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/advanced_k_funcstrargs_record.log
@@ -218,7 +218,7 @@ PERF_EXIT_CODE=$?
 
 test $TESTLOG_VERBOSITY -ge 2 && cat $LOGS_DIR/advanced_k_funcstrargs_script.err
 # checking for the perf script output sanity
-REGEX_SCRIPT_LINE="\s*cat\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+$RE_NUMBER:\s+probe:do_sys_open:\s+\($RE_NUMBER_HEX\) filename_string=\"$RE_PATH\""
+REGEX_SCRIPT_LINE="\s*cat\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+$RE_NUMBER:\s+probe:do_sys_open(?:_\d+)?:\s+\($RE_NUMBER_HEX\) filename_string=\"$RE_PATH\""
 ../common/check_all_lines_matched.pl "$REGEX_SCRIPT_LINE" < $LOGS_DIR/advanced_k_funcstrargs_script.log
 CHECK_EXIT_CODE=$?
 
