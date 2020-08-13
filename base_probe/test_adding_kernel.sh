@@ -171,7 +171,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "force-adding probes :: second pr
 $CMD_PERF stat -e probe:$TEST_PROBE -e probe:${TEST_PROBE}_${NO_OF_PROBES} -x';' -o $LOGS_DIR/adding_kernel_using_two.log -- bash -c 'cat /proc/cpuinfo > /dev/null'
 PERF_EXIT_CODE=$?
 
-REGEX_LINE="$RE_NUMBER;+probe:${TEST_PROBE}_?$NO_OF_PROBES?;$RE_NUMBER;$RE_NUMBER"
+REGEX_LINE="$RE_NUMBER;+probe:${TEST_PROBE}_?(?:$NO_OF_PROBES)?;$RE_NUMBER;$RE_NUMBER"
 ../common/check_all_lines_matched.pl "$REGEX_LINE" "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" < $LOGS_DIR/adding_kernel_using_two.log
 CHECK_EXIT_CODE=$?
 
