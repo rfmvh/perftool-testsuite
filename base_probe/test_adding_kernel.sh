@@ -18,7 +18,7 @@
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
-TEST_PROBE="getname_flags"
+TEST_PROBE=${TEST_PROBE:-"inode_permission"}
 
 check_kprobes_available
 if [ $? -ne 0 ]; then
