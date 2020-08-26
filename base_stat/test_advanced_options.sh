@@ -17,6 +17,9 @@
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
+# disable in BASIC mode
+consider_skipping $RUNMODE_STANDARD
+
 
 ### delay
 
