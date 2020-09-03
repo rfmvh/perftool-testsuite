@@ -124,6 +124,9 @@ should_support_hw_breakpoints()
 	# s390x does not support hw breakpoints on Linux
 	test "$MY_ARCH" = "s390x" && return 1
 
+	# aarch64 hw breakpoint interface is broken/obsoleted
+	test "$MY_ARCH" = "aarch64" && return 1
+
 	# when mem:<addr>[/len][:access] event is listed, we expect it
 	# to be supported (currently, this is always true in perf)
 	$CMD_PERF list | grep -q '\[Hardware breakpoint\]'
@@ -141,6 +144,9 @@ should_support_hw_watchpoints()
 
 	# s390x does not support hw watchpoints on Linux
 	test "$MY_ARCH" = "s390x" && return 1
+
+	# aarch64 hw watchpoint interface is broken/obsoleted
+	test "$MY_ARCH" = "aarch64" && return 1
 
 	# when mem:<addr>[/len][:access] event is listed, we expect it
 	# to be supported (currently, this is always true in perf)
