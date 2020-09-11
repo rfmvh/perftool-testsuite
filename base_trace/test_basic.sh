@@ -45,11 +45,13 @@ fi
 $CMD_PERF trace $CMD_QUICK_SLEEP 2> $LOGS_DIR/basic_basic.log
 PERF_EXIT_CODE=$?
 
+REGEX_TIMESTAMP="^\s*(\d+(?:\.\d+))\s"
+
 ../common/check_all_lines_matched.pl "$RE_LINE_TRACE_FULL" < $LOGS_DIR/basic_basic.log
 CHECK_EXIT_CODE=$?
 ../common/check_all_patterns_found.pl "$RE_LINE_TRACE_FULL" < $LOGS_DIR/basic_basic.log
 (( CHECK_EXIT_CODE += $? ))
-../common/check_timestamps.pl < $LOGS_DIR/basic_basic.log
+../common/check_timestamps.pl "$REGEX_TIMESTAMP" < $LOGS_DIR/basic_basic.log
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic execution"
@@ -95,7 +97,7 @@ PERF_EXIT_CODE=$?
 
 ../common/check_all_lines_matched.pl "$RE_LINE_TRACE_FULL" "\d{5,}\." < $LOGS_DIR/basic_full_timestamp.log
 CHECK_EXIT_CODE=$?
-../common/check_timestamps.pl < $LOGS_DIR/basic_full_timestamp.log
+../common/check_timestamps.pl "$REGEX_TIMESTAMP" < $LOGS_DIR/basic_full_timestamp.log
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "full timestamp"
@@ -133,7 +135,7 @@ CHECK_EXIT_CODE=$?
 # the following syscalls should have full entries in the log:
 ../common/check_all_patterns_found.pl "(?:nano)?sleep\([^\)]" "open(?:at)?\([^\)]" "close\([^\)]" "write\([^\)]" < $LOGS_DIR/basic_attach.log
 (( CHECK_EXIT_CODE += $? ))
-../common/check_timestamps.pl < $LOGS_DIR/basic_attach.log
+../common/check_timestamps.pl "$REGEX_TIMESTAMP" < $LOGS_DIR/basic_attach.log
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "attach process"
