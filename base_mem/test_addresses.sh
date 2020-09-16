@@ -67,9 +67,20 @@ GREP_EXIT_CODE=$?
 
 # check sample lines sanity
 REGEX_PERF_RECORD_SAMPLE="$RE_NUMBER\s+$RE_ADDRESS_NOT_NULL\s+\[$RE_ADDRESS_NOT_NULL\]:\s+PERF_RECORD_SAMPLE\(IP,\s+$RE_ADDRESS_NOT_NULL\):\s+$RE_NUMBER\/$RE_NUMBER:\s+$RE_ADDRESS_NOT_NULL\s+period:\s+$RE_NUMBER\s+addr:\s+$RE_ADDRESS_NOT_NULL"
-../common/check_all_lines_matched.pl "$REGEX_PERF_RECORD_SAMPLE" < $LOGS_DIR/addresses_report_samples.log
+REGEX_PERF_RECORD_SAMPLE_INCOMPLETE="$RE_NUMBER\s+$RE_ADDRESS_NOT_NULL\s+\[$RE_ADDRESS_NOT_NULL\]:\s+PERF_RECORD_SAMPLE\(IP,\s+$RE_ADDRESS_NOT_NULL\):\s+$RE_NUMBER\/$RE_NUMBER:\s+(?:$RE_ADDRESS_NOT_NULL|0)\s+period:\s+$RE_NUMBER\s+addr:\s+0$"
+
+../common/check_all_lines_matched.pl "$REGEX_PERF_RECORD_SAMPLE" "$REGEX_PERF_RECORD_SAMPLE_INCOMPLETE" < $LOGS_DIR/addresses_report_samples.log
 CHECK_EXIT_CODE=$?
 ../common/check_all_patterns_found.pl "$REGEX_PERF_RECORD_SAMPLE" < $LOGS_DIR/addresses_report_samples.log
+(( CHECK_EXIT_CODE += $? ))
+
+INCOMPLETE_SAMPLES=`grep -P "$REGEX_PERF_RECORD_SAMPLE_INCOMPLETE" $LOGS_DIR/addresses_report_samples.log | wc -l`
+MAX_INCOMPLETE_SAMPLES=$(( $SAMPLE_COUNT / 100 ))
+
+echo $INCOMPLETE_SAMPLES $MAX_INCOMPLETE_SAMPLES
+
+# count check of incomplete samples
+test $INCOMPLETE_SAMPLES -le $MAX_INCOMPLETE_SAMPLES
 (( CHECK_EXIT_CODE += $? ))
 
 # check sample lines count
