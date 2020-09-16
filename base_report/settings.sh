@@ -12,7 +12,7 @@ export MY_ARCH=`arch`
 export MY_HOSTNAME=`hostname`
 export MY_KERNEL_VERSION=`uname -r`
 export MY_CPUS_ONLINE=`nproc`
-export MY_CPUS_AVAILABLE=`getconf -a | grep _NPROCESSORS_CONF | awk '{print $2}'`
+export MY_CPUS_AVAILABLE=`lscpu | grep '^CPU(s)' | awk '{print $2}'`
 
 if [ -n "$PERFSUITE_RUN_DIR" ]; then
 	# when $PERFSUITE_RUN_DIR is set to something, all the logs and temp files will be placed there
