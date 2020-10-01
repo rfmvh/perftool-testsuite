@@ -162,11 +162,11 @@ if [ $? -eq 0 ]; then
 	$CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/set_report_children.log 2> $LOGS_DIR/set_report_children.err
 	PERF_EXIT_CODE=$?
 
-	OVERHEAD_PERCENTAGE=`perl -ne 'BEGIN{$n=0;} {$n+=$1 if /^\s*('$RE_NUMBER')%\s*/;} END{print "$n";}' < $LOGS_DIR/set_report_children.log`
+	OVERHEAD_PERCENTAGE=`perl -ne 'BEGIN{$n=0;$c=0;} {$c+=1 if /^\s*('$RE_NUMBER')%\s*/; $n+=$1 if /^\s*('$RE_NUMBER')%\s*/;} END{print "$n"; exit $c;}' < $LOGS_DIR/set_report_children.log`
+	PRECISION=`echo 0.005 \* $? | bc`
 
 	CHECK_EXIT_CODE=`echo "$CHILDREN_PERCENTAGE < $OVERHEAD_PERCENTAGE" | bc`
 
-	PRECISION=0.1
 	ZERO=`echo $OVERHEAD_PERCENTAGE - 100 | bc | tr -d - | awk '{print $0" > '$PRECISION'"}' | bc`
 
 	(( CHECK_EXIT_CODE += $ZERO ))
