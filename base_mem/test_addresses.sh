@@ -74,6 +74,11 @@ CHECK_EXIT_CODE=$?
 ../common/check_all_patterns_found.pl "$REGEX_PERF_RECORD_SAMPLE" < $LOGS_DIR/addresses_report_samples.log
 (( CHECK_EXIT_CODE += $? ))
 
+print_results $GREP_EXIT_CODE $CHECK_EXIT_CODE "samples output check"
+(( TEST_RESULT += $? ))
+
+
+# count checks
 INCOMPLETE_SAMPLES=`grep -P "$REGEX_PERF_RECORD_SAMPLE_INCOMPLETE" $LOGS_DIR/addresses_report_samples.log | wc -l`
 MAX_INCOMPLETE_SAMPLES=$(( $SAMPLE_COUNT / 100 ))
 
@@ -81,11 +86,16 @@ MAX_INCOMPLETE_SAMPLES=$(( $SAMPLE_COUNT / 100 ))
 test $INCOMPLETE_SAMPLES -le $MAX_INCOMPLETE_SAMPLES
 (( CHECK_EXIT_CODE += $? ))
 
+print_results $GREP_EXIT_CODE $CHECK_EXIT_CODE "samples count check :: incomplete samples ($INCOMPLETE_SAMPLES <= $MAX_INCOMPLETE_SAMPLES)"
+(( TEST_RESULT += $? ))
+
+
 # check sample lines count
-test $SAMPLE_COUNT -eq `wc -l < $LOGS_DIR/addresses_report_samples.log`
+SAMPLE_LINES_COUNT=`wc -l < $LOGS_DIR/addresses_report_samples.log`
+test $SAMPLE_COUNT -eq $SAMPLE_LINES_COUNT
 (( CHECK_EXIT_CODE += $? ))
 
-print_results $GREP_EXIT_CODE $CHECK_EXIT_CODE "sample check"
+print_results $GREP_EXIT_CODE $CHECK_EXIT_CODE "samples count check :: lines count ($SAMPLE_COUNT == $SAMPLE_LINES_COUNT)"
 (( TEST_RESULT += $? ))
 
 
@@ -101,11 +111,16 @@ CHECK_EXIT_CODE=$?
 ../common/check_all_patterns_found.pl "$REGEX_DATA_SRC" < $LOGS_DIR/addresses_report_data.log
 (( CHECK_EXIT_CODE += $? ))
 
+print_results $GREP_EXIT_CODE $CHECK_EXIT_CODE "data_src output check"
+(( TEST_RESULT += $? ))
+
+
 # check data_src lines count
-test $SAMPLE_COUNT -eq `wc -l < $LOGS_DIR/addresses_report_data.log`
+DATA_SRC_LINES_COUNT=`wc -l < $LOGS_DIR/addresses_report_data.log`
+test $SAMPLE_COUNT -eq $DATA_SRC_LINES_COUNT
 (( CHECK_EXIT_CODE += $? ))
 
-print_results $GREP_EXIT_CODE $CHECK_EXIT_CODE "data_src check"
+print_results $GREP_EXIT_CODE $CHECK_EXIT_CODE "data_src lines count ($SAMPLE_COUNT == $DATA_SRC_LINES_COUNT)"
 (( TEST_RESULT += $? ))
 
 
@@ -121,11 +136,16 @@ CHECK_EXIT_CODE=$?
 ../common/check_all_patterns_found.pl "$REGEX_PHYSDATA_SRC" < $LOGS_DIR/addresses_report_physdata.log
 (( CHECK_EXIT_CODE += $? ))
 
-# check data_src lines count
-test $SAMPLE_COUNT -eq `wc -l < $LOGS_DIR/addresses_report_physdata.log`
+print_results $GREP_EXIT_CODE $CHECK_EXIT_CODE "phys_addr output check"
+(( TEST_RESULT += $? ))
+
+
+# check phys_addr lines count
+PHYS_ADDR_LINES_COUNT=`wc -l < $LOGS_DIR/addresses_report_physdata.log`
+test $SAMPLE_COUNT -eq $PHYS_ADDR_LINES_COUNT
 (( CHECK_EXIT_CODE += $? ))
 
-print_results $GREP_EXIT_CODE $CHECK_EXIT_CODE "phys_addr check"
+print_results $GREP_EXIT_CODE $CHECK_EXIT_CODE "phys_addr lines count ($SAMPLE_COUNT == $PHYS_ADDR_LINES_COUNT)"
 (( TEST_RESULT += $? ))
 
 
