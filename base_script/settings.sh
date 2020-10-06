@@ -49,3 +49,19 @@ detect_Qt_Python_bindings()
 	test -z "$PYTHON" && export PYTHON="python"
 	$PYTHON -c "import PySide.QtSql" 2> /dev/null || $PYTHON -c "import PySide2.QtSql" 2> /dev/null
 }
+
+should_support_deltatime_option()
+{
+	# return value
+	# 0 = expected to support --deltatime option
+	# 1 = not expected to support --deltatime option
+	perf script --help | grep -q "\-\-deltatime"
+}
+
+should_support_reltime_option()
+{
+	# return value
+	# 0 = expected to support --reltime option
+	# 1 = not expected to support --reltime option
+	perf script --help | grep -q "\-\-reltime"
+}
