@@ -1,0 +1,201 @@
+#### !!! THIS IS TO BE SOURCED BY test_tui.sh !!!
+
+### test of help window
+
+
+set PERF_CMD [lindex $argv 0]
+set INPUT [lindex $argv 1]
+set CMD [lindex $argv 2]
+set SAMPLES [lindex $argv 3]
+
+# enable diagnostic output
+exp_internal 1
+
+# timeout period set to 2 seconds
+set timeout 2
+spawn $PERF_CMD report -i $INPUT
+
+# main window
+expect {
+	-re "Samples:\\s*$SAMPLES\\s*of event '\[\\w\:\-\]+', Event count \\(approx\.\\):\\s*\\d+" { }
+	timeout { exit 2; }
+}
+expect {
+	-re "Overhead\\s*Command\\s*Shared\\s*Object\\s*Symbol." { }
+	timeout { exit 2; }
+}
+
+expect {
+        -re "\\s*\[\\d,\]+%\[^\\r\\n\]+$CMD\\s+\\\[?\[\\w\.\-\]+\\\]?\\s*\\\[\[kH\.\]\\\]\\s*\[\\w+\.\]" { }
+	timeout { exit 2; }
+}
+
+# show help window
+send -- "h"
+
+expect {
+	-re "Help" { }
+	timeout { exit 1; }
+}
+
+# timeout period set to 0 seconds
+set timeout 0
+
+# test expected regexes
+expect {
+	-re "h/\\?/F1\\s+Show this window" { }
+	timeout { exit 3; }
+}
+
+expect {
+	-re "UP/DOWN/PGUP" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "PGDN/SPACE\\s+Navigate" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "q/ESC/CTRL\\+C\\s+Exit browser or go back to previous screen" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "For multiple event sessions:" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "TAB/UNTAB\\s*Switch events" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "For symbolic views \\\(--sort has sym\\\):" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "ENTER\\s+Zoom into DSO/Threads & Annotate current symbol" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "ESC\\s+Zoom out" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "a\\s+Annotate current symbol" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "C\\s+Collapse all callchains" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "d\\s+Zoom into current DSO" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "E\\s+Expand all callchains" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "F\\s+Toggle percentage of filtered entries" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "H\\s+Display column headers" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "L\\s+Change percent limit" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "m\\s+Display context menu" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "S\\s+Zoom into current Processor Socket" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "i\\s+Show header information" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "P\\s+Print histograms to perf\.hist\.N" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "r\\s+Run available scripts" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "s\\s+Switch to another data file in PWD" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "t\\s+Zoom into current Thread" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "V\\s+Verbose \\\(DSO names in callchains, etc\\\)" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "/\\s+Filter symbol by name" { }
+	timeout { exit 3; }
+}
+
+
+expect {
+	-re "Press any key\.\.\." { }
+	timeout { exit 3; }
+}
+
+
+expect eof
+exit 0
