@@ -1,0 +1,59 @@
+#### !!! THIS IS TO BE SOURCED BY test_tui.sh !!!
+
+### test of comparing 'perf report' output with 'perf report --stdio' output
+
+
+set PERF_CMD [lindex $argv 0]
+set INPUT [lindex $argv 1]
+set CMDS [lindex $argv 2]
+set SAMPLES [lindex $argv 3]
+
+# store 'perf report --stdio' lines into LINES variable
+set CMDS_FILE [open $CMDS]
+set LINES [split [read $CMDS_FILE] "\n"]
+close $CMDS_FILE
+
+# enable diagnostic output
+exp_internal 1
+
+# timeout period set to 2 seconds
+set timeout 2
+spawn $PERF_CMD report -i $INPUT
+
+# main window
+expect {
+        -re "Samples:\\s*$SAMPLES\\s*of event '\[\\w\:\-\]+', Event count \\(approx\.\\):\\s*\\d+" { }
+        timeout { exit 2; }
+}
+expect {
+        -re "Overhead\\s*Command\\s*Shared\\s*Object\\s*Symbol." { }
+        timeout { exit 2; }
+}
+
+# compare line by line
+foreach line $LINES {
+	set line_parts [split $line " "]
+
+	set PERCENTAGE [lindex $line_parts 0]
+	set COMMAND [lindex $line_parts 1]
+	set SHARED_OBJECT [lindex $line_parts 2]
+	set SYMBOL_1 [lindex $line_parts 3]
+	set SYMBOL_2 [lindex $line_parts 4]
+
+        expect {
+                -re "\\s*$PERCENTAGE\[^\\r\\n\]+$COMMAND\\s+$SHARED_OBJECT\\s*$SYMBOL_1\\s*$SYMBOL_2" { }
+                timeout { exit 1; }
+        }
+}
+
+# timeout period set to 0 seconds
+set timeout 0
+
+# checking if there are more lines in 'perf report' output
+expect {
+        -re "\\s*\[\\d,\]+%\[^\\r\\n\]+\[\\w\]+\\s+\\\[?\[\\w\.\-\]+\\\]?\\s*\\\[\[kH\.\]\\\]\\s*\[\\w+\.\]" { exit 1; }
+	timeout { }
+}
+
+expect eof
+exit 0
