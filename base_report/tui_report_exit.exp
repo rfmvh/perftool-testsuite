@@ -1,0 +1,120 @@
+#### !!! THIS IS TO BE SOURCED BY test_tui.sh !!!
+
+### test different ways of exitting perf report
+
+
+set PERF_CMD [lindex $argv 0]
+set INPUT [lindex $argv 1]
+set CMD [lindex $argv 2]
+set SAMPLES [lindex $argv 3]
+
+# enable diagnostic output
+exp_internal 1
+
+# timeout period set to 2 seconds
+set timeout 2
+spawn $PERF_CMD report -i $INPUT
+
+# main window
+expect {
+	-re "Samples:\\s*$SAMPLES\\s*of event '\[\\w\:\-\]+', Event count \\(approx\.\\):\\s*\\d+" { }
+	timeout { exit 2; }
+}
+expect {
+	-re "Overhead\\s*Command\\s*Shared\\s*Object\\s*Symbol." { }
+	timeout { exit 2; }
+}
+
+expect {
+	-re "\\s*\[\\d,\]+%\[^\\r\\n\]+$CMD\\s+\\\[?\[\\w\.\-\]+\\\]?\\s*\\\[\[kH\.\]\\\]\\s*\[\\w+\.\]" { }
+	timeout { exit 2; }
+}
+
+### exit perf report with q character
+send -- "q"
+expect {
+	eof { }
+	timeout { exit 1; }
+}
+
+
+spawn $PERF_CMD report -i $INPUT
+
+# main window
+expect {
+	-re "Samples:\\s*$SAMPLES\\s*of event '\[\\w\:\-\]+', Event count \\(approx\.\\):\\s*\\d+" { }
+	timeout { exit 2; }
+}
+expect {
+	-re "Overhead\\s*Command\\s*Shared\\s*Object\\s*Symbol." { }
+	timeout { exit 2; }
+}
+
+expect {
+	-re "\\s*\[\\d,\]+%\[^\\r\\n\]+$CMD\\s+\\\[?\[\\w\.\-\]+\\\]?\\s*\\\[\[kH\.\]\\\]\\s*\[\\w+\.\]" { }
+	timeout { exit 2; }
+}
+
+### exit perf report with ^C
+send -- "\003"
+expect {
+	eof { }
+	timeout { exit 1; }
+}
+
+
+spawn $PERF_CMD report -i $INPUT
+
+# main window
+expect {
+	-re "Samples:\\s*$SAMPLES\\s*of event '\[\\w\:\-\]+', Event count \\(approx\.\\):\\s*\\d+" { }
+	timeout { exit 2; }
+}
+expect {
+	-re "Overhead\\s*Command\\s*Shared\\s*Object\\s*Symbol." { }
+	timeout { exit 2; }
+}
+
+expect {
+	-re "\\s*\[\\d,\]+%\[^\\r\\n\]+$CMD\\s+\\\[?\[\\w\.\-\]+\\\]?\\s*\\\[\[kH\.\]\\\]\\s*\[\\w+\.\]" { }
+	timeout { exit 2; }
+}
+
+# ESC window
+send -- "\033"
+expect {
+	-re "Do\\s*you\\s*really\\s*want" { }
+	eof { exit 1; }
+	timeout { exit 1; }
+}
+# jump out of ESC window by q character
+send -- "q"
+sleep 1
+
+# ESC window
+send -- "\033"
+expect {
+	-re "Do\\s*you\\s*really\\s*want" { }
+	eof { exit 1; }
+	timeout { exit 1; }
+}
+# jump out of ESC window by ESC character
+send -- "\033"
+sleep 1
+
+# ESC window
+send -- "\033"
+expect {
+	-re "Do\\s*you\\s*really\\s*want" { }
+	eof { exit 1; }
+	timeout { exit 1; }
+}
+
+### exit by ESC + ENTER
+send -- "\r"
+expect {
+	eof { exit 0; }
+	timeout { exit 1; }
+}
+
+exit 0;
