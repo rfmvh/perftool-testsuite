@@ -32,3 +32,13 @@ else
 	export HEADER_TAR_DIR="./header_tar"
 	test -d "$HEADER_TAR_DIR" || mkdir -p "$HEADER_TAR_DIR"
 fi
+
+
+should_support_expect_script()
+{
+	# return values:
+	# 0 = expected to support expect script
+	# 1 = expected not to support expect script
+
+	type expect &> /dev/null
+}
