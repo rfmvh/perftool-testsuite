@@ -1,0 +1,59 @@
+#### !!! THIS IS TO BE SOURCED BY test_tui.sh !!!
+
+### test of filtering by non-existent symbol
+
+
+set PERF_CMD [lindex $argv 0]
+set INPUT [lindex $argv 1]
+set CMD [lindex $argv 2]
+set SAMPLES [lindex $argv 3]
+
+# enable diagnostic output
+exp_internal 1
+
+# timeout period set to 2 seconds
+set timeout 2
+spawn $PERF_CMD report -i $INPUT
+
+# main window
+expect {
+	-re "Samples:\\s*$SAMPLES\\s*of event '\[\\w\:\-\]+', Event count \\(approx\.\\):\\s*\\d+" { }
+	timeout { exit 2; }
+}
+expect {
+	-re "Overhead\\s*Command\\s*Shared\\s*Object\\s*Symbol." { }
+	timeout { exit 2; }
+}
+
+expect {
+        -re "\\s*\[\\d,\]+%\[^\\r\\n\]+$CMD\\s+\\\[?\[\\w\.\-\]+\\\]?\\s*\\\[\[kH\.\]\\\]\\s*\[\\w+\.\]" { }
+	timeout { exit 2; }
+}
+
+send -- "/"
+
+# filter window
+expect {
+	"Symbol to show" { }
+	timeout { exit 2; }
+}
+expect {
+	"Please enter the name of symbol you want to see." { }
+	timeout { exit 2; }
+}
+expect {
+	"To remove the filter later, press / + ENTER." { }
+	timeout { exit 2; }
+}
+
+# try to filter by non-existent symbol
+send -- "i do not exist\r\r"
+
+expect {
+	-re "\[\\w\\s\]+\\\(SIGSEGV\\\).*" { set error 1; }
+	-re "Run scripts for (?:all )?samples(?:of (?:thread|symbol))?" { set error 0; send -- "qq"; }
+	timeout { set error 2; }
+}
+
+expect eof
+exit $error
