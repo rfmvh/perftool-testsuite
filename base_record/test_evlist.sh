@@ -82,7 +82,7 @@ EVENTS_TO_TEST=`$CMD_PERF list hw | grep "Hardware event" | awk '{print $1}' | e
 if [ -n "$EVENTS_TO_TEST" ]; then
 	for event in $EVENTS_TO_TEST; do
 		# record event
-		$CMD_PERF record -a -e $event -o $CURRENT_TEST_DIR/perf.data -- $CMD_LONGER_SLEEP > $LOGS_DIR/evlist_record_$event.log 2> $LOGS_DIR/evlist_record_$event.err
+		$CMD_PERF record -e $event -o $CURRENT_TEST_DIR/perf.data -- $CMD_SIMPLE > $LOGS_DIR/evlist_record_$event.log 2> $LOGS_DIR/evlist_record_$event.err
 		PERF_EXIT_CODE=$?
 
 		../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2_TOLERANT" "perf.data" < $LOGS_DIR/evlist_record_$event.err
