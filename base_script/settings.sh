@@ -24,6 +24,32 @@ else
 	export LOGS_DIR="."
 fi
 
+should_support_syscall_translations()
+{
+	# return values
+	# 0 = expected to support syscall translations
+	# 1 = not expected to support syscall translations
+	test -z "$PYTHON" && /usr/bin/env python -V &>/dev/null && export PYTHON="/usr/bin/env python"
+	test -z "$PYTHON" && /usr/bin/env python3 -V &>/dev/null && export PYTHON="/usr/bin/env python3"
+	test -z "$PYTHON" && /usr/bin/env python2 -V &>/dev/null && export PYTHON="/usr/bin/env python2"
+	test -z "$PYTHON" && /usr/libexec/platform-python -V &>/dev/null && export PYTHON="/usr/libexec/platform-python"
+	test -z "$PYTHON" && export PYTHON="python"
+	$PYTHON -c "import audit" 2>/dev/null
+}
+
+detect_Qt_Python_bindings()
+{
+	# return values
+	# 0 = PySide package is installed
+	# 1 = PySide package is not installed
+	test -z "$PYTHON" && /usr/bin/env python -V &>/dev/null && export PYTHON="/usr/bin/env python"
+	test -z "$PYTHON" && /usr/bin/env python3 -V &>/dev/null && export PYTHON="/usr/bin/env python3"
+	test -z "$PYTHON" && /usr/bin/env python2 -V &>/dev/null && export PYTHON="/usr/bin/env python2"
+	test -z "$PYTHON" && /usr/libexec/platform-python -V &>/dev/null && export PYTHON="/usr/libexec/platform-python"
+	test -z "$PYTHON" && export PYTHON="python"
+	$PYTHON -c "import PySide.QtSql" 2> /dev/null || $PYTHON -c "import PySide2.QtSql" 2> /dev/null
+}
+
 should_support_deltatime_option()
 {
 	# return value
