@@ -30,13 +30,10 @@ PERF_EXIT_CODE=$?
 cd $OLDPWD
 (( CHECK_EXIT_CODE += $? ))
 
-REGEX_DATA_LINE="[\w\-~#:]+\s(\d+)"
-REGEX_SLEEP_LINE="sleep\s\d+"
-REGEX_PERF_LINE="perf\s\d+"
+$CMD_PERF script -i $CURRENT_TEST_DIR/perf.data | grep -oP "^[^\[]*\[" | sed 's/\s*[0-9]*\s\[$//g' | sort | uniq -c | sed 's/^\s*\([0-9]*\)\s*\(.*\)$/\2 \1/g' | sed 's/ /_/g' | sed 's/_\([^_]*$\)/ \1/g' | LC_COLLATE=C sort > $LOGS_DIR/script__${script}__collapse.log
+(( CHECK_EXIT_CODE += $? ))
 
-../common/check_all_lines_matched.pl "$REGEX_DATA_LINE" < $LOGS_DIR/script__${script}__report.log
-CHECK_EXIT_CODE=$?
-../common/check_all_patterns_found.pl "$REGEX_SLEEP_LINE" "$REGEX_PERF_LINE" < $LOGS_DIR/script__${script}__report.log
+diff $LOGS_DIR/script__${script}__collapse.log $LOGS_DIR/script__${script}__report.log &> $LOGS_DIR/script__${script}__report.diff
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "script $script :: report"
