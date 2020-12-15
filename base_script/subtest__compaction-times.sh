@@ -7,6 +7,11 @@
 
 script="compaction-times"
 
+if ! should_support_compaction_times_script; then
+	print_testcase_skipped "script $script"
+	return 0
+fi
+
 
 ### record
 $CMD_PERF script record $script -a -o $CURRENT_TEST_DIR/perf.data -- echo 1 > /proc/sys/vm/compact_memory 2> $LOGS_DIR/script__${script}__record.log
