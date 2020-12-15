@@ -24,7 +24,7 @@ PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "wakeup_latency stats" "total_wakeups:\s*\d+" < $LOGS_DIR/script__${script}__report.log
 CHECK_EXIT_CODE=$?
-../common/check_all_patterns_found.pl "avg_wakeup_latency.*:\s*\d+" "min_wakeup_latency.*:\s*\d+" "max_wakeup_latency.*:\s*\d+" < $LOGS_DIR/script__${script}__report.log
+../common/check_all_patterns_found.pl "avg_wakeup_latency.*:\s*(?:\d+|N\/A)" "min_wakeup_latency.*:\s*\d+" "max_wakeup_latency.*:\s*\d+" < $LOGS_DIR/script__${script}__report.log
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "script $script :: report"
@@ -35,6 +35,11 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "script $script :: report"
 LAT_MIN=`grep min_wakeup_latency $LOGS_DIR/script__${script}__report.log | perl -ne 'print "$1" if /(\d+)$/'`
 LAT_MAX=`grep max_wakeup_latency $LOGS_DIR/script__${script}__report.log | perl -ne 'print "$1" if /(\d+)$/'`
 LAT_AVG=`grep avg_wakeup_latency $LOGS_DIR/script__${script}__report.log | perl -ne 'print "$1" if /(\d+)$/'`
+
+if [ -z $LAT_AVG ]; then
+	print_testcase_skipped "script $script :: latency sanity check"
+	return 0
+fi
 
 test $LAT_MAX -ge $LAT_MIN
 print_results 0 $? "script $script :: latency sanity check min <= max ($LAT_MIN <= $LAT_MAX)"
