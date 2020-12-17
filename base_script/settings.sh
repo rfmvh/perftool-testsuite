@@ -75,3 +75,11 @@ should_support_compaction_times_script()
 	FIVE=`perf list | grep -P "compaction:mm_compaction_(?:begin|end|migratepages|isolate_migratepages|isolate_freepages)" | wc -l`
 	test $FIVE -ge 5
 }
+
+should_support_tod_field()
+{
+	# return value
+	# 0 = expected to support perf script -F+tod
+	# 1 = expected not to support perf script -F+tod
+	echo $PERF_SCRIPT_FIELDS | grep -q "tod"
+}
