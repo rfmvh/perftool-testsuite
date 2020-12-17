@@ -13,7 +13,17 @@ export RE_NUMBER_HEX="[0-9A-Fa-f]+"
 #    deadbeef
 
 
-export RE_DATE_TIME="\w+\s+\w+\s+$RE_NUMBER\s+$RE_NUMBER:$RE_NUMBER:$RE_NUMBER\s+$RE_NUMBER"
+export RE_TIME="(?:[0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"
+# Time
+# Examples:
+#    15:12:27
+#    23:59:59
+#!   24:00:00
+#!   11:25:60
+#!   17:60:15
+
+
+export RE_DATE_TIME="\w+\s+\w+\s+$RE_NUMBER\s+$RE_TIME\s+$RE_NUMBER"
 # Time and date
 # Examples:
 #    Wed Feb 12 10:46:26 2020
