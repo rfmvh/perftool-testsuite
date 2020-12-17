@@ -8,6 +8,7 @@
 #
 
 export TEST_NAME="perf_script"
+export PERF_SCRIPT_FIELDS="`$CMD_PERF script -F 2>&1 >/dev/null | perl -ne 'print "$1\n" if /Fields:\s*(.*)/' | sed 's/,/ /g'`"
 
 if [ -n "$PERFSUITE_RUN_DIR" ]; then
 	# when $PERFSUITE_RUN_DIR is set to something, all the logs and temp files will be placed there
