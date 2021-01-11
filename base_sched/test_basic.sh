@@ -75,12 +75,19 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "sched latency"
 # latency count check
 cat $LOGS_DIR/basic_latency.log | cut -s -d'|' -f2-3 > $LOGS_DIR/basic_latency_count.log
 
-COUNT_RUNTIME=`head -n -1 $LOGS_DIR/basic_latency_count.log | perl -ne 'BEGIN{$n=0;} {$n+=$1 if (/\s*([\d\.]+) ms \|\s*\d+/)} END{print "$n";}'`
-RESULT_RUNTIME=`tail -n 1 $LOGS_DIR/basic_latency_count.log | perl -ne 'BEGIN{$n=0;} {$n+=$1 if (/\s*([\d\.]+) ms \|\s*\d+/)} END{print "$n";}'`
+perl -ne '{print "$_" if /\s*[\d\.]+ ms \|\s*\d+/}' < $LOGS_DIR/basic_latency_count.log > $LOGS_DIR/basic_latency_runtimes.log
+PERL_EXIT_CODE=$?
 
-CHECK_EXIT_CODE=`perl -e 'print 0; print 1 if abs('$COUNT_RUNTIME' - '$RESULT_RUNTIME') > 0.005'`
+COUNT_RUNTIME=`head -n -1 $LOGS_DIR/basic_latency_runtimes.log | perl -ne 'BEGIN{$n=0;} {$n+=$1 if (/\s*([\d\.]+) ms \|\s*\d+/)} END{print "$n";}'`
+RESULT_RUNTIME=`tail -n 1 $LOGS_DIR/basic_latency_runtimes.log | perl -ne 'BEGIN{$n=0;} {$n+=$1 if (/\s*([\d\.]+) ms \|\s*\d+/)} END{print "$n";}'`
 
-print_results 0 $CHECK_EXIT_CODE "sched latency count check (|$COUNT_RUNTIME - $RESULT_RUNTIME| <= 0.005)"
+NUM_LINES=`wc -l < $LOGS_DIR/basic_latency_runtimes.log`
+
+PRECISION=`echo 0.0005 \* $NUM_LINES | bc`
+
+CHECK_EXIT_CODE=`perl -e 'print 0; print 1 if abs('$COUNT_RUNTIME' - '$RESULT_RUNTIME') > '$PRECISION' '`
+
+print_results $PERL_EXIT_CODE $CHECK_EXIT_CODE "sched latency count check (|$COUNT_RUNTIME - $RESULT_RUNTIME| <= 0$PRECISION)"
 (( TEST_RESULT += $? ))
 
 
