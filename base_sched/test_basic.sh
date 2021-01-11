@@ -57,9 +57,15 @@ $CMD_PERF sched latency -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_latency
 PERF_EXIT_CODR=$?
 
 REGEX_SEP="\s*\|\s*"
-REGEX_HEADER_LINE="\s+Task${REGEX_SEP}Runtime ms${REGEX_SEP}Switches${REGEX_SEP}Average delay ms${REGEX_SEP}Maximum delay ms${REGEX_SEP}Maximum delay at${REGEX_SEP}"
+REGEX_MAX_DELAY_AT="Max(?:imum)? delay at${REGEX_SEP}"
+REGEX_MAX_DELAY_START_END="Max(?:imum)? delay start${REGEX_SEP}Max(?:imum)? delay end${REGEX_SEP}"
+REGEX_HEADER_LINE="\s+Task${REGEX_SEP}Runtime ms${REGEX_SEP}Switches${REGEX_SEP}(?:Average|Avg) delay ms${REGEX_SEP}Max(?:imum)? delay ms${REGEX_SEP}(?:$REGEX_MAX_DELAY_AT|$REGEX_MAX_DELAY_START_END)"
 REGEX_HEADER_UNDERLINE="-{100,}"
-REGEX_DATA_LINE="\s+\S+$REGEX_SPR$RE_NUMBER ms$REGEX_SEP\d+${REGEX_SEP}avg:\s*($RE_NUMBER) ms${REGEX_SEP}max:\s*($RE_NUMBER) ms${REGEX_SEP}max at:\s+$RE_NUMBER s"
+
+REGEX_MAX_AT="max at:\s+$RE_NUMBER s"
+REGEX_MAX_START_END="max start:\s+$RE_NUMBER s${REGEX_SEP}max end:\s*$RE_NUMBER s"
+REGEX_DATA_LINE="\s+\S+$REGEX_SEP$RE_NUMBER ms$REGEX_SEP\d+${REGEX_SEP}avg:\s*($RE_NUMBER) ms${REGEX_SEP}max:\s*($RE_NUMBER) ms${REGEX_SEP}(?:$REGEX_MAX_AT|$REGEX_MAX_START_END)"
+
 REGEX_TOTAL_LINE="\s+TOTAL:$REGEX_SEP$RE_NUMBER ms$REGEX_SEP\d+ \|"
 REGEX_TOTAL_UNDERLINE="-{40,}"
 
