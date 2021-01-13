@@ -52,7 +52,7 @@ REGEX_LINE_BASIC="\s*$RE_EVENT_ANY\s+(?:OR\s+$RE_EVENT_ANY\s+)?\[.*event.*\]"
 REGEX_LINE_BREAKPOINT="\s*mem:<addr>.*\s+\[Hardware breakpoint\]"
 REGEX_LINE_RAW="\[Raw hardware event descriptor\]"
 REGEX_LINE_AUX="see \'man perf\-list\' on how to encode it"
-REGEX_LINE_PMU_GRP="^\w[\w\s]*\w:"
+REGEX_LINE_PMU_GRP="^\w[\w\s\-]*\w:"
 REGEX_LINE_PMU_EVENT="^\s\s$RE_EVENT_ANY"
 REGEX_LINE_PMU_DESCR="^(?:\s{7}\[[^\]]+)|(?:\s{8}.+)"
 ../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "$REGEX_LINE_HEADER" "$REGEX_LINE_BASIC" "$REGEX_LINE_BREAKPOINT" "$REGEX_LINE_RAW" "$REGEX_LINE_AUX" \
