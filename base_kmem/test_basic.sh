@@ -37,11 +37,19 @@ else
 fi
 
 
+# use output redirection paramter if it is supported
+if support_output_parameter; then
+	OUTPUT_FLAG="-o $CURRENT_TEST_DIR/perf.data"
+else
+	OUTPUT_FLAG="-- -o $CURRENT_TEST_DIR/perf.data"
+fi
+
+
 ### basic execution
 
 # basic kmem record test
 
-$CMD_PERF kmem record -- -o $CURRENT_TEST_DIR/perf.data -- $CMD_SIMPLE 2> $LOGS_DIR/basic_record.log
+$CMD_PERF kmem record $OUTPUT_FLAG -- $CMD_SIMPLE 2> $LOGS_DIR/basic_record.log
 PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" "perf.data" < $LOGS_DIR/basic_record.log
@@ -70,7 +78,7 @@ REGEX_CROSS_CPU_ALLOC="Cross CPU allocations:\s+$RE_NUMBER/$RE_NUMBER"
 CHECK_EXIT_CODE=$?
 
 # should create the same file
-$CMD_PERF kmem stat --slab -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_slab.log
+$CMD_PERF kmem --slab stat -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_slab.log
 (( PERF_EXIT_CODE += $? ))
 
 cmp $LOGS_DIR/basic_stat.log $LOGS_DIR/basic_stat_slab.log 2> /dev/null
@@ -84,7 +92,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "stat"
 
 # --caller
 
-$CMD_PERF kmem stat --caller -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_caller.log 2> $LOGS_DIR/basic_stat_caller.err
+$CMD_PERF kmem --caller stat -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_caller.log 2> $LOGS_DIR/basic_stat_caller.err
 PERF_EXIT_CODE=$?
 
 REGEX_CALLER_HEADER_LINE="\s+Callsite\s+\|\s+Total_alloc\/Per\s+\|\s+Total_req\/Per\s+\|\s+Hit\s+\|\s+Ping-pong\s+\|\s+Frag"
@@ -111,7 +119,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "stat --caller ($CHECK_EXIT_CODE 
 
 # --raw-ip
 
-$CMD_PERF kmem stat --caller --raw-ip -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_raw-ip.log 2> $LOGS_DIR/basic_stat_raw-ip.err
+$CMD_PERF kmem --caller --raw-ip stat -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_raw-ip.log 2> $LOGS_DIR/basic_stat_raw-ip.err
 PERF_EXIT_CODE=$?
 
 REGEX_RAW_IP_DATA_LINE="\s+${RE_ADDRESS}\s+\|\s+\d+\/\d+\s+\|\s+\d+\/\d+\s+\|\s+\d+\s+\|\s+\d+\s+\|\s+\d+\.\d+%"
@@ -135,7 +143,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "stat --caller --raw-ip ($CHECK_E
 
 # kmem stat --alloc
 
-$CMD_PERF kmem stat --alloc -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_alloc.log 2> $LOGS_DIR/basic_stat_alloc.err
+$CMD_PERF kmem --alloc stat -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_alloc.log 2> $LOGS_DIR/basic_stat_alloc.err
 PERF_EXIT_CODE=$?
 
 REGEX_ALLOC_HEADER_LINE="\s+Alloc Ptr\s+\|\s+Total_alloc\/Per\s+\|\s+Total_req\/Per\s+\|\s+Hit\s+\|\s+Ping-pong\s+\|\s+Frag"
@@ -160,7 +168,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "stat --alloc ($CHECK_EXIT_CODE w
 # kmem stat --page
 
 # record - rewriting perf.data
-$CMD_PERF kmem record --page -- -o $CURRENT_TEST_DIR/perf.data -- $CMD_SIMPLE 2> $LOGS_DIR/basic_record_page.log
+$CMD_PERF kmem --page record $OUTPUT_FLAG -- $CMD_SIMPLE 2> $LOGS_DIR/basic_record_page.log
 PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" "perf.data" < $LOGS_DIR/basic_record_page.log
@@ -170,7 +178,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "record --page"
 (( TEST_RESULT += $? ))
 
 # stat
-$CMD_PERF kmem stat --page -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_page.log 2> $LOGS_DIR/basic_stat_page.err
+$CMD_PERF kmem --page stat -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_page.log 2> $LOGS_DIR/basic_stat_page.err
 PERF_EXIT_CODE=$?
 
 REGEX_PAGE_HEADER_LINE="SUMMARY \(page allocator\)"
