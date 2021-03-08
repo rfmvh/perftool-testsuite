@@ -23,3 +23,8 @@ else
 	export CURRENT_TEST_DIR="."
 	export LOGS_DIR="."
 fi
+
+support_output_parameter()
+{
+	$CMD_PERF kmem record -o /dev/null -- true &> /dev/null
+}
