@@ -62,8 +62,10 @@ test ! -s $LOGS_DIR/cache_list.err
 (( CHECK_EXIT_CODE += $? ))
 
 # output semantics check
-../common/check_buildids_vs_files.pl < $LOGS_DIR/cache_list.log
-(( CHECK_EXIT_CODE += $? ))
+if support_buildids_vs_files_check; then
+	../common/check_buildids_vs_files.pl < $LOGS_DIR/cache_list.log
+	(( CHECK_EXIT_CODE += $? ))
+fi
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "list"
 (( TEST_RESULT += $? ))
@@ -75,8 +77,10 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "list"
 cat $LOGS_DIR/cache_list.log | perl -ne 'BEGIN{$BUILDIDDIR=shift;} print "$1 ${BUILDIDDIR}$2/$1/elf\n" if /^(\w{40})\s+((\/[\w\+.-]+)+)$/; print "$1 ${BUILDIDDIR}/$2/$1/elf\n" if /^(\w{40})\s+(\[[\w\.]+\])$/' $BUILDIDDIR > $LOGS_DIR/cache_debug_structure.log
 CHECK_EXIT_CODE=$?
 
-../common/check_buildids_vs_files.pl < $LOGS_DIR/cache_debug_structure.log
-(( CHECK_EXIT_CODE += $? ))
+if support_buildids_vs_files_check; then
+	../common/check_buildids_vs_files.pl < $LOGS_DIR/cache_debug_structure.log
+	(( CHECK_EXIT_CODE += $? ))
+fi
 
 print_results 0 $CHECK_EXIT_CODE "check $BUILDIDDIR structure"
 (( TEST_RESULT += $? ))
