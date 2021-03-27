@@ -59,8 +59,10 @@ test ! -s $LOGS_DIR/basic_buildids.err
 (( CHECK_EXIT_CODE += $? ))
 
 # output semantics check
-../common/check_buildids_vs_files.pl < $LOGS_DIR/list_buildids.log
-(( CHECK_EXIT_CODE += $? ))
+if support_buildids_vs_files_check; then
+	../common/check_buildids_vs_files.pl < $LOGS_DIR/list_buildids.log
+	(( CHECK_EXIT_CODE += $? ))
+fi
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "buildids check"
 (( TEST_RESULT += $? ))
