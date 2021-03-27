@@ -33,6 +33,11 @@ if [ ! "$THIS_TEST_NAME" = "cleanup" ]; then
 	source settings_cache.sh
 fi
 
+support_buildids_vs_files_check()
+{
+	command -v file &> /dev/null
+}
+
 clear_buildid_cache()
 {
 	rm -rf $BUILDIDDIR/.b*
