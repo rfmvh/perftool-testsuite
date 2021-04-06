@@ -99,6 +99,8 @@ REGEX_LINES_2="perf.data.tar.bz2"
 REGEX_LINES_3="wherever you need to run"
 ../common/check_all_patterns_found.pl "$REGEX_LINES_1" "$REGEX_LINES_2" "$REGEX_LINES_3" "$RE_LINE_EMPTY" < $LOGS_DIR/basic_archive.log
 CHECK_EXIT_CODE=$?
+../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/basic_archive.err
+(( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "archive creation"
 (( TEST_RESULT += $? ))
@@ -109,13 +111,15 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "archive creation"
 # get the DSOs that were hit by samples
 REGEX_MODULE="$RE_PATH_ABSOLUTE/modules/`uname -r | perl -pe 's/\+/\\\+/'`/$RE_PATH/.*\.ko(?:\.gz|\.xz)?$"
 $CMD_PERF script -i $CURRENT_TEST_DIR/perf.data 2> $LOGS_DIR/basic_archive_sanity.err | perl -ne 'print "$1\n" if /\(([^\)]+)\)$/' | sort -u | grep -v -P "$REGEX_MODULE" | grep -P '^/' > $CURRENT_TEST_DIR/basic_dsos_hit.list
-test $TESTLOG_VERBOSITY -ge 2 && cat $LOGS_DIR/basic_archive_sanity.err
 # get the DSOs that were saved to the archive
 bzcat $CURRENT_TEST_DIR/perf.data.tar.bz2 2>/dev/null | tar t 2>/dev/null | grep -v -P '^\.' 2>/dev/null | grep -v -P '^\[' | perl -pe 's/^/\//;s/\/[0-9a-f]{40}.*$//' | sort > $CURRENT_TEST_DIR/basic_dsos_archived.list
 (( EXIT_CODE = ${PIPESTATUS[0]} + ${PIPESTATUS[1]} + ${PIPESTATUS[2]} + ${PIPESTATUS[3]} + ${PIPESTATUS[4]} ))
 
 ../common/check_dso_archive_content.pl "$CURRENT_TEST_DIR/basic_dsos_archived.list" "$CURRENT_TEST_DIR/basic_dsos_hit.list"
 CHECK_EXIT_CODE=$?
+
+../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/basic_archive_sanity.err
+(( CHECK_EXIT_CODE += $? ))
 
 print_results $EXIT_CODE $CHECK_EXIT_CODE "archive sanity (contents)"
 (( TEST_RESULT += $? ))
