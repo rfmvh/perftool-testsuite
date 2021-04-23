@@ -17,11 +17,12 @@
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
+consider_skipping $RUNMODE_EXPERIMENTAL
+
 #### Create and read the controle pipe
 mkfifo control ack perf.pipe
 $CMD_PERF record --control=fifo:control,ack -D -1 --no-buffering -e 'sched:*' -o - > perf.pipe 2> $LOGS_DIR/control_pipe_record.log &
 PERF_PIPE_PID=$!
-
 
 #### Consume the pipe
 
