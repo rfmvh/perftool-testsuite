@@ -4,3 +4,5 @@ Lowering default frequency rate to \d+\.
 Please consider tweaking \/proc\/sys\/kernel\/perf_event_max_sample_rate\.
 Warning:
 \d+ out of order events recorded.
+Processed \d+ samples and lost 1?\d\.\d+%!
+^$
