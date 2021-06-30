@@ -66,7 +66,7 @@ else
 	REGEX_SLEEP_PID_TID=$REGEX_SLEEP_PID
 fi
 
-REGEX_IDLE_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+<idle>\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
+REGEX_IDLE_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+(?:<idle>|swapper)\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
 REGEX_PERF_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+perf\[$REGEX_PERF_PID_TID\]\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
 REGEX_SLEEP_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+sleep\[$REGEX_SLEEP_PID_TID\]\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
 
@@ -98,6 +98,7 @@ REGEX_S_HEADER_NOTES="\s+\(count\)\s+\(msec\)\s+\(msec\)\s+\(msec\)\s+\(msec\)\s
 REGEX_S_HEADER_UNDERLINE="-{100,}"
 REGEX_S_DATA_LINE="\s+[\w~\/ \.\+:#-]+(?:\[-1\]|\[\d+(?:\/\d+)?\])\s+(?:-1|\d+)\s+\d+\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+\d+"
 REGEX_S_SLEEP_LINE="\s+sleep\[\d+(?:\/\d+)?\]\s+\d+\s+\d+\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+\d+"
+REGEX_S_IDLE_LINE="\s+swapper\s+\-1\s+\d+\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+\d+"
 
 REGEX_S_IDLE="\s+CPU\s+\d+ idle for\s+$RE_NUMBER\s+msec\s+\(\s*$RE_NUMBER%\)|\s+CPU\s+\d+\s+idle entire time window"
 REGEX_S_UNIQ="\s+Total number of unique tasks: \d+"
@@ -106,7 +107,7 @@ REGEX_S_RUN_T="\s+Total run time \(msec\):\s+$RE_NUMBER"
 REGEX_S_SCHED_T="\s+Total scheduling time \(msec\):\s+$RE_NUMBER\s+\(x\s*\d+\)"
 
 ../common/check_all_lines_matched.pl "^\s*$" "Runtime summary" "$REGEX_S_HEADER_LINE" "$REGEX_S_HEADER_NOTES" "$REGEX_S_HEADER_UNDERLINE" "$REGEX_S_DATA_LINE"\
- "Terminated tasks:" "$REGEX_S_SLEEP_LINE" "Idle stats:" "$REGEX_S_IDLE" "$REGEX_S_UNIQ" "$REGEX_S_SWITCH" "$REGEX_S_RUN_T" "$REGEX_S_SCHED_T" < $LOGS_DIR/timehist_summary.log
+ "$REGEX_S_IDLE_LINE" "Terminated tasks:" "$REGEX_S_SLEEP_LINE" "Idle stats:" "$REGEX_S_IDLE" "$REGEX_S_UNIQ" "$REGEX_S_SWITCH" "$REGEX_S_RUN_T" "$REGEX_S_SCHED_T" < $LOGS_DIR/timehist_summary.log
 CHECK_EXIT_CODE=$?
 ../common/check_all_patterns_found.pl "Runtime summary" "$REGEX_S_HEADER_LINE" "$REGEX_S_HEADER_NOTES" "$REGEX_S_HEADER_UNDERLINE" "$REGEX_S_DATA_LINE" "Terminated tasks:" "Idle stats:"\
  "$REGEX_S_IDLE" "$REGEX_S_UNIQ" "$REGEX_S_SWITCH" "$REGEX_S_RUN_T" "$REGEX_S_SCHED_T" < $LOGS_DIR/timehist_summary.log
@@ -165,7 +166,7 @@ PERF_EXIT_CODE=$?
 
 REGEX_V_HEADER_LINE="\s*time\s+cpu\s+[\da-f]+\s+task name\s+wait time\s+sch delay\s+run time"
 REGEX_V_DATA_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+s\s+[\w~\[\]\/ \.\+:#-]+\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
-REGEX_V_IDLE_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+i\s+<idle>\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
+REGEX_V_IDLE_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+i\s+(?:<idle>|swapper)\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
 
 ../common/check_all_lines_matched.pl "^\s*$" "$REGEX_V_HEADER_LINE" "$REGEX_HEADER_NOTES" "$REGEX_HEADER_UNDERLINE" "$REGEX_V_DATA_LINE" "$REGEX_V_IDLE_LINE" < $LOGS_DIR/timehist_visual.log
 CHECK_EXIT_CODE=$?
@@ -230,7 +231,7 @@ $CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -I > $LOGS_DIR/timehist_
 PERF_EXIT_CODE=$?
 
 REGEX_I_DATA_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+[\w~\[\]\/ \.\+:#-]+\s+[0\.]+\s+[0\.]+\s+[0\.]+"
-REGEX_I_IDLE_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+<idle>\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
+REGEX_I_IDLE_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+(?:<idle>|swapper)\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER"
 
 ../common/check_all_lines_matched.pl "^\s*$" "$REGEX_HEADER_LINE" "$REGEX_HEADER_NOTES" "$REGEX_HEADER_UNDERLINE" "$REGEX_I_DATA_LINE" "$REGEX_I_IDLE_LINE" < $LOGS_DIR/timehist_idle-hist.log
 CHECK_EXIT_CODE=$?
@@ -249,7 +250,7 @@ PERF_EXIT_CODE=$?
 REGEX_ST_HEADER_LINE="$REGEX_HEADER_LINE\s+state"
 
 REGEX_ST_DATA_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+[\w~\[\]\/ \.\+:#-]+\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+[RSDTtZXxKWP]"
-REGEX_ST_IDLE_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+<idle>\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+I"
+REGEX_ST_IDLE_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+(?:<idle>|swapper)\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+I"
 
 ../common/check_all_lines_matched.pl "$REGEX_ST_HEADER_LINE" "$REGEX_HEADER_NOTES" "$REGEX_HEADER_UNDERLINE" "$REGEX_ST_DATA_LINE" "$REGEX_ST_IDLE_LINE" < $LOGS_DIR/timehist_state.log
 CHECK_EXIT_CODE=$?
