@@ -125,8 +125,12 @@ $CMD_PERF annotate -i $CURRENT_TEST_DIR/perf.data --stdio --dso load -P --print-
 PERF_EXIT_CODE=$?
 
 FULLPATH="`pwd`/examples"
-../common/check_all_patterns_found.pl "$FULLPATH/load\.c:$RE_NUMBER\s+$REGEX_LINE" "$REGEX_SECTION__TEXT" < $LOGS_DIR/basic_printline.log
+REGEXP_FULL_PATH_LINE_OLD="$FULLPATH/load\.c:$RE_NUMBER\s+$REGEX_LINE"
+REGEXP_FULL_PATH_LINE_NEW="$REGEX_LINE\s+//\s+$FULLPATH/load\.c:$RE_NUMBER"
+../common/check_all_patterns_found.pl "$FULLPATH" "$REGEX_SECTION__TEXT" < $LOGS_DIR/basic_printline.log
 CHECK_EXIT_CODE=$?
+../common/check_any_pattern_found.pl "$REGEXP_FULL_PATH_LINE_OLD" "$REGEXP_FULL_PATH_LINE_NEW" < $LOGS_DIR/basic_printline.log
+(( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "print-line"
 (( TEST_RESULT += $? ))
