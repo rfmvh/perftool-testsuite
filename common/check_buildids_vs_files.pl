@@ -8,7 +8,7 @@ $passed = 1;
 sub get_filecmd_output
 {
 	my ($filepath) = @_;
-	if ($filepath =~ /ko.xz$/)
+	if ($filepath =~ /ko.xz(?:\/[a-f\d]{40}\/elf)?$/)
 	{
 		# xzipped module
 		$tmpfile = `mktemp`;
@@ -16,7 +16,7 @@ sub get_filecmd_output
 		$_ = `file $tmpfile 2>/dev/null`;
 		unlink $tmpfile;
 	}
-	elsif ($filepath =~ /ko.bz2$/)
+	elsif ($filepath =~ /ko.bz2(?:\/[a-f\d]{40}\/elf)?$/)
 	{
 		# bzipped module
 		$tmpfile = `mktemp`;
@@ -24,7 +24,7 @@ sub get_filecmd_output
 		$_ = `file $tmpfile 2>/dev/null`;
 		unlink $tmpfile;
 	}
-	elsif ($filepath =~ /ko.gz$/)
+	elsif ($filepath =~ /ko.gz(?:\/[a-f\d]{40}\/elf)?$/)
 	{
 		# gzipped module
 		$tmpfile = `mktemp`;
