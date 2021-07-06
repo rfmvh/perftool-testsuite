@@ -54,7 +54,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "sched record"
 # latency
 
 $CMD_PERF sched latency -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_latency.log 2> $LOGS_DIR/basic_latency.err
-PERF_EXIT_CODR=$?
+PERF_EXIT_CODE=$?
 
 REGEX_SEP="\s*\|\s*"
 REGEX_MAX_DELAY_AT="Max(?:imum)? delay at${REGEX_SEP}"
