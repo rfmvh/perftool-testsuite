@@ -21,6 +21,7 @@ consider_skipping $RUNMODE_EXPERIMENTAL
 
 if ! should_support_expect_script; then
 	print_overall_skipped
+	exit 0
 fi
 
 
