@@ -24,10 +24,12 @@ if ! should_support_expect_script; then
 	exit 0
 fi
 
+COMMAND=pwd
+
 
 # record
 
-$CMD_PERF record -o $CURRENT_TEST_DIR/perf.data -- $CMD_SIMPLE > $LOGS_DIR/tui_record_simple.log 2> $LOGS_DIR/tui_record_simple.err
+$CMD_PERF record -a -o $CURRENT_TEST_DIR/perf.data -- $COMMAND > $LOGS_DIR/tui_record_simple.log 2> $LOGS_DIR/tui_record_simple.err
 PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" "perf.data" < $LOGS_DIR/tui_record_simple.err
@@ -43,7 +45,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "record"
 
 N_SAMPLES_SIMPLE=`perl -ne 'print "$1" if /\((\d+) samples\)/' $LOGS_DIR/tui_record_simple.err`
 
-expect tui_report_non_existent_filter.exp "$CMD_PERF" "$LOGS_DIR/perf.data" "(?:$CMD_SIMPLE|perf)" "$N_SAMPLES_SIMPLE" > $LOGS_DIR/tui_empty_search.log 2> $LOGS_DIR/tui_empty_search.err
+expect tui_report_non_existent_filter.exp "$CMD_PERF" "$LOGS_DIR/perf.data" "(?:$COMMAND|perf)" "$N_SAMPLES_SIMPLE" > $LOGS_DIR/tui_empty_search.log 2> $LOGS_DIR/tui_empty_search.err
 TUI_EXIT_CODE=$?
 
 CHECK_EXIT_CODE=$([ "$TUI_EXIT_CODE" -le 1 ] && echo "0" || echo "1")
@@ -54,7 +56,7 @@ print_results $TUI_EXIT_CODE $CHECK_EXIT_CODE "tui tests :: nonexistent filter"
 
 # exit
 
-expect tui_report_exit.exp "$CMD_PERF" "$LOGS_DIR/perf.data" "(?:$CMD_SIMPLE|perf)" "$N_SAMPLES_SIMPLE" > $LOGS_DIR/tui_exit.log 2> $LOGS_DIR/tui_exit.err
+expect tui_report_exit.exp "$CMD_PERF" "$LOGS_DIR/perf.data" "(?:$COMMAND|perf)" "$N_SAMPLES_SIMPLE" > $LOGS_DIR/tui_exit.log 2> $LOGS_DIR/tui_exit.err
 TUI_EXIT_CODE=$?
 
 CHECK_EXIT_CODE=$([ "$TUI_EXIT_CODE" -le 1 ] && echo "0" || echo "1")
@@ -79,7 +81,7 @@ print_results $TUI_EXIT_CODE $CHECK_EXIT_CODE "tui tests :: --stdio compare"
 
 # help
 
-expect tui_report_help.exp "$CMD_PERF" "$LOGS_DIR/perf.data" "(?:$CMD_SIMPLE|perf)" "$N_SAMPLES_SIMPLE" > $LOGS_DIR/tui_help.log 2> $LOGS_DIR/tui_help.err
+expect tui_report_help.exp "$CMD_PERF" "$LOGS_DIR/perf.data" "(?:$COMMAND|perf)" "$N_SAMPLES_SIMPLE" > $LOGS_DIR/tui_help.log 2> $LOGS_DIR/tui_help.err
 TUI_EXIT_CODE=$?
 
 CHECK_EXIT_CODE=$([ "$TUI_EXIT_CODE" -le 1 ] && echo "0" || echo "1")
