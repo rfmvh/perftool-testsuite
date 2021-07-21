@@ -105,7 +105,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "record :: small"
 $CMD_PERF script -i $CURRENT_TEST_DIR/perf_small.data > $LOGS_DIR/basic_script_small.log 2> $LOGS_DIR/basic_script_small.err
 PERF_EXIT_CODE=$?
 
-REGEX_BASIC_SMALL_SCRIPT_LINE="^\s*(?:perf|$COMMAND_NAME)\s+$RE_NUMBER\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+$REGEX_DSO$"
+REGEX_BASIC_SMALL_SCRIPT_LINE="^\s*(?:perf(?:-exec)?|$COMMAND_NAME)\s+$RE_NUMBER\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+$REGEX_DSO$"
 
 ../common/check_all_lines_matched.pl "$REGEX_BASIC_SMALL_SCRIPT_LINE" < $LOGS_DIR/basic_script_small.log
 CHECK_EXIT_CODE=$?
@@ -193,7 +193,7 @@ REGEX_PERF_COMM_SCRIPT_LINE="^\s*perf(?:-exec)?\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+
 REGEX_SLEEP_COMM_SCRIPT_LINE="^\s*sleep\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+$REGEX_DSO$"
 REGEX_COMMAND_NAME_COMM_SCRIPT_LINE="^\s*$COMMAND_NAME\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+$REGEX_DSO$"
 
-REGEX_PERF_COMM_SMALL_SCRIPT_LINE="^\s*perf\s+$RE_NUMBER\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+$REGEX_DSO$"
+REGEX_PERF_COMM_SMALL_SCRIPT_LINE="^\s*perf(?:-exec)?\s+$RE_NUMBER\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+$REGEX_DSO$"
 REGEX_COMMAND_NAME_COMM_SMALL_SCRIPT_LINE="^\s*$COMMAND_NAME\s+$RE_NUMBER\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+$REGEX_DSO$"
 
 $CMD_PERF script -c perf -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_script_comms_one.log 2> $LOGS_DIR/basic_script_comms_one.err
@@ -238,7 +238,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "script :: comms :: nonexiting va
 
 # script :: comms :: all applicable values
 
-$CMD_PERF script -c perf,$COMMAND_NAME -i $CURRENT_TEST_DIR/perf_small.data > $LOGS_DIR/basic_script_comms_all.log 2> $LOGS_DIR/basic_script_comms_all.err
+$CMD_PERF script -c perf,perf-exec,$COMMAND_NAME -i $CURRENT_TEST_DIR/perf_small.data > $LOGS_DIR/basic_script_comms_all.log 2> $LOGS_DIR/basic_script_comms_all.err
 PERF_EXIT_CODE=$?
 
 ../common/check_all_lines_matched.pl "$REGEX_PERF_COMM_SMALL_SCRIPT_LINE" "$REGEX_COMMAND_NAME_COMM_SMALL_SCRIPT_LINE" < $LOGS_DIR/basic_script_comms_all.log
