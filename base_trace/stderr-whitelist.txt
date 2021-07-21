@@ -1,1 +1,2 @@
 no symbols found in .*, maybe install a debug package
+detected invalid bpf_prog_info
