@@ -22,9 +22,10 @@ if [ $? -ne 0 ]; then
 	exit 0
 fi
 
-# load libpthread to buildid cache
-LIBPTHREAD_PATH=`ldd $CURRENT_TEST_DIR/examples/simple_threads | grep pthread | cut -d' ' -f3`
-$CMD_PERF buildid-cache --add $LIBPTHREAD_PATH
+# load libraries to buildid cache
+for lib in `ldd $CURRENT_TEST_DIR/examples/simple_threads | grep -e libc -e thread | cut -d' ' -f3`; do
+	$CMD_PERF buildid-cache --add $lib
+done
 
 check_sdt_support
 if [ $? -ne 0 ]; then
@@ -34,9 +35,9 @@ fi
 
 
 # FIXME -- experimental (this test is testing libpthread SDT tracepoints)
-PTHREAD_LIBRARY=`$CMD_PERF probe --cache --list | grep -o -P '^/.+libpthread.+\.so'`
-EVENTS_TO_TEST=`$CMD_PERF probe --cache --list | grep sdt_libpthread:pthread_ | perl -pe 's/\n/ /' | perl -pe 's/\s+$//'`
-NO_OF_EVENTS_TO_TEST=`$CMD_PERF probe --cache --list | grep -c sdt_libpthread:pthread_`
+PTHREAD_LIBRARY=`$CMD_PERF probe --cache --list | grep ^/ | cut -d' ' -f1 | grep -e libc -e libpthread | sort | tail -1`
+EVENTS_TO_TEST=`$CMD_PERF probe --cache --list | grep -P 'sdt_lib.+:pthread_' | perl -pe 's/\n/ /' | perl -pe 's/\s+$//'`
+NO_OF_EVENTS_TO_TEST=`echo "$EVENTS_TO_TEST" | wc -w`
 
 if [ -z "$PTHREAD_LIBRARY" -o -z "$EVENTS_TO_TEST" ]; then
 	# nothing to test, maybe this should be rather a skip, FIXME
@@ -97,7 +98,7 @@ done
 
 ### using probes :: perf record
 
-REGEX_SCRIPT_LINE="\s*simple_threads\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+$RE_NUMBER:\s+sdt_libpthread:pthread_\w+:\s+\($RE_NUMBER_HEX\)"
+REGEX_SCRIPT_LINE="\s*simple_threads\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+$RE_NUMBER:\s+sdt_lib\w+:pthread_\w+:\s+\($RE_NUMBER_HEX\)"
 for N in 37 97 237; do
 	# perf record should catch all the samples as well
 	$CMD_PERF record -m 16M -e "$PROBE_PREFIX:"'*' -o $CURRENT_TEST_DIR/perf.data $CURRENT_TEST_DIR/examples/simple_threads $N > $LOGS_DIR/sdt_record_$N.out 2> $LOGS_DIR/sdt_record_$N.log
