@@ -39,9 +39,8 @@ PERF_EXIT_CODE=$?
 REGEX_COMMAND="[\w#~\.\-\+\/: ]+"
 REGEX_EVENT="[\w]+"
 REGEX_SYMBOL="(?:[\w\.\@\&:<>*~, ]+\+$RE_ADDRESS|\[unknown\])"
-REGEX_DSO="\((?:$RE_PATH_ABSOLUTE(?: \(deleted\))?|\[kernel\.kallsyms\]|\[\w+]|\[kernel\.vmlinux\][\w\.]*)\)"
 
-REGEX_NS_SCRIPT_LINE="^\s*$REGEX_COMMAND\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+([0-9]+\.[0-9]{9}):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+$REGEX_DSO$"
+REGEX_NS_SCRIPT_LINE="^\s*$REGEX_COMMAND\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+([0-9]+\.[0-9]{9}):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
 
 ../common/check_all_lines_matched.pl "$REGEX_NS_SCRIPT_LINE" < $LOGS_DIR/time_script_ns.log
 CHECK_EXIT_CODE=$?
@@ -67,7 +66,7 @@ print_results 0 $? "ns option :: sample count check ($CNT == $N_SAMPLES)"
 
 ### time option
 
-REGEX_SCRIPT_LINE="^\s*$REGEX_COMMAND\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+$REGEX_DSO$"
+REGEX_SCRIPT_LINE="^\s*$REGEX_COMMAND\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
 
 # time option :: 0%-10%
 
@@ -297,7 +296,7 @@ else
 
 	# reltime option :: first line zero time
 
-	REGEX_ZERO_TIME_SCRIPT_LINE="^\s*$REGEX_COMMAND\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+(0\.0+):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+$REGEX_DSO$"
+	REGEX_ZERO_TIME_SCRIPT_LINE="^\s*$REGEX_COMMAND\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+(0\.0+):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
 
 	head -n 1 $LOGS_DIR/time_script_reltime.log | ../common/check_all_patterns_found.pl "$REGEX_ZERO_TIME_SCRIPT_LINE"
 	CHECK_EXIT_CODE=$?

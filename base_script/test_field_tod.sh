@@ -51,9 +51,8 @@ PERF_EXIT_CODE=$?
 REGEX_COMMAND="[\w#~\-\+\.\/: ]+"
 REGEX_EVENT="[\w]+"
 REGEX_SYMBOL="(?:[\w\.@:<>*~, ]+\+$RE_ADDRESS|\[unknown\])"
-REGEX_DSO="\((?:$RE_PATH_ABSOLUTE(?: \(deleted\))?|\[kernel\.kallsyms\]|\[unknown\]|\[vdso\]|\[kernel\.vmlinux\][\.\w]*)\)"
 
-REGEX_FIELD_TOD_SCRIPT_LINE="^\s*$REGEX_COMMAND\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+$RE_DATE_YYYYMMDD\s+$RE_TIME\.$RE_NUMBER\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+$REGEX_DSO$"
+REGEX_FIELD_TOD_SCRIPT_LINE="^\s*$REGEX_COMMAND\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+$RE_DATE_YYYYMMDD\s+$RE_TIME\.$RE_NUMBER\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
 
 ../common/check_all_lines_matched.pl "$REGEX_FIELD_TOD_SCRIPT_LINE" < $LOGS_DIR/field_tod_script.log
 CHECK_EXIT_CODE=$?

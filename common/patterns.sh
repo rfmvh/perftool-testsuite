@@ -130,6 +130,18 @@ export RE_PATH="(?:$RE_FILE_NAME)?$RE_PATH_ABSOLUTE"
 #    src/fs/file.c
 
 
+export RE_DSO="(?:$RE_PATH_ABSOLUTE(?: \(deleted\))?|\[kernel\.kallsyms\]|\[unknown\]|\[vdso\]|\[kernel\.vmlinux\][\.\w]*)"
+# A DSO name in various result tables
+# Examples:
+#    /usr/lib64/somelib.so.5.4.0
+#    /usr/bin/somebinart (deleted)
+#    /lib/modules/4.3.0-rc5/kernel/fs/xfs/xfs.ko
+#    [kernel.kallsyms]
+#    [kernel.vmlinux]
+#    [vdso]
+#    [unknown]
+
+
 export RE_LINE_COMMENT="^#.*"
 # A comment line
 # Examples:
