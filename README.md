@@ -2,6 +2,10 @@
 
 Author: Michael Petlan <mpetlan@redhat.com>
 
+FOR CONTRIBUTING, PLEASE USE git format-patch AND git send-email.
+YOU HAVE A HIGHER CHANCE YOUR PATCH GETS REVIEWED THAN WITH PULL
+REQUESTS! THANK YOU.
+
 Introducing a new testsuite for perf builtin commands. The testsuite
 should cover all the perf's builtin commands, their options and use-
 cases in various situations.
