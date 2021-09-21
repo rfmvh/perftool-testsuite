@@ -8,3 +8,4 @@ call-graph.sort-key=function
 call-graph.threshold=0.5
 call-graph.print-limit=0
 llvm.dump-obj=true
+stat.big-num=true
