@@ -47,7 +47,7 @@ disable_nmi_watchdog_if_exists
 for event in $EVENTS_TO_TEST; do
 	$CMD_PERF stat -a -e $event -o $LOGS_DIR/hwcache/$event.log --append -x';' -- $CMD_BASIC_SLEEP
 	PERF_EXIT_CODE=$?
-	REGEX_LINES="$RE_NUMBER;+$event;$RE_NUMBER;100\.00"
+	REGEX_LINES="$RE_NUMBER;+(?:\w+\/)?$event\/?;$RE_NUMBER;100\.00"
 	../common/check_all_patterns_found.pl "$REGEX_LINES" < $LOGS_DIR/hwcache/$event.log
 	CHECK_EXIT_CODE=$?
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "event $event"
