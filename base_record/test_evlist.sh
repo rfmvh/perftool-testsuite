@@ -97,7 +97,7 @@ if [ -n "$EVENTS_TO_TEST" ]; then
 
 		../common/check_all_patterns_found.pl "$event" < $LOGS_DIR/evlist_evlist_$event.log
 		CHECK_EXIT_CODE=$?
-		../common/check_all_lines_matched.pl "$event" < $LOGS_DIR/evlist_evlist_$event.log
+		../common/check_all_lines_matched.pl "$event" "dummy" < $LOGS_DIR/evlist_evlist_$event.log
 		(( CHECK_EXIT_CODE += $? ))
 
 		print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "various events :: evlist $event"
