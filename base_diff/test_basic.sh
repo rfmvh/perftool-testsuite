@@ -59,6 +59,12 @@ REGEX_LINE_BOTH="$RE_NUMBER$REGEX_SEP[\+\-]$RE_NUMBER%$REGEX_SEP(?:$RE_FILE_NAME
 # check for the basic structure
 ../common/check_all_lines_matched.pl "$REGEX_LINE_BASELINE" "$REGEX_LINE_DELTA" "$REGEX_LINE_BOTH" "$RE_LINE_COMMENT" "$RE_LINE_EMPTY" < $LOGS_DIR/basic_diff.log
 CHECK_EXIT_CODE=$?
+# check for the output's sanity: "load" must be there
+../common/check_all_patterns_found.pl "${REGEX_SEP}load" < $LOGS_DIR/basic_diff.log
+(( CHECK_EXIT_CODE += $? ))
+# check for the output's sanity: "load" must give similar results, not differ byt more than 30%
+../common/check_no_patterns_found.pl "$REGEX_SEP[\+\-][3-9]\d\.\d+%\s*${REGEX_SEP}load" < $LOGS_DIR/basic_diff.log
+(( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic execution - diff"
 (( TEST_RESULT += $? ))
