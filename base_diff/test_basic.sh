@@ -57,7 +57,7 @@ REGEX_LINE_BASELINE="$RE_NUMBER$REGEX_SEP$REGEX_SEP(?:$RE_FILE_NAME)|(?:\[[\w\.]
 REGEX_LINE_DELTA="$REGEX_SEP[\+\-]$RE_NUMBER%$REGEX_SEP(?:$RE_FILE_NAME)|(?:\[[\w\.]+\](?:[\.\w]+)?)$REGEX_SEP\[[\.kH]\]\s[\w\.\-]+"
 REGEX_LINE_BOTH="$RE_NUMBER$REGEX_SEP[\+\-]$RE_NUMBER%$REGEX_SEP(?:$RE_FILE_NAME)|(?:\[[\w\.]+\](?:[\.\w]+)?)$REGEX_SEP\[[\.kH]\]\s[\w\.\-]+"
 # check for the basic structure
-../common/check_all_lines_matched.pl "$REGEX_LINE_BASELINE" "$REGEX_LINE_DELTA" "$REGEX_LINE_BOTH" "$RE_LINE_COMMENT" < $LOGS_DIR/basic_diff.log
+../common/check_all_lines_matched.pl "$REGEX_LINE_BASELINE" "$REGEX_LINE_DELTA" "$REGEX_LINE_BOTH" "$RE_LINE_COMMENT" "$RE_LINE_EMPTY" < $LOGS_DIR/basic_diff.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic execution - diff"
