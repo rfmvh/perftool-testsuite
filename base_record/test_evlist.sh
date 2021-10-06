@@ -61,7 +61,7 @@ if [ -n "$CYCLES_AVAIL" ]; then
 		$CMD_PERF evlist -i $CURRENT_TEST_DIR/perf.data -F > $LOGS_DIR/evlist_freq_evlist_$frq.log
 		PERF_EXIT_CODE=$?
 
-		../common/check_all_patterns_found.pl "$EVENT:\s+sample_freq=$frq" < $LOGS_DIR/evlist_freq_evlist_$frq.log
+		../common/check_all_patterns_found.pl "^(?:\w+\/)?$EVENT\/?:\s+sample_freq=$frq" < $LOGS_DIR/evlist_freq_evlist_$frq.log
 		CHECK_EXIT_CODE=$?
 
 		print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "sample frequency check :: evlist $frq"
