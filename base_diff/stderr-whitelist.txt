@@ -5,3 +5,7 @@ Lowering default frequency rate from \d+ to \d+\.
 Please consider tweaking \/proc\/sys\/kernel\/perf_event_max_sample_rate\.
 Warning:
 \d+ out of order events recorded.
+warning: Maximum frequency rate \(\d+ Hz\) exceeded, throttling from \d+ Hz to \d+ Hz\.
+\s+The limit can be raised via /proc/sys/kernel/perf_event_max_sample_rate\.
+\s+The kernel will lower it when perf's interrupts take too long\.
+\s+Use --strict-freq to disable this throttling, refusing to record\.
