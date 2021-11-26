@@ -230,6 +230,29 @@ else
 fi
 
 
+### perf script -F 'weight' processing
+
+# run only if one of previous tests was successfully executed
+if [ -f $CURRENT_TEST_DIR/perf.data ]; then
+	$CMD_PERF script -i $CURRENT_TEST_DIR/perf.data -F "comm,pid,event,weight" > $LOGS_DIR/basic_weight.out 2> $LOGS_DIR/basic_weight.err
+	PERF_EXIT_CODE=$?
+
+	REGEX_SYMBOL="(?:[\w\.@:<>*~, ]+\+$RE_ADDRESS|\[unknown\])"
+	REGEX_SCRIPT_LINE="\s*[\w\-]+\s+$RE_NUMBER\s+$RE_EVENT_ANY\s+$RE_NUMBER"
+	../common/check_all_patterns_found.pl "$REGEX_SCRIPT_LINE" < $LOGS_DIR/basic_weight.out
+	CHECK_EXIT_CODE=$?
+	../common/check_all_lines_matched.pl "$REGEX_SCRIPT_LINE" < $LOGS_DIR/basic_weight.out
+	(( CHECK_EXIT_CODE += $? ))
+	../common/check_no_patterns_found.pl "event do not have WEIGHT attribute set" "Cannot print" < $LOGS_DIR/basic_weight.err
+	(( CHECK_EXIT_CODE += $? ))
+
+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "script -F weight"
+	(( TEST_RESULT += $? ))
+else
+	print_testcase_skipped "script -F weight"
+fi
+
+
 # print overall results
 print_overall_results "$TEST_RESULT"
 exit $?
