@@ -1,0 +1,195 @@
+#### !!! THIS IS TO BE SOURCED BY test_tui.sh !!!
+
+### test of help window
+
+
+set CMD_PERF [lindex $argv 0]
+set ARGS [lindex $argv 1]
+
+
+# enable diagnostic output
+exp_internal 1
+
+# timeout period set to 4 seconds
+set timeout 4
+if { $ARGS == "" } {
+	spawn $CMD_PERF top;
+} else {
+	spawn $CMD_PERF top $ARGS;
+}
+
+# show help window
+send -- "h"
+
+expect {
+	-re "Help" { }
+	timeout { puts "Regexp not found: Help"; exit 1; }
+}
+
+# timeout period set to 1 second
+set timeout 1
+
+# test expected regexes
+expect {
+	-re "h/\\?/F1\\s+Show this window" { }
+	timeout { puts "\nRegexp not found: h/\\?/F1\\s+Show this window"; exit 3; }
+}
+
+expect {
+	-re "UP/DOWN/PGUP" { }
+	timeout { puts "\nRegexp not found: UP/DOWN/PGUP"; exit 3; }
+}
+
+
+expect {
+	-re "PGDN/SPACE\\s+Navigate" { }
+	timeout { puts "\nRegexp not found: PGDN/SPACE\\s+Navigate"; exit 3; }
+}
+
+
+expect {
+	-re "q/ESC/CTRL\\+C\\s+Exit browser or go back to previous screen" { }
+	timeout { puts "\nRegexp not found: q/ESC/CTRL\\+C\\s+Exit browser or go back to previous screen"; exit 3; }
+}
+
+
+expect {
+	-re "For multiple event sessions:" { }
+	timeout { puts "\nRegexp not found: For multiple event sessions:"; exit 3; }
+}
+
+
+expect {
+	-re "TAB/UNTAB\\s*Switch events" { }
+	timeout { puts "\nRegexp not found: TAB/UNTAB\\s*Switch events"; exit 3; }
+}
+
+
+expect {
+	-re "For symbolic views \\\(--sort has sym\\\):" { }
+	timeout { puts "\nRegexp not found: For symbolic views \\\(--sort has sym\\\):"; exit 3; }
+}
+
+
+expect {
+	-re "ENTER\\s+Zoom into DSO/Threads & Annotate current symbol" { }
+	timeout { puts "\nRegexp not found: ENTER\\s+Zoom into DSO/Threads & Annotate current symbol"; exit 3; }
+}
+
+
+expect {
+	-re "ESC\\s+Zoom out" { }
+	timeout { puts "\nRegexp not found: ESC\\s+Zoom out"; exit 3; }
+}
+
+
+expect {
+	-re "\\+\\s+Expand/Collapse one callchain level" { }
+	timeout { puts "\nRegexp not found: \\+\\s+Expand/Collapse one callchain level"; exit 3; }
+}
+
+
+expect {
+	-re "a\\s+Annotate current symbol" { }
+	timeout { puts "\nRegexp not found: a\\s+Annotate current symbol"; exit 3; }
+}
+
+
+expect {
+	-re "C\\s+Collapse all callchains" { }
+	timeout { puts "\nRegexp not found: C\\s+Collapse all callchains"; exit 3; }
+}
+
+
+expect {
+	-re "d\\s+Zoom into current DSO" { }
+	timeout { puts "\nRegexp not found: d\\s+Zoom into current DSO"; exit 3; }
+}
+
+
+expect {
+	-re "e\\s+Expand/Collapse main entry callchains" { }
+	timeout { puts "\nRegexp not found: e\\s+Expand/Collapse main entry callchains"; exit 3; }
+}
+
+
+expect {
+	-re "E\\s+Expand all callchains" { }
+	timeout { puts "\nRegexp not found: E\\s+Expand all callchains"; exit 3; }
+}
+
+
+expect {
+	-re "F\\s+Toggle percentage of filtered entries" { }
+	timeout { puts "\nRegexp not found: F\\s+Toggle percentage of filtered entries"; exit 3; }
+}
+
+
+expect {
+	-re "H\\s+Display column headers" { }
+	timeout { puts "\nRegexp not found: H\\s+Display column headers"; exit 3; }
+}
+
+
+expect {
+	-re "k\\s+Zoom into the kernel map" { }
+	timeout { puts "\nRegexp not found: k\\s+Zoom into the kernel map"; exit 3; }
+}
+
+
+expect {
+	-re "L\\s+Change percent limit" { }
+	timeout { puts "\nRegexp not found: L\\s+Change percent limit"; exit 3; }
+}
+
+
+expect {
+	-re "m\\s+Display context menu" { }
+	timeout { puts "\nRegexp not found: m\\s+Display context menu"; exit 3; }
+}
+
+
+expect {
+	-re "S\\s+Zoom into current Processor Socket" { }
+	timeout { puts "\nRegexp not found: S\\s+Zoom into current Processor Socket"; exit 3; }
+}
+
+
+expect {
+	-re "P\\s+Print histograms to perf\\.hist\\.N" { }
+	timeout { puts "\nRegexp not found: P\\s+Print histograms to perf\\.hist\\.N"; exit 3; }
+}
+
+
+expect {
+	-re "t\\s+Zoom into current Thread" { }
+	timeout { puts "\nRegexp not found: t\\s+Zoom into current Thread"; exit 3; }
+}
+
+
+expect {
+	-re "V\\s+Verbose \\\(DSO names in callchains, etc\\\)" { }
+	timeout { puts "\nRegexp not found: V\\s+Verbose \\\(DSO names in callchains, etc\\\)"; exit 3; }
+}
+
+
+expect {
+	-re "z\\s+Toggle zeroing of samples" { }
+	timeout { puts "\nRegexp not found: z\\s+Toggle zeroing of samples"; exit 3; }
+}
+
+
+expect {
+	-re "\/\\s+Filter symbol by name" { }
+	timeout { puts "\nRegexp not found: \/\\s+Filter symbol by name"; exit 3; }
+}
+
+
+expect {
+	-re "Press any key\\\.\\\.\\\." { }
+	timeout { puts "\nRegexp not found: Press any key\\\.\\\.\\\."; exit 3; }
+}
+
+
+expect eof
+exit 0
