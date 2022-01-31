@@ -1,0 +1,100 @@
+#### !!! THIS IS TO BE SOURCED BY test_tui.sh !!!
+
+### test different ways of exitting perf report
+
+
+set CMD_PERF [lindex $argv 0]
+set ARGS [lindex $argv 1]
+
+# enable diagnostic output
+exp_internal 1
+
+# timeout period set to 4 seconds
+set timeout 4
+if { $ARGS == "" } {
+	spawn $CMD_PERF top;
+} else {
+	spawn $CMD_PERF top $ARGS;
+	sleep 4;
+}
+
+# main window
+expect {
+	-re "Samples:\\s*\\d+(?:K|M)?\\s*of event '\[\\w\:\-\]+',\\s*\\d+ Hz,\\s*Event count \\(approx\.\\):\\s*\\d+" { }
+	timeout { puts "\nRegexp not found: Samples:\\s*\\d+(?:K|M)?\\s*of event '\[\\w\:\-\]+',\\s*\\d+ Hz,\\s*Event count \\(approx\.\\):\\s*\\d+"; exit 2; }
+}
+expect {
+	-re "Overhead\\s*Shared\\s*Object\\s*Symbol." { }
+	timeout { puts "\nRegexp not found: Overhead\\s*Shared\\s*Object\\s*Symbol."; exit 2; }
+}
+expect {
+        -re "\\s*\[\\d,\]+%\[^\\r\\n\]+\[\\w\.\-\\\[\\\]\]+\[^\\r\\n\]+\\\[\[kH\.\]\\\]\\s*\[\\w+\.\]" { }
+        timeout { puts "\nRegexp not found: \\s*\[\\d,\]+%\[^\\r\\n\]+\[\\w\.\-\\\[\\\]\]+\[^\\r\\n\]+\\\[\[kH\.\]\\\]\\s*\[\\w+\.\]"; exit 2; }
+}
+
+### exit perf top with q character
+send -- "q"
+expect {
+	eof { }
+	timeout { puts "\nExiting perf top with q does not work."; exit 1; }
+}
+
+
+if { $ARGS == "" } {
+	spawn $CMD_PERF top;
+} else {
+	spawn $CMD_PERF top $ARGS;
+}
+
+### exit perf top with ^C
+send -- "\003"
+expect {
+	eof { }
+	timeout { puts "\nExiting perf top with ^C does not work."; exit 1; }
+}
+
+
+if { $ARGS == "" } {
+	spawn $CMD_PERF top;
+} else {
+	spawn $CMD_PERF top $ARGS;
+}
+
+# ESC window
+send -- "\033"
+expect {
+	-re "Do\\s*you\\s*really\\s*want" { }
+	eof { puts "\nRegexp not found: Do\\s*you\\s*really\\s*want"; exit 1; }
+	timeout { puts "\nRegexp not found: Do\\s*you\\s*really\\s*want"; exit 1; }
+}
+# jump out of ESC window by q character
+send -- "q"
+sleep 1
+
+# ESC window
+send -- "\033"
+expect {
+	-re "Do\\s*you\\s*really\\s*want" { }
+	eof { puts "\nRegexp not found: Do\\s*you\\s*really\\s*want"; exit 1; }
+	timeout { puts "\nRegexp not found: Do\\s*you\\s*really\\s*want"; exit 1; }
+}
+# jump out of ESC window by ESC character
+send -- "\033"
+sleep 1
+
+# ESC window
+send -- "\033"
+expect {
+	-re "Do\\s*you\\s*really\\s*want" { }
+	eof { puts "\nRegexp not found: Do\\s*you\\s*really\\s*want"; exit 1; }
+	timeout { puts "\nRegexp not found: Do\\s*you\\s*really\\s*want"; exit 1; }
+}
+
+### exit by ESC + ENTER
+send -- "\r"
+expect {
+	eof { exit 0; }
+	timeout { puts "\nExiting perf-top with ESC+ENTER does not work."; exit 1; }
+}
+
+exit 0;
