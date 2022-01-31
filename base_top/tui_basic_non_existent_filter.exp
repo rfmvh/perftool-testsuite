@@ -1,0 +1,60 @@
+#### !!! THIS IS TO BE SOURCED BY test_tui.sh !!!
+
+### test of filtering by non-existent symbol
+
+
+set CMD_PERF [lindex $argv 0]
+set ARGS [lindex $argv 1]
+
+# enable diagnostic output
+exp_internal 1
+
+# timeout period set to 4 seconds
+set timeout 4
+if { $ARGS == "" } {
+        spawn $CMD_PERF top;
+} else {
+        spawn $CMD_PERF top $ARGS;
+}
+
+# main window
+expect {
+        -re "Samples:\\s*\\d+(?:K|M)?\\s*of event '\[\\w\:\-\]+',\\s*\\d+ Hz,\\s*Event count \\(approx\.\\):\\s*\\d+" { }
+        timeout { puts "\nRegexp not found: Samples:\\s*\\d+(?:K|M)?\\s*of event '\[\\w\:\-\]+',\\s*\\d+ Hz,\\s*Event count \\(approx\.\\):\\s*\\d+"; exit 2; }
+}
+expect {
+        -re "Overhead\\s*Shared\\s*Object\\s*Symbol." { }
+        timeout { puts "\nRegexp not found: Overhead\\s*Shared\\s*Object\\s*Symbol."; exit 2; }
+}
+expect {
+        -re "\\s*\[\\d,\]+%\[^\\r\\n\]+\[\\w\.\-\\\[\\\]\]+\[^\\r\\n\]+\\\[\[kH\.\]\\\]\\s*\[\\w+\.\]" { }
+        timeout { puts "\nRegexp not found: \\s*\[\\d,\]+%\[^\\r\\n\]+\[\\w\.\-\\\[\\\]\]+\[^\\r\\n\]+\\\[\[kH\.\]\\\]\\s*\[\\w+\.\]"; exit 2; }
+}
+
+send -- "/"
+
+# filter window
+expect {
+	"Symbol to show" { }
+	timeout { puts "\nRegexp not found: Symbol to show"; exit 2; }
+}
+expect {
+	"Please enter the name of symbol you want to see." { }
+	timeout { puts "\nRegexp not found: Please enter the name of symbol you want to see."; exit 2; }
+}
+expect {
+	"To remove the filter later, press / + ENTER." { }
+	timeout { puts "\nRegexp not found: To remove the filter later, press / + ENTER."; exit 2; }
+}
+
+# try to filter by non-existent symbol
+send -- "i do not exist\r\r"
+
+expect {
+	-re "\[\\w\\s\]+\\\(SIGSEGV\\\).*" { set error 1; }
+	-re "Collecting samples\.\.\." { set error 0; send -- "q"; }
+	timeout { puts "\nRegexp not found: Collecting samples\.\.\."; set error 2; }
+}
+
+expect eof
+exit $error
