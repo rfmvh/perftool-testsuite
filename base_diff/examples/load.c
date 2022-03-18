@@ -1,43 +1,50 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define DEFAULT_FROM 18L
+int mandelbrot(double real, double imag) {
+	int limit = 100;
+	double zReal = real;
+	double zImag = imag;
 
-long func_ref(long from)
-{
-	long i, j;
-	for (i = 1L; j; ++i)
-	{
-		for (j = from; j > 0L; --j)
-			if (i % j)
-				break;
+	for (int i = 0; i < limit; ++i) {
+		double r2 = zReal * zReal;
+		double i2 = zImag * zImag;
+		
+		if (r2 + i2 > 4.0) return i;
+
+		zImag = 2.0 * zReal * zImag + imag;
+		zReal = r2 - i2 + real;
 	}
-	return --i;
+	return limit;
 }
 
-long func_test(long from)
-{
-	long i, j;
-	for (i = 1L; j; ++i)
-	{
-		for (j = from; j > 0L; --j)
-			if (i % j)
-				break;
+int calculate_mandelbrot() {
+	int width = 379;
+	int heigth = 98;
+		
+	double x_start = -2.0;
+	double x_fin = 1.0;
+	double y_start = -1.0;
+	double y_fin = 1.0;
+
+	double dx = (x_fin - x_start)/(width - 1);
+	double dy = (y_fin - y_start)/(heigth - 1);
+
+	for (int i = 0; i < heigth; i++) {
+		for (int j = 0; j < width; j++) {
+			double x = x_start + j*dx;
+			double y = y_fin - i*dy;
+
+			int value = mandelbrot(x, y);
+		}
 	}
-	return --i;
+	return 0;
 }
 
 int main (int argc, char *argv[])
 {
-	long from, i, j = DEFAULT_FROM;
-
-	if (argc > 1)
-		from = atol (argv[1]);
-	else
-		from = DEFAULT_FROM;
-
-	printf ("%ld\n", func_ref(DEFAULT_FROM));
-	printf ("%ld\n", func_test(from));
+	printf ("%ld\n", func_ref(calculate_mandelbrot()));
+	printf ("%ld\n", func_test(calculate_mandelbrot()));
 
 	return 0;
 }
