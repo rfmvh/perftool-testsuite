@@ -73,7 +73,7 @@ if [ "$MEM_LOADS_SUPPORTED" = "yes" ]; then
 	PERF_EXIT_CODE=$?
 
 	# check the events used
-	../common/check_all_patterns_found.pl "cpu\/mem-loads" < $LOGS_DIR/basic_loads_evlist.log
+	../common/check_all_patterns_found.pl "cpu(?:_[a-z]+)?\/mem-loads" < $LOGS_DIR/basic_loads_evlist.log
 	CHECK_EXIT_CODE=$?
 	../common/check_no_patterns_found.pl "cycles" < $LOGS_DIR/basic_loads_evlist.log
 	(( CHECK_EXIT_CODE += $? ))
@@ -134,7 +134,7 @@ if [ "$MEM_STORES_SUPPORTED" = "yes" ]; then
 	PERF_EXIT_CODE=$?
 
 	# check the events used
-	../common/check_all_patterns_found.pl "cpu\/mem-stores" < $LOGS_DIR/basic_stores_evlist.log
+	../common/check_all_patterns_found.pl "cpu(?:_[a-z]+)?\/mem-stores" < $LOGS_DIR/basic_stores_evlist.log
 	CHECK_EXIT_CODE=$?
 	../common/check_no_patterns_found.pl "cycles" < $LOGS_DIR/basic_stores_evlist.log
 	(( CHECK_EXIT_CODE += $? ))
@@ -195,7 +195,7 @@ if [ "$MEM_LOADS_SUPPORTED" = "yes" -a "$MEM_STORES_SUPPORTED" = "yes" ]; then
 	PERF_EXIT_CODE=$?
 
 	# check the events used
-	../common/check_all_patterns_found.pl "cpu\/mem-stores" "cpu\/mem-loads" < $LOGS_DIR/basic_both_evlist.log
+	../common/check_all_patterns_found.pl "cpu(?:_[a-z]+)?\/mem-stores" "cpu(?:_[a-z]+)?\/mem-loads" < $LOGS_DIR/basic_both_evlist.log
 	CHECK_EXIT_CODE=$?
 	../common/check_no_patterns_found.pl "cycles" < $LOGS_DIR/basic_both_evlist.log
 	(( CHECK_EXIT_CODE += $? ))
