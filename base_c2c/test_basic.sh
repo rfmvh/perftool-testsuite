@@ -101,7 +101,7 @@ if [ "$LDLAT_LOADS_SUPPORTED" = "yes" ]; then
 	PERF_EXIT_CODE=$?
 
 	# check the events used
-	../common/check_all_patterns_found.pl "cpu\/mem-loads" "$REGEX_LDLAT_ATTR" < $LOGS_DIR/basic_loads_evlist.log
+	../common/check_all_patterns_found.pl "cpu(?:_[a-z]+)?\/mem-loads" "$REGEX_LDLAT_ATTR" < $LOGS_DIR/basic_loads_evlist.log
 	CHECK_EXIT_CODE=$?
 	../common/check_no_patterns_found.pl "cycles" < $LOGS_DIR/basic_loads_evlist.log
 	(( CHECK_EXIT_CODE += $? ))
@@ -166,7 +166,7 @@ if [ "$LDLAT_STORES_SUPPORTED" = "yes" ]; then
 	PERF_EXIT_CODE=$?
 
 	# check the events used
-	../common/check_all_patterns_found.pl "cpu\/mem-stores" < $LOGS_DIR/basic_stores_evlist.log
+	../common/check_all_patterns_found.pl "cpu(?:_[a-z]+)?\/mem-stores" < $LOGS_DIR/basic_stores_evlist.log
 	CHECK_EXIT_CODE=$?
 	../common/check_no_patterns_found.pl "cycles" < $LOGS_DIR/basic_stores_evlist.log
 	(( CHECK_EXIT_CODE += $? ))
@@ -234,7 +234,7 @@ if [ "$LDLAT_LOADS_SUPPORTED" = "yes" -a "$LDLAT_STORES_SUPPORTED" = "yes" ]; th
 	PERF_EXIT_CODE=$?
 
 	# check the events used
-	../common/check_all_patterns_found.pl "cpu\/mem-stores" "cpu\/mem-loads" "$REGEX_LDLAT_ATTR" < $LOGS_DIR/basic_both_evlist.log
+	../common/check_all_patterns_found.pl "cpu(?:_[a-z]+)?\/mem-stores" "cpu(?:_[a-z]+)?\/mem-loads" "$REGEX_LDLAT_ATTR" < $LOGS_DIR/basic_both_evlist.log
 	CHECK_EXIT_CODE=$?
 	../common/check_no_patterns_found.pl "cycles" < $LOGS_DIR/basic_both_evlist.log
 	(( CHECK_EXIT_CODE += $? ))

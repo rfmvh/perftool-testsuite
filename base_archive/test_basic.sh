@@ -77,7 +77,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "report"
 $CMD_PERF --buildid-dir $BUILDIDDIR script -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_script.log 2> $LOGS_DIR/basic_script.err
 PERF_EXIT_CODE=$?
 
-REGEX_SCRIPT_LINE="\s+\S+\s+(?:\-1|$RE_NUMBER)\s+\[$RE_NUMBER\]\s+$RE_NUMBER:\s+$RE_NUMBER\s+$RE_EVENT\s+$RE_NUMBER_HEX\s+(?:@plt|\.?\w+)|(?:\[unknown\])\s+\($RE_DSO\)"
+REGEX_SCRIPT_LINE="\s+\S+\s+(?:\-1|$RE_NUMBER)\s+\[$RE_NUMBER\]\s+$RE_NUMBER:\s+$RE_NUMBER\s+$RE_EVENT_ANY\s+$RE_NUMBER_HEX\s+(?:@plt|\.?\w+)|(?:\[unknown\])\s+\($RE_DSO\)"
 ../common/check_all_lines_matched.pl "$REGEX_SCRIPT_LINE" < $LOGS_DIR/basic_script.log
 CHECK_EXIT_CODE=$?
 ../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/basic_script.err
