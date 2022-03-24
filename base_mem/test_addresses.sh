@@ -84,7 +84,7 @@ MAX_INCOMPLETE_SAMPLES=$(( $SAMPLE_COUNT / 100 ))
 
 # count check of incomplete samples
 test $INCOMPLETE_SAMPLES -le $MAX_INCOMPLETE_SAMPLES
-(( CHECK_EXIT_CODE += $? ))
+CHECK_EXIT_CODE=$?
 
 print_results $GREP_EXIT_CODE $CHECK_EXIT_CODE "samples count check :: incomplete samples ($INCOMPLETE_SAMPLES <= $MAX_INCOMPLETE_SAMPLES)"
 (( TEST_RESULT += $? ))
@@ -93,7 +93,7 @@ print_results $GREP_EXIT_CODE $CHECK_EXIT_CODE "samples count check :: incomplet
 # check sample lines count
 SAMPLE_LINES_COUNT=`wc -l < $LOGS_DIR/addresses_report_samples.log`
 test $SAMPLE_COUNT -eq $SAMPLE_LINES_COUNT
-(( CHECK_EXIT_CODE += $? ))
+CHECK_EXIT_CODE=$?
 
 print_results $GREP_EXIT_CODE $CHECK_EXIT_CODE "samples count check :: lines count ($SAMPLE_COUNT == $SAMPLE_LINES_COUNT)"
 (( TEST_RESULT += $? ))
