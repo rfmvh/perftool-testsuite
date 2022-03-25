@@ -3,6 +3,9 @@
 $quiet = 1;
 $quiet = 0 if (defined $ENV{TESTLOG_VERBOSITY} && $ENV{TESTLOG_VERBOSITY} ge 2);
 
+$verbose = 0;
+$verbose = 1 if (defined $ENV{TESTLOG_VERBOSITY} && $ENV{TESTLOG_VERBOSITY} ge 3);
+
 $passed = 1;
 
 $koef = 0.003;
@@ -31,6 +34,10 @@ if ($ku != 0)
 	{
 		print "FAIL ($k + $u - $ku) / $ku = $diff ; it should be $diff < $koef\n" unless $quiet;
 		$passed = 0;
+	}
+	else
+	{
+		print "PASS ($k + $u - $ku) / $ku = $diff\n" if $verbose;
 	}
 }
 else
