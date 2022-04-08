@@ -43,8 +43,8 @@ int calculate_mandelbrot() {
 
 int main (int argc, char *argv[])
 {
-	printf ("%ld\n", func_ref(calculate_mandelbrot()));
-	printf ("%ld\n", func_test(calculate_mandelbrot()));
+	printf ("%ld\n", calculate_mandelbrot());
+	printf ("%ld\n", calculate_mandelbrot());
 
 	return 0;
 }
