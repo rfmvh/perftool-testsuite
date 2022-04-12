@@ -58,10 +58,9 @@ $CMD_PERF script -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_script.log 2> 
 PERF_EXIT_CODE=$?
 
 REGEX_COMMAND="[\w#~\-\+\.\/: ]+"
-REGEX_EVENT="[\w]+"
 REGEX_SYMBOL="(?:[\w\.@:<>*~, ]+\+$RE_ADDRESS|\[unknown\])"
 
-REGEX_BASIC_SCRIPT_LINE="^\s*$REGEX_COMMAND\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
+REGEX_BASIC_SCRIPT_LINE="^\s*$REGEX_COMMAND\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT_ANY:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
 
 ../common/check_all_lines_matched.pl "$REGEX_BASIC_SCRIPT_LINE" < $LOGS_DIR/basic_script.log
 CHECK_EXIT_CODE=$?
@@ -104,7 +103,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "record :: small"
 $CMD_PERF script -i $CURRENT_TEST_DIR/perf_small.data > $LOGS_DIR/basic_script_small.log 2> $LOGS_DIR/basic_script_small.err
 PERF_EXIT_CODE=$?
 
-REGEX_BASIC_SMALL_SCRIPT_LINE="^\s*(?:perf(?:-exec)?|$COMMAND_NAME)\s+$RE_NUMBER\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
+REGEX_BASIC_SMALL_SCRIPT_LINE="^\s*(?:perf(?:-exec)?|$COMMAND_NAME)\s+$RE_NUMBER\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT_ANY:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
 
 ../common/check_all_lines_matched.pl "$REGEX_BASIC_SMALL_SCRIPT_LINE" < $LOGS_DIR/basic_script_small.log
 CHECK_EXIT_CODE=$?
@@ -133,7 +132,7 @@ print_results 0 $? "script :: small :: sample count check ($CNT == $N_SAMPLES)"
 $CMD_PERF script --Latency -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_script_latency.log 2> $LOGS_DIR/basic_script_latency.err
 PERF_EXIT_CODE=$?
 
-REGEX_LATENCY_SCRIPT_LINE="^\s*$REGEX_COMMAND\s+$RE_NUMBER\s+$RE_NUMBER\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
+REGEX_LATENCY_SCRIPT_LINE="^\s*$REGEX_COMMAND\s+$RE_NUMBER\s+$RE_NUMBER\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT_ANY:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
 
 ../common/check_all_lines_matched.pl "$REGEX_LATENCY_SCRIPT_LINE" < $LOGS_DIR/basic_script_latency.log
 CHECK_EXIT_CODE=$?
@@ -162,7 +161,7 @@ print_results 0 $? "script :: latency :: sample count check ($CNT == $N_SAMPLES)
 $CMD_PERF script --cpu 0 -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_script_cpu.log 2> $LOGS_DIR/basic_script_cpu.err
 PERF_EXIT_CODE=$?
 
-REGEX_CPU_0_SCRIPT_LINE="^\s*$REGEX_COMMAND\s+$RE_NUMBER\s+\[000\]\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
+REGEX_CPU_0_SCRIPT_LINE="^\s*$REGEX_COMMAND\s+$RE_NUMBER\s+\[000\]\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT_ANY:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
 
 ../common/check_all_lines_matched.pl "$REGEX_CPU_0_SCRIPT_LINE" < $LOGS_DIR/basic_script_cpu.log
 CHECK_EXIT_CODE=$?
@@ -188,12 +187,12 @@ print_results 0 $? "script :: cpu :: sample count check ($CNT <= $N_SAMPLES)"
 
 # script :: comms :: one value
 
-REGEX_PERF_COMM_SCRIPT_LINE="^\s*perf(?:-exec)?\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
-REGEX_SLEEP_COMM_SCRIPT_LINE="^\s*sleep\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
-REGEX_COMMAND_NAME_COMM_SCRIPT_LINE="^\s*$COMMAND_NAME\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
+REGEX_PERF_COMM_SCRIPT_LINE="^\s*perf(?:-exec)?\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT_ANY:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
+REGEX_SLEEP_COMM_SCRIPT_LINE="^\s*sleep\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT_ANY:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
+REGEX_COMMAND_NAME_COMM_SCRIPT_LINE="^\s*$COMMAND_NAME\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT_ANY:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
 
-REGEX_PERF_COMM_SMALL_SCRIPT_LINE="^\s*perf(?:-exec)?\s+$RE_NUMBER\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
-REGEX_COMMAND_NAME_COMM_SMALL_SCRIPT_LINE="^\s*$COMMAND_NAME\s+$RE_NUMBER\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
+REGEX_PERF_COMM_SMALL_SCRIPT_LINE="^\s*perf(?:-exec)?\s+$RE_NUMBER\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT_ANY:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
+REGEX_COMMAND_NAME_COMM_SMALL_SCRIPT_LINE="^\s*$COMMAND_NAME\s+$RE_NUMBER\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT_ANY:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
 
 $CMD_PERF script -c perf -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_script_comms_one.log 2> $LOGS_DIR/basic_script_comms_one.err
 PERF_EXIT_CODE=$?
