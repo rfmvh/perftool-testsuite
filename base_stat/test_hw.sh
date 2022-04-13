@@ -63,15 +63,19 @@ if ! [[ "$MY_ARCH" =~ ppc64.* ]]; then
 	EVENTS_TO_TEST=${EVENTS_TO_TEST/stalled-cycles-backend/}
 	EVENTS_TO_TEST=${EVENTS_TO_TEST/stalled-cycles-frontend/}
 
-	# check if all events can separate kernel/userspace
-	# and whether the results fit into the "ku = k + u" formula
-	for event in $EVENTS_TO_TEST; do
-		$CMD_PERF stat -e "{$event:k,$event:u,$event:ku}" -o $LOGS_DIR/hw/$event--ku.log -x';' -- $CMD_SIMPLE
+	DEVICES=`ls -d /sys/devices/cpu* | perl -pe 's#/sys/devices/##g'`
+
+	for dev in $DEVICES; do
+	    # check if all events can separate kernel/userspace
+	    # and whether the results fit into the "ku = k + u" formula
+	    for event in $EVENTS_TO_TEST; do
+		$CMD_PERF stat -e "{$dev/$event:k/,$dev/$event:u/,$dev/$event:ku/}" -o $LOGS_DIR/hw/$dev-$event--ku.log -x';' -- $CMD_SIMPLE
 		PERF_EXIT_CODE=$?
-		../common/check_ku_sum.pl < $LOGS_DIR/hw/$event--ku.log
+		../common/check_ku_sum.pl < $LOGS_DIR/hw/$dev-$event--ku.log
 		CHECK_EXIT_CODE=$?
-		print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "k+u=ku check :: event $event"
+		print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "k+u=ku check :: event $dev/$event/"
 		(( TEST_RESULT += $? ))
+	    done
 	done
 else
 	print_testcase_skipped "k+u=ku check"
