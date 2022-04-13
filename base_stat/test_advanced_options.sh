@@ -45,11 +45,15 @@ if [ -n "$EVENTS_TO_TEST" ]; then
 		(( TEST_RESULT += $? ))
 
 		# half measurement
-		$CMD_PERF stat -e $event -o $LOGS_DIR/delay/$event--half.log -x';' --delay $HALF_DELAY_MS -- sleep $FULL_DELAY_S
+		$CMD_PERF stat -e $event -o $LOGS_DIR/delay/$event--half.log -x';' --delay $HALF_DELAY_MS -- sleep $FULL_DELAY_S 2> $LOGS_DIR/delay/$event--half.err
 		PERF_EXIT_CODE=$?
 		../common/check_all_patterns_found.pl "$REGEX_LINES" < $LOGS_DIR/delay/$event--half.log
 		CHECK_EXIT_CODE=$?
 		../common/check_all_lines_matched.pl "$REGEX_LINES" "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" "$REGEX_METRIC_LINE" < $LOGS_DIR/delay/$event--half.log
+		(( CHECK_EXIT_CODE += $? ))
+		../common/check_all_patterns_found.pl "Events enabled" "Events disabled" < $LOGS_DIR/delay/$event--half.err
+		(( CHECK_EXIT_CODE += $? ))
+		../common/check_all_lines_matched.pl "Events (?:dis|en)abled" < $LOGS_DIR/delay/$event--half.err
 		(( CHECK_EXIT_CODE += $? ))
 
 		print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "delay event $event half"
