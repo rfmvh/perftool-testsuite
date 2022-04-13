@@ -54,7 +54,7 @@ for event in $EVENTS_TO_TEST; do
 	logfile=`echo $event | tr '/' '_'`
 	$CMD_PERF stat -a -e $event -o $LOGS_DIR/pmu/$logfile.log --append -x';' -- $CMD_BASIC_SLEEP 2> /dev/null
 	PERF_EXIT_CODE=$?
-	REGEX_LINES="$RE_NUMBER;[\w;]+$event;$RE_NUMBER;100\.00"
+	REGEX_LINES="$RE_NUMBER;[\w;]+(?:cpu\w*\/)?$event\/?;$RE_NUMBER;100\.00"
 	../common/check_all_patterns_found.pl "$REGEX_LINES" < $LOGS_DIR/pmu/$logfile.log
 	CHECK_EXIT_CODE=$?
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "event $event"
