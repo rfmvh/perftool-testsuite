@@ -26,8 +26,12 @@ consider_skipping $RUNMODE_STANDARD
 FULL_DELAY_S=0.4
 FULL_DELAY_MS=`echo "$FULL_DELAY_S * 1000" | bc`
 HALF_DELAY_MS=`echo "scale=0 ; $FULL_DELAY_MS / 2" | bc`
+
 EVENTS_TO_TEST=`$CMD_PERF list hw sw | grep -e cpu-cycles -e instructions -e cpu-clock | perl -ne 'print "$1 " if /^\s\s([\w\-]+)\s/'`
+
 REGEX_METRIC_LINE="^;+$RE_NUMBER;[\w\s]+"
+REGEX_NOT_COUNTED_LINE="^<not counted>"
+
 if [ -n "$EVENTS_TO_TEST" ]; then
 	test -d $LOGS_DIR/delay || mkdir $LOGS_DIR/delay
 
@@ -38,7 +42,7 @@ if [ -n "$EVENTS_TO_TEST" ]; then
 		REGEX_LINES="$RE_NUMBER;[^;]*;(?:cpu\w*\/)?$event\/?;$RE_NUMBER;100\.00"
 		../common/check_all_patterns_found.pl "$REGEX_LINES" < $LOGS_DIR/delay/$event--full.log
 		CHECK_EXIT_CODE=$?
-		../common/check_all_lines_matched.pl "$REGEX_LINES" "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" "$REGEX_METRIC_LINE" < $LOGS_DIR/delay/$event--full.log
+		../common/check_all_lines_matched.pl "$REGEX_LINES" "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" "$REGEX_METRIC_LINE" "$REGEX_NOT_COUNTED_LINE" < $LOGS_DIR/delay/$event--full.log
 		(( CHECK_EXIT_CODE += $? ))
 
 		print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "delay event $event full"
@@ -49,7 +53,7 @@ if [ -n "$EVENTS_TO_TEST" ]; then
 		PERF_EXIT_CODE=$?
 		../common/check_all_patterns_found.pl "$REGEX_LINES" < $LOGS_DIR/delay/$event--half.log
 		CHECK_EXIT_CODE=$?
-		../common/check_all_lines_matched.pl "$REGEX_LINES" "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" "$REGEX_METRIC_LINE" < $LOGS_DIR/delay/$event--half.log
+		../common/check_all_lines_matched.pl "$REGEX_LINES" "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" "$REGEX_METRIC_LINE" "$REGEX_NOT_COUNTED_LINE" < $LOGS_DIR/delay/$event--half.log
 		(( CHECK_EXIT_CODE += $? ))
 		../common/check_all_patterns_found.pl "Events enabled" "Events disabled" < $LOGS_DIR/delay/$event--half.err
 		(( CHECK_EXIT_CODE += $? ))
