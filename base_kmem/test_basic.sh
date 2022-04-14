@@ -61,7 +61,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "record"
 
 # basic kmem stat test
 
-$CMD_PERF kmem stat -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat.log
+$CMD_PERF kmem stat -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat.log 2> $LOGS_DIR/basic_stat.err
 PERF_EXIT_CODE=$?
 
 REGEX_STAT_HEADER_LINE="SUMMARY \(SLAB allocator\)"
