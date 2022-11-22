@@ -69,7 +69,7 @@ if ! [[ "$MY_ARCH" =~ ppc64.* ]]; then
 	    # check if all events can separate kernel/userspace
 	    # and whether the results fit into the "ku = k + u" formula
 	    for event in $EVENTS_TO_TEST; do
-		$CMD_PERF stat -e "{$dev/$event:k/,$dev/$event:u/,$dev/$event:ku/}" -o $LOGS_DIR/hw/$dev-$event--ku.log -x';' -a -- $CMD_SIMPLE
+		$CMD_PERF stat -e "{$dev/$event/k,$dev/$event/u,$dev/$event/ku}" -o $LOGS_DIR/hw/$dev-$event--ku.log -x';' -a -- $CMD_SIMPLE
 		PERF_EXIT_CODE=$?
 		../common/check_ku_sum.pl < $LOGS_DIR/hw/$dev-$event--ku.log
 		CHECK_EXIT_CODE=$?
