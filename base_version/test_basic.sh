@@ -26,7 +26,7 @@ PERF_EXIT_CODE=$?
 
 ../common/check_all_lines_matched.pl "perf version" < $LOGS_DIR/basic_basic.log
 CHECK_EXIT_CODE=$?
-../common/check_all_patterns_found.pl "perf version" < $LOGS_DIR/basic_basic.log
+../common/check_all_patterns_found.pl "perf version \d" < $LOGS_DIR/basic_basic.log
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic execution"
