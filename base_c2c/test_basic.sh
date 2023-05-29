@@ -285,6 +285,15 @@ else
 	print_testcase_skipped "ldlat-loads&ldlat-stores verification"
 fi
 
+#### "--double-cl" option verification, bz2193189 (9.3),bz2193188 (8.9) ###
+grep -q "double-cl" $LOGS_DIR/basic_helpmsg.log
+if [ $? -eq 0 ]; then
+	$CMD_PERF record -ag -- examples/dummy -o $CURRENT_TEST_DIR/perf.data >  /dev/null 2> $LOGS_DIR/basic_double_cl.err
+	$CMD_PERF c2c report -i $CURRENT_TEST_DIR/perf.data --double-cl --stdio > $LOGS_DIR/basic_double_cl.log 2> $LOGS_DIR/basic_double_cl.err
+	PERF_EXIT_CODE=$?
+	print_results 0 $CHECK_EXIT_CODE "--double-cl verification"
+	(( TEST_RESULT += $? ))
+fi
 
 # print overall results
 print_overall_results "$TEST_RESULT"
