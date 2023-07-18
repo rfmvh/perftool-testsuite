@@ -96,6 +96,21 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "CSV output"
 (( TEST_RESULT += $? ))
 
 
+### BUG: perf stat -a --per-node -x, --metric-only true command crashes
+
+# the bug was caused by missing aggr_header_csv for AGGR_NODE and should be fixed
+# this testcase tests, whether the segfault has been fixed
+
+sh -c "$CMD_PERF stat -a --per-node -x, --metric-only true" > $LOGS_DIR/basic_per_node_x_crash.out 2> $LOGS_DIR/basic_per_node_x_crash.err
+
+../common/check_no_patterns_found.pl "Segmentation fault" "SIGSEGV" "core" "dumped" "segfault" < $LOGS_DIR/basic_per_node_x_crash.err
+PERF_EXIT_STATUS=$?
+
+print_results $PERF_EXIT_STATUS 0 "--per-node -x crash"
+(( TEST_RESULT += $? ))
+
+
+
 # print overall results
 print_overall_results "$TEST_RESULT"
 exit $?
