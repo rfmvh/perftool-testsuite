@@ -96,7 +96,7 @@ fi
 # when perf record detects that stdout is piped, it puts the data there instead of to perf.data
 # when there is '-k mono' option, it used to segfault
 # this testcase tests, whether the segfault is fixed 
-{ $CMD_PERF record -k mono -- true  | cat; } > $LOGS_DIR/basic_kmono_crash.out 2> $LOGS_DIR/basic_kmono_crash.err
+{ $CMD_PERF record -k mono -- true  | cat; } > $LOGS_DIR/basic_kmono_crash.log 2> $LOGS_DIR/basic_kmono_crash.err
 
 ../common/check_no_patterns_found.pl "Segmentation fault" "SIGSEGV" "core" "dumped" "segfault" < $LOGS_DIR/basic_kmono_crash.err
 PERF_EXIT_STATUS=$?
@@ -108,7 +108,7 @@ print_results $PERF_EXIT_STATUS 0 "-k mono crash"
 ### large -C number
 
 # perf used to segfault if a number too large was used with -C
-{ $CMD_PERF record -C 12323431 -- true | cat; } > $LOGS_DIR/basic_largeC_crash.out 2> $LOGS_DIR/basic_largeC_crash.err
+{ $CMD_PERF record -C 12323431 -- true | cat; } > $LOGS_DIR/basic_largeC_crash.log 2> $LOGS_DIR/basic_largeC_crash.err
 
 ../common/check_no_patterns_found.pl "Segmentation fault" "SIGSEGV" "core" "dumped" "segfault" < $LOGS_DIR/basic_largeC_crash.err
 PERF_EXIT_STATUS=$?

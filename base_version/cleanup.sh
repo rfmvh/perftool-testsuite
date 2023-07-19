@@ -17,7 +17,7 @@ if [ -n "$PERFSUITE_RUN_DIR" ]; then
 	exit 0
 fi
 
-find . -name \*.out | xargs -r rm
+find . -name \*.log | xargs -r rm
 find . -name \*.err | xargs -r rm
 
 print_overall_results 0

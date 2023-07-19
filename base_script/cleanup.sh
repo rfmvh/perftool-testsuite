@@ -18,7 +18,6 @@ if [ -n "$PERFSUITE_RUN_DIR" ]; then
 fi
 
 find . -name \*.log | xargs -r rm
-find . -name \*.out | xargs -r rm
 find . -name \*.err | xargs -r rm
 rm -f perf.data*
 

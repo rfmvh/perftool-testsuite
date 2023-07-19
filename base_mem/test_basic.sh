@@ -234,14 +234,14 @@ fi
 
 # run only if one of previous tests was successfully executed
 if [ -f $CURRENT_TEST_DIR/perf.data ]; then
-	$CMD_PERF script -i $CURRENT_TEST_DIR/perf.data -F "comm,pid,event,weight" > $LOGS_DIR/basic_weight.out 2> $LOGS_DIR/basic_weight.err
+	$CMD_PERF script -i $CURRENT_TEST_DIR/perf.data -F "comm,pid,event,weight" > $LOGS_DIR/basic_weight.log 2> $LOGS_DIR/basic_weight.err
 	PERF_EXIT_CODE=$?
 
 	REGEX_SYMBOL="(?:[\w\.@:<>*~, ]+\+$RE_ADDRESS|\[unknown\])"
 	REGEX_SCRIPT_LINE="\s*[\w\-]+\s+$RE_NUMBER\s+$RE_EVENT_ANY\s+$RE_NUMBER"
-	../common/check_all_patterns_found.pl "$REGEX_SCRIPT_LINE" < $LOGS_DIR/basic_weight.out
+	../common/check_all_patterns_found.pl "$REGEX_SCRIPT_LINE" < $LOGS_DIR/basic_weight.log
 	CHECK_EXIT_CODE=$?
-	../common/check_all_lines_matched.pl "$REGEX_SCRIPT_LINE" < $LOGS_DIR/basic_weight.out
+	../common/check_all_lines_matched.pl "$REGEX_SCRIPT_LINE" < $LOGS_DIR/basic_weight.log
 	(( CHECK_EXIT_CODE += $? ))
 	../common/check_no_patterns_found.pl "event do not have WEIGHT attribute set" "Cannot print" < $LOGS_DIR/basic_weight.err
 	(( CHECK_EXIT_CODE += $? ))

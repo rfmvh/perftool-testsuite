@@ -36,7 +36,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic execution"
 #### invalid option
 
 # BUG: perf version crashes with an invalid option
-{ sh -c "$CMD_PERF version -t"; } > $LOGS_DIR/basic_invalid_opt.out 2> $LOGS_DIR/basic_invalid_opt.err
+{ sh -c "$CMD_PERF version -t"; } > $LOGS_DIR/basic_invalid_opt.log 2> $LOGS_DIR/basic_invalid_opt.err
 test $? -ne 139
 PERF_EXIT_CODE=$?
 

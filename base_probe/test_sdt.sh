@@ -85,7 +85,7 @@ PROBE_PREFIX=`head -n 1 $LOGS_DIR/sdt_list.log | perl -ne 'print "$1" if /\s+(\w
 
 for N in 13 128 241; do
 	# perf stat should catch all the events and give exact results
-	$CMD_PERF stat -x';' -e "$PROBE_PREFIX:"'*' $CURRENT_TEST_DIR/examples/simple_threads $N > $LOGS_DIR/sdt_stat_$N.out 2> $LOGS_DIR/sdt_stat_$N.log
+	$CMD_PERF stat -x';' -e "$PROBE_PREFIX:"'*' $CURRENT_TEST_DIR/examples/simple_threads $N > $LOGS_DIR/sdt_stat_$N.log 2> $LOGS_DIR/sdt_stat_$N.log
 	PERF_EXIT_CODE=$?
 
 	# check for exact values in perf stat results
@@ -101,7 +101,7 @@ done
 REGEX_SCRIPT_LINE="\s*simple_threads\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+$RE_NUMBER:\s+sdt_lib\w+:pthread_\w+:\s+\($RE_NUMBER_HEX\)"
 for N in 37 97 237; do
 	# perf record should catch all the samples as well
-	$CMD_PERF record -m 16M -e "$PROBE_PREFIX:"'*' -o $CURRENT_TEST_DIR/perf.data $CURRENT_TEST_DIR/examples/simple_threads $N > $LOGS_DIR/sdt_record_$N.out 2> $LOGS_DIR/sdt_record_$N.log
+	$CMD_PERF record -m 16M -e "$PROBE_PREFIX:"'*' -o $CURRENT_TEST_DIR/perf.data $CURRENT_TEST_DIR/examples/simple_threads $N > $LOGS_DIR/sdt_record_$N.log 2> $LOGS_DIR/sdt_record_$N.log
 	PERF_EXIT_CODE=$?
 
 	# perf record should catch exactly ($N * $NO_OF_EVENTS_TO_TEST) samples

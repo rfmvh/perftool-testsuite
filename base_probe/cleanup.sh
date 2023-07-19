@@ -15,7 +15,6 @@ clear_all_probes
 if [ ! -n "$PERFSUITE_RUN_DIR" ]; then
 	find . -name \*.log | xargs -r rm
 	find . -name \*.err | xargs -r rm
-	find . -name \*.out | xargs -r rm
 	rm -f perf.data*
 	make -s -C examples clean
 fi
