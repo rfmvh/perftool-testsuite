@@ -130,7 +130,7 @@ if [ "$LDLAT_LOADS_SUPPORTED" = "yes" ]; then
 	test $TESTLOG_VERBOSITY -ge 2 -a $CHECK_EXIT_CODE -ne 0 && echo "$LOAD_OPS + $UNPARSED_OPS should be equal to $TOTAL_SAMPLES"
 	../common/check_all_patterns_found.pl "Store Operations\s+:\s+0" < $LOGS_DIR/basic_loads_report.log
 	(( CHECK_EXIT_CODE += $? ))
-	
+
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "ldlat-loads report"
 	(( TEST_RESULT += $? ))
 else
@@ -197,7 +197,7 @@ if [ "$LDLAT_STORES_SUPPORTED" = "yes" ]; then
 
 	../common/check_all_patterns_found.pl "Load Operations\s+:\s+0" < $LOGS_DIR/basic_stores_report.log
 	(( CHECK_EXIT_CODE += $? ))
-	
+
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "ldlat-stores report"
 	(( TEST_RESULT += $? ))
 else
@@ -285,6 +285,29 @@ else
 	print_testcase_skipped "ldlat-loads&ldlat-stores verification"
 fi
 
+#### "--double-cl" option verification
+
+grep -q "double-cl" $LOGS_DIR/basic_helpmsg.log
+if [ $? -eq 0 ]; then
+	$CMD_PERF record -ag -- examples/dummy -o $CURRENT_TEST_DIR/perf.data > /dev/null 2> $LOGS_DIR/basic_double_cl_record.err
+	PERF_EXIT_CODE=$?
+
+	../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" "perf.data" < $LOGS_DIR/basic_double_cl_record.err
+	CHECK_EXIT_CODE=$?
+
+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "--double-cl verification :: record"
+
+	$CMD_PERF c2c report -i $CURRENT_TEST_DIR/perf.data --double-cl --stdio > $LOGS_DIR/basic_double_cl_report.log 2> $LOGS_DIR/basic_double_cl_report.err
+	PERF_EXIT_CODE=$?
+
+	../common/check_all_patterns_found.pl "Double-Cacheline" < $LOGS_DIR/basic_double_cl_report.log
+	CHECK_EXIT_CODE=$?
+
+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "--double-cl verification :: report"
+	(( TEST_RESULT += $? ))
+else
+	print_testcase_skipped "--double-cl verification"
+fi
 
 # print overall results
 print_overall_results "$TEST_RESULT"
