@@ -17,7 +17,7 @@
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
-EVENTS_TO_TEST=`$CMD_PERF list | grep -P "^\s\suncore" | awk '{print $1}' | tr '\n' ' '`
+EVENTS_TO_TEST=`$CMD_PERF list --no-desc uncore | grep -P "^\s\sunc" | grep -v uncore_frequency | awk '{print $1}' | tr '\n' ' '`
 if [ -z "$EVENTS_TO_TEST" ]; then
 	if should_support_intel_uncore; then
 		print_results 1 1 "uncore support not found despite being expected"
