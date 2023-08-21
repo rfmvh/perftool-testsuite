@@ -96,7 +96,7 @@ PERF_EXIT_CODE=$?
 REGEX_S_HEADER_LINE="\s+comm\s+parent\s+sched-in\s+run-time\s+min-run\s+avg-run\s+max-run\s+stddev\s+migrations"
 REGEX_S_HEADER_NOTES="\s+\(count\)\s+\(msec\)\s+\(msec\)\s+\(msec\)\s+\(msec\)\s+%"
 REGEX_S_HEADER_UNDERLINE="-{100,}"
-REGEX_S_DATA_LINE="\s+[\w~\/ \.\+:#-]+(?:\[-1\]|\[\d+(?:\/\d+)?\])\s+(?:-1|\d+)\s+\d+\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+\d+"
+REGEX_S_DATA_LINE="$RE_TASK\s+(?:-1|\d+)\s+\d+\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+\d+"
 REGEX_S_SLEEP_LINE="\s+sleep\[\d+(?:\/\d+)?\]\s+\d+\s+\d+\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+\d+"
 REGEX_S_IDLE_LINE="\s+swapper\s+\-1\s+\d+\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+\d+"
 
@@ -116,17 +116,16 @@ CHECK_EXIT_CODE=$?
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "--summary"
 (( TEST_RESULT += $? ))
 
-
 # unique tasks count check
 UNIQUE_TASKS=`perl -ne 'BEGIN{$n=0;} {$n=$1 if (/\s+Total number of unique tasks: (\d+)/)} END{print "$n";}' < $LOGS_DIR/timehist_summary.log`
-CNT=`perl -ne 'BEGIN{$n=0;} {$n+=1 if (/\s+[\w~\/ \+:#-]+(?:\[-1\]|\[\d+(?:\/\d+)?\])\s+(?:-1|\d+)\s+\d+\s+[\d\.]+\s+[\d\.]+\s+[\d\.]+\s+[\d\.]+\s+[\d\.]+\s+\d+/);} END{print "$n";}' < $LOGS_DIR/timehist_summary.log`
+CNT=`perl -ne 'BEGIN{$n=0;} {$n+=1 if (/$ENV{RE_TASK}\s+(?:-1|\d+)\s+\d+\s+[\d\.]+\s+[\d\.]+\s+[\d\.]+\s+[\d\.]+\s+[\d\.]+\s+\d+/);} END{print "$n";}' < $LOGS_DIR/timehist_summary.log`
 
 test $UNIQUE_TASKS -eq $CNT
 print_results 0 $? "--summary unique tasks count check ($UNIQUE_TASKS == $CNT)"
 (( TEST_RESULT += $? ))
 
 # min <= avg <= max <= total runtime compare check
-CHECK_EXIT_CODE=`perl -ne 'BEGIN{$n=0;} {$n+=1 if (/\s+[\w~\/ \+:#-]+(?:\[-1\]|\[\d+(?:\/\d+)?\])\s+(?:-1|\d+)\s+\d+\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+[\d\.]+\s+\d+/ and ($2 > $3 or $3 > $4 or $4 > $1));} END{print "$n";}' < $LOGS_DIR/timehist_summary.log`
+CHECK_EXIT_CODE=`perl -ne 'BEGIN{$n=0;} {$n+=1 if (/$ENV{RE_TASK}\s+(?:-1|\d+)\s+\d+\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+[\d\.]+\s+\d+/ and ($2 > $3 or $3 > $4 or $4 > $1));} END{print "$n";}' < $LOGS_DIR/timehist_summary.log`
 
 print_results 0 $CHECK_EXIT_CODE "--summary runtime inequalities check ($CHECK_EXIT_CODE wrong inequalities)"
 (( TEST_RESULT += $? ))
@@ -182,7 +181,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "--visual-cpu"
 $CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -w > $LOGS_DIR/timehist_wakeups.log 2> $LOGS_DIR/timehist_wakeups.err
 PERF_EXIT_CODE=$?
 
-REGEX_W_AWAKENED_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+[\w~\[\]\/ \+:#-]+\s+awakened: [\w~\[\]\/ \+:#-]+"
+REGEX_W_AWAKENED_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+[\w~\[\]\/ \.\+:#-]+\s+awakened: [\w~\[\]\/ \.\+:#-]+"
 
 ../common/check_all_lines_matched.pl "^\s*$" "$REGEX_HEADER_LINE" "$REGEX_HEADER_NOTES" "$REGEX_HEADER_UNDERLINE" "$REGEX_DATA_LINE" "$REGEX_W_AWAKENED_LINE" < $LOGS_DIR/timehist_wakeups.log
 CHECK_EXIT_CODE=$?

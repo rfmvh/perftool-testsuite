@@ -230,3 +230,17 @@ export RE_LINE_REPORT_CONTENT="^\s+$RE_NUMBER%\s+\w+\s+\S+\s+\S+\s+\S+" # FIXME
 # A line from typicap perf report --stdio output
 # Example:
 #     100.00%  sleep    [kernel.vmlinux]  [k] syscall_return_slowpath
+
+
+
+export RE_TASK="\s+[\w~\/ \.\+:#-]+(?:\[-1(?:\/\d+)?\]|\[\d+(?:\/\d+)?\])"
+# A name of a task used for perf sched timehist -s
+# Example:
+#     sleep[62755]
+#     runtest.sh[62762]
+#     gmain[705/682]
+#     xfsaild/dm-0[495]
+#     kworker/u8:1-ev[62714]
+#     :-1[-1/62756]
+#     :-1[-1]
+#     :-1[62756]
