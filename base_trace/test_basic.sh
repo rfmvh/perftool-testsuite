@@ -117,6 +117,30 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "summary"
 (( TEST_RESULT += $? ))
 
 
+### errno summary
+
+# should print summary table with errno stats
+$CMD_PERF trace --errno-summary -- $CMD_QUICK_SLEEP 2> $LOGS_DIR/basic_errno.log
+PERF_EXIT_CODE=$?
+
+REGEX_ERRNO_LINE="^\s+E[A-Z]+:\s[1-9][0-9]*\s*$"
+REGEX_SYSCALL_HEADER="^\s+sleep\s\($RE_NUMBER\),\s+$RE_NUMBER\s+\w+,\s+$RE_NUMBER%\s*$"
+
+../common/check_all_patterns_found.pl "$RE_LINE_EMPTY" "$RE_LINE_TRACE_SUMMARY_HEADER" "$RE_LINE_TRACE_SUMMARY_CONTENT" "$REGEX_SYSCALL_HEADER" < $LOGS_DIR/basic_errno.log
+CHECK_EXIT_CODE=$?
+../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "^\s+Summary of events:\s*$" "$REGEX_SYSCALL_HEADER" "$RE_LINE_TRACE_SUMMARY_HEADER" "^\s+(?:\(msec\)\s+){4}\(%\)\s*$" "^\s+(?:-+\s*)+$" "$RE_LINE_TRACE_SUMMARY_CONTENT" "$REGEX_ERRNO_LINE" < $LOGS_DIR/basic_errno.log
+(( CHECK_EXIT_CODE += $? ))
+
+cat basic_errno.log | grep -E -i  "^\s+\w+\s+[0-9]+"| tr -s " " | cut -d " " -f4 | grep -v -q "0"
+# if an error occured the errno should be printed
+if [ $? == "0" ]; then
+	../common/check_all_patterns_found.pl "$REGEX_ERRNO_LINE" < $LOGS_DIR/basic_errno.log
+	(( CHECK_EXIT_CODE += $? ))
+fi
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "errno summary"
+(( TEST_RESULT += $? ))
+
 ### attach process
 
 # perf-trace should be able to attach an existing process by '-p PID'
