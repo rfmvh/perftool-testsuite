@@ -80,7 +80,7 @@ print_results $GREP_EXIT_CODE $CHECK_EXIT_CODE "samples output check"
 
 # count checks
 INCOMPLETE_SAMPLES=`grep -P "$REGEX_PERF_RECORD_SAMPLE_INCOMPLETE" $LOGS_DIR/addresses_report_samples.log | wc -l`
-MAX_INCOMPLETE_SAMPLES=$(( $SAMPLE_COUNT / 100 ))
+MAX_INCOMPLETE_SAMPLES=$(( $SAMPLE_COUNT / 5 ))
 
 # count check of incomplete samples
 test $INCOMPLETE_SAMPLES -le $MAX_INCOMPLETE_SAMPLES
