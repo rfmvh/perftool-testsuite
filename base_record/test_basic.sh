@@ -59,8 +59,24 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic record"
 ### hwcache + tracepoint
 
 # in some version of kernel, these two types of events did not work together
-EVENT_HWCACHE=`$CMD_PERF list hwcache | grep "Hardware cache event" | awk '{print $1}' | head -n 1`
-EVENT_TRACEPOINT=`$CMD_PERF list tracepoint | grep "Tracepoint event" | awk '{print $1}' | head -n 1`
+EVENTS_HWCACHE=`$CMD_PERF list hwcache | grep "Hardware cache event" | awk '{print $1}'`
+EVENTS_TRACEPOINT=`$CMD_PERF list tracepoint | grep "Tracepoint event" | awk '{print $1}'`
+while read -r test_hw_event; do
+        HW_SUPPORT=`$CMD_PERF record -e $test_hw_event -o $CURRENT_TEST_DIR/perf.data -a $CMD_QUICK_SLEEP 2>&1 | grep "event is not supported"`
+        if [ -z "$HW_SUPPORT" ]; then
+                EVENT_HWCACHE="$test_hw_event"
+                break;
+        fi
+done <<< "$EVENTS_HWCACHE"
+
+while read -r test_tp_event; do
+        TP_SUPPORT=`$CMD_PERF record -e $test_tp_event -o $CURRENT_TEST_DIR/perf.data -a $CMD_QUICK_SLEEP 2>&1 | grep "event is not supported"`
+        if [ -z "$TP_SUPPORT" ]; then
+                EVENT_TRACEPOINT="$test_tp_event"
+                break;
+        fi
+done <<< "$EVENTS_TRACEPOINT"
+
 if [ -z "$EVENT_HWCACHE" -o -z "$EVENT_TRACEPOINT" ]; then
 	print_testcase_skipped "hwcache + tracepoint :: record"
 	print_testcase_skipped "hwcache + tracepoint :: evlist"
