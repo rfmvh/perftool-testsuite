@@ -98,7 +98,7 @@ fi
 # this testcase tests, whether the segfault is fixed 
 { $CMD_PERF record -k mono -- $CMD_SIMPLE | cat; } > $LOGS_DIR/basic_kmono_crash.log 2> $LOGS_DIR/basic_kmono_crash.err
 
-../common/check_no_patterns_found.pl "Segmentation fault" "SIGSEGV" "core" "dumped" "segfault" < $LOGS_DIR/basic_kmono_crash.err
+../common/check_no_patterns_found.pl "$RE_SEGFAULT" < $LOGS_DIR/basic_kmono_crash.err
 PERF_EXIT_STATUS=$?
 
 print_results $PERF_EXIT_STATUS 0 "-k mono crash"
@@ -110,7 +110,8 @@ print_results $PERF_EXIT_STATUS 0 "-k mono crash"
 # perf used to segfault if a number too large was used with -C
 { $CMD_PERF record -C 12323431 -- $CMD_SIMPLE | cat; } > $LOGS_DIR/basic_largeC_crash.log 2> $LOGS_DIR/basic_largeC_crash.err
 
-../common/check_no_patterns_found.pl "Segmentation fault" "SIGSEGV" "core" "dumped" "segfault" < $LOGS_DIR/basic_largeC_crash.err
+
+../common/check_no_patterns_found.pl "$RE_SEGFAULT" < $LOGS_DIR/basic_largeC_crash.err
 PERF_EXIT_STATUS=$?
 
 print_results $PERF_EXIT_STATUS 0 "large -C number crash"

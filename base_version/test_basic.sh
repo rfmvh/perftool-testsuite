@@ -40,7 +40,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic execution"
 test $? -ne 139
 PERF_EXIT_CODE=$?
 
-../common/check_no_patterns_found.pl "Segmentation fault" "SIGSEGV" "core" "dumped" "segfault" < $LOGS_DIR/basic_invalid_opt.err
+../common/check_no_patterns_found.pl "$RE_SEGFAULT" < $LOGS_DIR/basic_invalid_opt.err
 CHECK_EXIT_CODE=$?
 #../common/check_all_patterns_found.pl "Error" "unknown switch" "Usage" "perf version" "build-options" < $LOGS_DIR/basic_invalid_opt.err
 #(( CHECK_EXIT_CODE += $? ))

@@ -226,7 +226,7 @@ CHECK_EXIT_CODE=$?
 (( CHECK_EXIT_CODE += $? ))
 ../common/check_all_lines_matched.pl "Failed to find" "Error" "Probe point .+ not found" "optimized out" "Use.+\-\-range option to show.+location range" < $LOGS_DIR/adding_kernel_nonexisting.err
 (( CHECK_EXIT_CODE += $? ))
-../common/check_no_patterns_found.pl "Segmentation" "fault" "SIGSEGV" "segfault" < $LOGS_DIR/adding_kernel_nonexisting.err
+../common/check_no_patterns_found.pl "$RE_SEGFAULT" < $LOGS_DIR/adding_kernel_nonexisting.err
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing variable"

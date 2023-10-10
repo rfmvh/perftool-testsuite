@@ -232,7 +232,6 @@ export RE_LINE_REPORT_CONTENT="^\s+$RE_NUMBER%\s+\w+\s+\S+\s+\S+\s+\S+" # FIXME
 #     100.00%  sleep    [kernel.vmlinux]  [k] syscall_return_slowpath
 
 
-
 export RE_TASK="\s+[\w~\/ \.\+:#-]+(?:\[-1(?:\/\d+)?\]|\[\d+(?:\/\d+)?\])"
 # A name of a task used for perf sched timehist -s
 # Example:
@@ -244,3 +243,12 @@ export RE_TASK="\s+[\w~\/ \.\+:#-]+(?:\[-1(?:\/\d+)?\]|\[\d+(?:\/\d+)?\])"
 #     :-1[-1/62756]
 #     :-1[-1]
 #     :-1[62756]
+
+
+export RE_SEGFAULT=".*(?:Segmentation\sfault|SIGSEGV|\score\s|dumped|segfault).*"
+# Possible variations of the segfault message
+# Example:
+#     /bin/bash: line 1:    32 Segmentation fault      timeout 15s
+#     Segmentation fault (core dumped)
+#     Program terminated with signal SIGSEGV
+#!     WARNING: 12323431 isn't a 'cpu_core', please use a CPU list in the 'cpu_core' range (0-15)

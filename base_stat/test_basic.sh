@@ -103,7 +103,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "CSV output"
 
 { $CMD_PERF stat -a --per-node -x, --metric-only $CMD_SIMPLE; } > $LOGS_DIR/basic_per_node_x_crash.log 2> $LOGS_DIR/basic_per_node_x_crash.err
 
-../common/check_no_patterns_found.pl "Segmentation fault" "SIGSEGV" "core" "dumped" "segfault" < $LOGS_DIR/basic_per_node_x_crash.err
+../common/check_no_patterns_found.pl "$RE_SEGFAULT" < $LOGS_DIR/basic_per_node_x_crash.err
 PERF_EXIT_STATUS=$?
 
 print_results $PERF_EXIT_STATUS 0 "--per-node -x crash"
