@@ -16,6 +16,7 @@
 
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
+SW_EVENT="cpu-clock"
 
 
 # save config file before tests
@@ -25,7 +26,7 @@ mv $HOME/.perfconfig $CURRENT_TEST_DIR/.config_before
 
 ### record and report without config
 
-$CMD_PERF record -a -o $CURRENT_TEST_DIR/perf.data -- $CMD_SIMPLE 2> $LOGS_DIR/set_report_record.log
+$CMD_PERF record -e $SW_EVENT -a -o $CURRENT_TEST_DIR/perf.data -- $CMD_SIMPLE 2> $LOGS_DIR/set_report_record.log
 PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" "perf.data" < $LOGS_DIR/set_report_record.log
@@ -126,7 +127,7 @@ fi
 
 # record and report with call-graph option
 
-$CMD_PERF record -a -g -o $CURRENT_TEST_DIR/perf.data -- $CMD_SIMPLE 2> $LOGS_DIR/set_report_record_cg.log
+$CMD_PERF record -e $SW_EVENT -a -g -o $CURRENT_TEST_DIR/perf.data -- $CMD_SIMPLE 2> $LOGS_DIR/set_report_record_cg.log
 PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" "perf.data" < $LOGS_DIR/set_report_record_cg.log
