@@ -15,8 +15,9 @@
 . ./settings.sh
 
 THIS_TEST_NAME=`basename $0 .sh`
+SW_EVENT="cpu-clock"
 
-$CMD_PERF record -asdg -o $CURRENT_TEST_DIR/perf.data -- $CMD_LONGER_SLEEP 2> $LOGS_DIR/setup.log
+$CMD_PERF record -asdg -e $SW_EVENT -o $CURRENT_TEST_DIR/perf.data -- $CMD_LONGER_SLEEP 2> $LOGS_DIR/setup.log
 PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/setup.log
