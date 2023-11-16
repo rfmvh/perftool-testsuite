@@ -17,7 +17,7 @@
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
-EVENTS_TO_TEST=`$CMD_PERF list hwcache | grep "Hardware cache event" | awk '{print $1}' | egrep '^.' | tr '\n' ' '`
+EVENTS_TO_TEST=`$CMD_PERF list hwcache | grep -P "^\s{2}\w" | awk '{print $1}' | egrep '^.' | tr '\n' ' '`
 if [ -z "$EVENTS_TO_TEST" ]; then
 	if [ "$TEST_IGNORE_MISSING_PMU" = "y" ]; then
 		print_overall_skipped
