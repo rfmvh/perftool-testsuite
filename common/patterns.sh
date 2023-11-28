@@ -92,10 +92,12 @@ export RE_EVENT_CPU="cpu/(\w+=$RE_NUMBER_HEX,?)+/p*"
 #    cpu/event=12,umask=34/pp
 
 
-export RE_EVENT_UNCORE="uncore/[\w_]+/"
+export RE_EVENT_UNCORE="(?:uncore(?:_\w+)?/[\w]+/)|(?:unc_[\w\.]+\w)"
 # Specification of an uncore event
 # Examples:
 #    uncore/qhl_request_local_reads/
+#    uncore_imc_2/cas_count_read/
+#    unc_c_llc_lookup.any
 
 
 export RE_EVENT_SUBSYSTEM="[\w\-]+:[\w\-]+"
