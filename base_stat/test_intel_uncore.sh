@@ -43,7 +43,7 @@ for event in $EVENTS_TO_TEST; do
 	$CMD_PERF stat -a -e $event -o $LOGS_DIR/intel_uncore/$EVENT_NAME.log -x';' -- $CMD_QUICK_SLEEP 2> $LOGS_DIR/intel_uncore/$EVENT_NAME.err
 	PERF_EXIT_CODE=$?
 
-	REGEX_LINES="$RE_NUMBER;[^;]*;$RE_EVENT_ANY;$RE_NUMBER;100\.00"
+	REGEX_LINES="$RE_NUMBER;[^;]*;$RE_EVENT_UNCORE;$RE_NUMBER;100\.00"
 	../common/check_all_patterns_found.pl "$REGEX_LINES" < $LOGS_DIR/intel_uncore/$EVENT_NAME.log
 	CHECK_EXIT_CODE=$?
 
