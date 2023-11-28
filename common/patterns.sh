@@ -63,13 +63,14 @@ export RE_PROCESS_PID="\w+\/\d+"
 #    sleep/4102
 
 
-export RE_EVENT_ANY="[\w\-\:\/_=,]+"
+export RE_EVENT_ANY="[\w\-\:\/_=,\.]+"
 # Name of any event (universal)
 # Examples:
 #    cpu-cycles
 #    cpu/event=12,umask=34/
 #    r41e1
 #    nfs:nfs_getattr_enter
+#    unc_c_tor_occupancy.llc_data_read
 
 
 export RE_EVENT="[\w\-:_]+"
