@@ -72,5 +72,7 @@ if [ ! -d ./common ]; then
 		. ../common/parametrization.$PERFTOOL_TESTSUITE_RUNMODE.sh
 	fi
 	# if some parameters haven't been set until now, set them to default
-	. ../common/parametrization.sh
+	if [ -f ../common/parametrization.sh ]; then
+		. ../common/parametrization.sh
+	fi
 fi
