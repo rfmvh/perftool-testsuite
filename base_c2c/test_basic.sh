@@ -16,6 +16,8 @@
 
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
+REASONABLE_SAMPLE_RATE=20000
+SAMPLE_RATE_MIN=18000
 
 # skip the testcase if there are no suitable events to be used
 if [ "$MEM_LOADS_SUPPORTED" = "no" -a "$MEM_STORES_SUPPORTED" = "no" ]; then
@@ -65,6 +67,11 @@ if [ "$MY_ARCH" = "x86_64" ]; then
 	REGEX_LDLAT_ATTR="ldlat="
 fi
 
+#check sample rate
+max_sample_rate=`cat /proc/sys/kernel/perf_event_max_sample_rate`
+if [[ $max_sample_rate -lt $SAMPLE_RATE_MIN ]]; then
+        sysctl kernel.perf_event_max_sample_rate=$REASONABLE_SAMPLE_RATE
+fi
 
 ### invalid args
 
@@ -139,6 +146,10 @@ else
 	print_testcase_skipped "ldlat-loads report"
 fi
 
+max_sample_rate=`cat /proc/sys/kernel/perf_event_max_sample_rate`
+if [[ $max_sample_rate -lt $SAMPLE_RATE_MIN ]]; then
+        sysctl kernel.perf_event_max_sample_rate=$REASONABLE_SAMPLE_RATE
+fi
 
 ### stores record, stores event check, stores report
 
@@ -146,7 +157,7 @@ if [ "$LDLAT_STORES_SUPPORTED" = "yes" ]; then
 	### stores record
 
 	# test that perf c2c record can record ldlat-stores
-	$CMD_PERF c2c record -e ldlat-stores -- -o $CURRENT_TEST_DIR/perf.data examples/dummy > /dev/null 2> $LOGS_DIR/basic_stores_record.err
+	$CMD_PERF c2c record -c 100000 -e ldlat-stores -- -o $CURRENT_TEST_DIR/perf.data examples/dummy > /dev/null 2> $LOGS_DIR/basic_stores_record.err
 	PERF_EXIT_CODE=$?
 
 	# check the perf c2c record output
@@ -206,7 +217,10 @@ else
 	print_testcase_skipped "ldlat-stores report"
 fi
 
-
+max_sample_rate=`cat /proc/sys/kernel/perf_event_max_sample_rate`
+if [[ $max_sample_rate -lt $SAMPLE_RATE_MIN ]]; then
+        sysctl kernel.perf_event_max_sample_rate=$REASONABLE_SAMPLE_RATE
+fi
 
 ### ldlat-loads&ldlat-stores record, ldlat-loads&ldlat-stores event check, ldlat-loads&ldlat-stores report, ldlat-loads&ldlat-stores verification
 
@@ -307,6 +321,11 @@ if [ $? -eq 0 ]; then
 	(( TEST_RESULT += $? ))
 else
 	print_testcase_skipped "--double-cl verification"
+fi
+
+max_sample_rate=`cat /proc/sys/kernel/perf_event_max_sample_rate`
+if [[ $max_sample_rate -lt $SAMPLE_RATE_MIN ]]; then
+        sysctl kernel.perf_event_max_sample_rate=$REASONABLE_SAMPLE_RATE
 fi
 
 # print overall results
