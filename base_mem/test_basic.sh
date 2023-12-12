@@ -16,6 +16,8 @@
 
 THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
+REASONABLE_SAMPLE_RATE=20000
+SAMPLE_RATE_MIN=18000
 
 # skip the testcase if there are no suitable events to be used
 if [ "$MEM_LOADS_SUPPORTED" = "no" -a "$MEM_STORES_SUPPORTED" = "no" ]; then
@@ -46,6 +48,11 @@ else
 	print_testcase_skipped "help message"
 fi
 
+# check sample rate
+max_sample_rate=`cat /proc/sys/kernel/perf_event_max_sample_rate`
+if [[ $max_sample_rate -lt $SAMPLE_RATE_MIN ]]; then
+        sysctl kernel.perf_event_max_sample_rate=$REASONABLE_SAMPLE_RATE
+fi
 
 ### loads record, loads event check, loads report
 
@@ -107,6 +114,11 @@ else
 	print_testcase_skipped "loads report"
 fi
 
+# check sample rate
+max_sample_rate=`cat /proc/sys/kernel/perf_event_max_sample_rate`
+if [[ $max_sample_rate -lt $SAMPLE_RATE_MIN ]]; then
+        sysctl kernel.perf_event_max_sample_rate=$REASONABLE_SAMPLE_RATE
+fi
 
 ### stores record, stores event check, stores report
 
@@ -114,7 +126,7 @@ if [ "$MEM_STORES_SUPPORTED" = "yes" ]; then
 	### stores record
 
 	# test that perf mem record can record mem-stores
-	$CMD_PERF mem -t store record -o $CURRENT_TEST_DIR/perf.data examples/dummy > /dev/null 2> $LOGS_DIR/basic_stores_record.err
+	$CMD_PERF mem -t store record -c 100000 -o $CURRENT_TEST_DIR/perf.data examples/dummy > /dev/null 2> $LOGS_DIR/basic_stores_record.err
 	PERF_EXIT_CODE=$?
 
 	# check the perf mem record output
@@ -168,6 +180,11 @@ else
 	print_testcase_skipped "stores report"
 fi
 
+# check sample rate
+max_sample_rate=`cat /proc/sys/kernel/perf_event_max_sample_rate`
+if [[ $max_sample_rate -lt $SAMPLE_RATE_MIN ]]; then
+        sysctl kernel.perf_event_max_sample_rate=$REASONABLE_SAMPLE_RATE
+fi
 
 ### loads&stores record, loads&stores event check, loads&tores report
 
@@ -229,6 +246,11 @@ else
 	print_testcase_skipped "loads&stores report"
 fi
 
+# check sample rate
+max_sample_rate=`cat /proc/sys/kernel/perf_event_max_sample_rate`
+if [[ $max_sample_rate -lt $SAMPLE_RATE_MIN ]]; then
+        sysctl kernel.perf_event_max_sample_rate=$REASONABLE_SAMPLE_RATE
+fi
 
 ### perf script -F 'weight' processing
 
