@@ -77,7 +77,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "script uprobe"
 ### record mixed events
 
 # record mixed uprobes
-$CMD_PERF record -e '{cpu-clock'",$PROBE_PREFIX:"'*}:S' $CURRENT_TEST_DIR/examples/load 17 > /dev/null 2> $LOGS_DIR/mixed_tp_record_mixed.err
+$CMD_PERF record --no-inherit -e '{cpu-clock'",$PROBE_PREFIX:"'*}:S' $CURRENT_TEST_DIR/examples/load 17 > /dev/null 2> $LOGS_DIR/mixed_tp_record_mixed.err
 PERF_EXIT_CODE=$?
 
 ../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/mixed_tp_record_mixed.err
