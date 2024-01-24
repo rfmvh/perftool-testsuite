@@ -107,9 +107,9 @@ REGEX_S_RUN_T="\s+Total run time \(msec\):\s+$RE_NUMBER"
 REGEX_S_SCHED_T="\s+Total scheduling time \(msec\):\s+$RE_NUMBER\s+\(x\s*\d+\)"
 
 ../common/check_all_lines_matched.pl "^\s*$" "Runtime summary" "$REGEX_S_HEADER_LINE" "$REGEX_S_HEADER_NOTES" "$REGEX_S_HEADER_UNDERLINE" "$REGEX_S_DATA_LINE"\
- "$REGEX_S_IDLE_LINE" "Terminated tasks:" "$REGEX_S_SLEEP_LINE" "Idle stats:" "$REGEX_S_IDLE" "$REGEX_S_UNIQ" "$REGEX_S_SWITCH" "$REGEX_S_RUN_T" "$REGEX_S_SCHED_T" < $LOGS_DIR/timehist_summary.log
+ "$REGEX_S_IDLE_LINE" "$REGEX_S_SLEEP_LINE" "Idle stats:" "$REGEX_S_IDLE" "$REGEX_S_UNIQ" "$REGEX_S_SWITCH" "$REGEX_S_RUN_T" "$REGEX_S_SCHED_T" < $LOGS_DIR/timehist_summary.log
 CHECK_EXIT_CODE=$?
-../common/check_all_patterns_found.pl "Runtime summary" "$REGEX_S_HEADER_LINE" "$REGEX_S_HEADER_NOTES" "$REGEX_S_HEADER_UNDERLINE" "$REGEX_S_DATA_LINE" "Terminated tasks:" "Idle stats:"\
+../common/check_all_patterns_found.pl "Runtime summary" "$REGEX_S_HEADER_LINE" "$REGEX_S_HEADER_NOTES" "$REGEX_S_HEADER_UNDERLINE" "$REGEX_S_DATA_LINE" "Idle stats:"\
  "$REGEX_S_IDLE" "$REGEX_S_UNIQ" "$REGEX_S_SWITCH" "$REGEX_S_RUN_T" "$REGEX_S_SCHED_T" < $LOGS_DIR/timehist_summary.log
 (( CHECK_EXIT_CODE += $? ))
 
@@ -151,7 +151,7 @@ cmp $LOGS_DIR/timehist_general.log $LOGS_DIR/timehist_with-summary_all.log &> /d
 (( CHECK_EXIT_CODE += $? ))
 
 ../common/check_all_patterns_found.pl "$REGEX_HEADER_LINE" "$REGEX_HEADER_NOTES" "$REGEX_HEADER_UNDERLINE" "$REGEX_DATA_LINE" "$REGEX_S_HEADER_LINE" "$REGEX_S_HEADER_NOTES" "$REGEX_S_HEADER_UNDERLINE" "$REGEX_S_DATA_LINE"\
- "Terminated tasks:" "Idle stats:" "$REGEX_S_IDLE" "$REGEX_S_UNIQ" "$REGEX_S_SWITCH" "$REGEX_S_RUN_T" "$REGEX_S_SCHED_T" < $LOGS_DIR/timehist_with-summary.log
+ "Idle stats:" "$REGEX_S_IDLE" "$REGEX_S_UNIQ" "$REGEX_S_SWITCH" "$REGEX_S_RUN_T" "$REGEX_S_SCHED_T" < $LOGS_DIR/timehist_with-summary.log
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "--with-summary"
