@@ -95,9 +95,11 @@ $CMD_PERF --buildid-dir $BUILDIDDIR archive $CURRENT_TEST_DIR/perf.data > $LOGS_
 PERF_EXIT_CODE=$?
 
 REGEX_LINES_1="Now please run"
-REGEX_LINES_2="perf.data.tar.bz2"
-REGEX_LINES_3="wherever you need to run"
-../common/check_all_patterns_found.pl "$REGEX_LINES_1" "$REGEX_LINES_2" "$REGEX_LINES_3" "$RE_LINE_EMPTY" < $LOGS_DIR/basic_archive.log
+REGEX_LINES_2="wherever you need to run"
+REGEX_LINES_3="perf.data.tar.bz2"
+REGEX_LINES_4="perf archive --unpack"	# after option --unpack was added
+../common/check_all_patterns_found.pl "$REGEX_LINES_1" "$REGEX_LINES_2" "$RE_LINE_EMPTY" < $LOGS_DIR/basic_archive.log
+../common/check_any_pattern_found.pl "$REGEX_LINES_3" "$REGEX_LINES_4" < $LOGS_DIR/basic_archive.log
 CHECK_EXIT_CODE=$?
 ../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/basic_archive.err
 (( CHECK_EXIT_CODE += $? ))
