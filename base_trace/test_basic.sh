@@ -47,7 +47,7 @@ PERF_EXIT_CODE=$?
 
 REGEX_TIMESTAMP="^\s*(\d+(?:\.\d+))\s"
 
-../common/check_all_lines_matched.pl "$RE_LINE_TRACE_FULL" < $LOGS_DIR/basic_basic.log
+../common/check_all_lines_matched.pl "$RE_LINE_TRACE_FULL" "$RE_LINE_TRACE_CONTINUED" "$RE_LINE_TRACE_UNFINISHED" "exit" < $LOGS_DIR/basic_basic.log
 CHECK_EXIT_CODE=$?
 ../common/check_all_patterns_found.pl "$RE_LINE_TRACE_FULL" < $LOGS_DIR/basic_basic.log
 (( CHECK_EXIT_CODE += $? ))
@@ -82,7 +82,7 @@ kill -SIGINT $PERF_PID
 wait $PERF_PID
 PERF_EXIT_CODE=$?
 
-../common/check_all_lines_matched.pl "$RE_LINE_TRACE_FULL" < $LOGS_DIR/basic_systemwide.log
+../common/check_all_lines_matched.pl "$RE_LINE_TRACE_FULL" "$RE_LINE_TRACE_CONTINUED" "$RE_LINE_TRACE_UNFINISHED" "exit" < $LOGS_DIR/basic_systemwide.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide"
@@ -95,7 +95,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "systemwide"
 $CMD_PERF trace -T -- $CMD_QUICK_SLEEP 2> $LOGS_DIR/basic_full_timestamp.log
 PERF_EXIT_CODE=$?
 
-../common/check_all_lines_matched.pl "$RE_LINE_TRACE_FULL" "\d{5,}\." < $LOGS_DIR/basic_full_timestamp.log
+../common/check_all_lines_matched.pl "$RE_LINE_TRACE_FULL" "$RE_LINE_TRACE_CONTINUED" "\d{5,}\." < $LOGS_DIR/basic_full_timestamp.log
 CHECK_EXIT_CODE=$?
 ../common/check_timestamps.pl "$REGEX_TIMESTAMP" < $LOGS_DIR/basic_full_timestamp.log
 (( CHECK_EXIT_CODE += $? ))

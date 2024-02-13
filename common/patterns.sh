@@ -57,11 +57,13 @@ export RE_ADDRESS_NOT_NULL="0x[0-9A-Fa-f]*[1-9A-Fa-f]+[0-9A-Fa-f]*"
 #!   0x0
 #!   0x0000000000000000
 
-export RE_PROCESS_PID="\w+\/\d+"
+export RE_PROCESS_PID="[^\/]+\/\d+"
 # A process with PID
 # Example:
 #    sleep/4102
-
+#    test_overhead./866185
+#    in:imjournal/1096
+#    random#$& test/866607
 
 export RE_EVENT_ANY="[\w\-\:\/_=,\.]+"
 # Name of any event (universal)
@@ -197,23 +199,33 @@ export RE_LINE_RECORD2_TOLERANT_FILENAME="^\[\s+perf\s+record:\s+Captured and wr
 #!    [ perf record: Captured and wrote 0.405 MB perf.data ]
 
 
-export RE_LINE_TRACE_FULL="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*$RE_PROCESS_PID\s+.*\)\s+=\s+\-?$RE_NUMBER|$RE_NUMBER_HEX.*$"
+export RE_LINE_TRACE_FULL="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*$RE_PROCESS_PID\s+.*\)\s+=\s+(:?\-?$RE_NUMBER|0x$RE_NUMBER_HEX).*$"
 # A line of perf-trace output
 # Examples:
 #    0.115 ( 0.005 ms): sleep/4102 open(filename: 0xd09e2ab2, flags: CLOEXEC                             ) = 3
 #    0.157 ( 0.005 ms): sleep/4102 mmap(len: 3932736, prot: EXEC|READ, flags: PRIVATE|DENYWRITE, fd: 3   ) = 0x7f89d0605000
+#!    0.115 ( 0.005 ms): sleep/4102 open(filename: 0xd09e2ab2, flags: CLOEXEC                             ) =
 
-export RE_LINE_TRACE_ONE_PROC="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*\w+\(.*\)\s+=\s+(?:\-?$RE_NUMBER)|(?:0x$RE_NUMBER_HEX).*$"
+export RE_LINE_TRACE_ONE_PROC="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*\w+\(.*\)\s+=\s+(?:\-?$RE_NUMBER|0x$RE_NUMBER_HEX).*$"
 # A line of perf-trace output
 # Examples:
 #    0.115 ( 0.005 ms): open(filename: 0xd09e2ab2, flags: CLOEXEC                             ) = 3
 #    0.157 ( 0.005 ms): mmap(len: 3932736, prot: EXEC|READ, flags: PRIVATE|DENYWRITE, fd: 3   ) = 0x7f89d0605000
+#!    0.115 ( 0.005 ms): open(filename: 0xd09e2ab2, flags: CLOEXEC                             ) =
 
-export RE_LINE_TRACE_CONTINUED="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*\.\.\.\s*\[continued\]:\s+\w+\(\).*\s+=\s+(?:\-?$RE_NUMBER)|(?:0x$RE_NUMBER_HEX).*$"
+export RE_LINE_TRACE_CONTINUED="^\s*(:?$RE_NUMBER|\?)\s*\(\s*($RE_NUMBER\s*ms\s*)?\):\s*($RE_PROCESS_PID\s*)?\.\.\.\s*\[continued\]:\s+\w+\(\).*\s+=\s+(?:\-?$RE_NUMBER|0x$RE_NUMBER_HEX).*$"
 # A line of perf-trace output
 # Examples:
 #    0.000 ( 0.000 ms):  ... [continued]: nanosleep()) = 0
 #    0.000 ( 0.000 ms):  ... [continued]: nanosleep()) = 0x00000000
+#    ? (         ): packagekitd/94838  ... [continued]: poll())                                             = 0 (Timeout)
+#!    0.000 ( 0.000 ms):  ... [continued]: nanosleep()) =
+
+export RE_LINE_TRACE_UNFINISHED="^\s*$RE_NUMBER\s*\(\s*\):\s*$RE_PROCESS_PID\s+.*\)\s+\.\.\.\s*$"
+# A line of perf-trace output
+# Examples:
+#    901.040 (         ): in:imjournal/1096 ppoll(ufds: 0x7f701a5adb70, nfds: 1, tsp: 0x7f701a5adaf0, sigsetsize: 8) ...
+#    613.727 (         ): gmain/1099 poll(ufds: 0x56248f6b64b0, nfds: 2, timeout_msecs: 3996)           ...
 
 export RE_LINE_TRACE_SUMMARY_HEADER="\s*syscall\s+calls\s+(?:errors\s+)?total\s+min\s+avg\s+max\s+stddev"
 # A header of a perf-trace summary table
