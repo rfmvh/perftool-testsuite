@@ -159,6 +159,14 @@ export RE_LINE_EMPTY="^\s*$"
 #
 
 
+export RE_FLAGS="(?:(?:[A-Z]+|0x$RE_NUMBER_HEX)\|?)+"
+# An empty line with possible whitespaces
+# Examples:
+#    WRONLY|0x20000
+#    RDWR
+#    RDONLY|LARGEFILE|NONBLOCK
+
+
 export RE_LINE_RECORD1="^\[\s+perf\s+record:\s+Woken up $RE_NUMBER times? to write data\s+\].*$"
 # The first line of perf-record "OK" output
 # Examples:
@@ -199,21 +207,23 @@ export RE_LINE_RECORD2_TOLERANT_FILENAME="^\[\s+perf\s+record:\s+Captured and wr
 #!    [ perf record: Captured and wrote 0.405 MB perf.data ]
 
 
-export RE_LINE_TRACE_FULL="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*$RE_PROCESS_PID\s+.*\)\s+=\s+(:?\-?$RE_NUMBER|0x$RE_NUMBER_HEX).*$"
+export RE_LINE_TRACE_FULL="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*$RE_PROCESS_PID\s+.*\)\s+=\s+(?:\-?$RE_NUMBER|$RE_FLAGS).*$"
 # A line of perf-trace output
 # Examples:
 #    0.115 ( 0.005 ms): sleep/4102 open(filename: 0xd09e2ab2, flags: CLOEXEC                             ) = 3
 #    0.157 ( 0.005 ms): sleep/4102 mmap(len: 3932736, prot: EXEC|READ, flags: PRIVATE|DENYWRITE, fd: 3   ) = 0x7f89d0605000
+#    791.257 ( 0.002 ms): in:imjournal/961 fcntl(fd: 7, cmd: GETFL)                                        = RDONLY|LARGEFILE|NONBLOCK
+#    1156.756 ( 0.002 ms): systemd/846 fcntl(fd: 29</proc/1/cgroup>, cmd: GETFL)                           = WRONLY|0x20000
 #!    0.115 ( 0.005 ms): sleep/4102 open(filename: 0xd09e2ab2, flags: CLOEXEC                             ) =
 
-export RE_LINE_TRACE_ONE_PROC="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*\w+\(.*\)\s+=\s+(?:\-?$RE_NUMBER|0x$RE_NUMBER_HEX).*$"
+export RE_LINE_TRACE_ONE_PROC="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*\w+\(.*\)\s+=\s+(?:\-?$RE_NUMBER|$RE_FLAGS).*$"
 # A line of perf-trace output
 # Examples:
 #    0.115 ( 0.005 ms): open(filename: 0xd09e2ab2, flags: CLOEXEC                             ) = 3
 #    0.157 ( 0.005 ms): mmap(len: 3932736, prot: EXEC|READ, flags: PRIVATE|DENYWRITE, fd: 3   ) = 0x7f89d0605000
 #!    0.115 ( 0.005 ms): open(filename: 0xd09e2ab2, flags: CLOEXEC                             ) =
 
-export RE_LINE_TRACE_CONTINUED="^\s*(:?$RE_NUMBER|\?)\s*\(\s*($RE_NUMBER\s*ms\s*)?\):\s*($RE_PROCESS_PID\s*)?\.\.\.\s*\[continued\]:\s+\w+\(\).*\s+=\s+(?:\-?$RE_NUMBER|0x$RE_NUMBER_HEX).*$"
+export RE_LINE_TRACE_CONTINUED="^\s*(?:$RE_NUMBER|\?)\s*\(\s*($RE_NUMBER\s*ms\s*)?\):\s*($RE_PROCESS_PID\s*)?\.\.\.\s*\[continued\]:\s+\w+\(\).*\s+=\s+(?:\-?$RE_NUMBER|$RE_FLAGS).*$"
 # A line of perf-trace output
 # Examples:
 #    0.000 ( 0.000 ms):  ... [continued]: nanosleep()) = 0
