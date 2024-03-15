@@ -8,7 +8,6 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
 if [ -n "$PERFSUITE_RUN_DIR" ]; then
 	print_overall_skipped
@@ -16,8 +15,8 @@ if [ -n "$PERFSUITE_RUN_DIR" ]; then
 fi
 
 make -s -C examples clean
-find . -name \*.log | xargs -r rm
-find . -name \*.err | xargs -r rm
+find . -name \*.log -print0 | xargs -0 -r rm
+find . -name \*.err -print0 | xargs -0 -r rm
 rm -f perf.data*
 
 print_overall_results 0

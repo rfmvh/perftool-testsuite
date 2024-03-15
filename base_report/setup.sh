@@ -12,7 +12,8 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
+
+test -d "$HEADER_TAR_DIR" || mkdir -p "$HEADER_TAR_DIR"
 
 THIS_TEST_NAME=`basename $0 .sh`
 SW_EVENT="cpu-clock"

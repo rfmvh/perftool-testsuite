@@ -8,7 +8,6 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
 # clean all the buildid-caches created within this test
 touch $CURRENT_TEST_DIR/BUILDIDDIRS

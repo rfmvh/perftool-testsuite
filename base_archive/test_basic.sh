@@ -12,7 +12,6 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
 # skip the testcase if $PERFSUITE_RUN_DIR is set, since we
 # cannot guarantee not writting into the current tree (we
@@ -28,6 +27,7 @@ TEST_RESULT=0
 source ./setup_src.sh
 
 # the test name needs to be reset here
+# shellcheck disable=SC2034 # the variable is later used after the working environment is included
 THIS_TEST_NAME=`basename $0 .sh`
 
 

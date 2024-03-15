@@ -10,7 +10,6 @@
 #
 
 . ../common/init.sh
-. ./settings.sh
 
 print_overall_results 0
 exit 0

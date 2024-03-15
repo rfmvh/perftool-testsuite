@@ -8,7 +8,6 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
 if [ -n "$PERFSUITE_RUN_DIR" ]; then
 	print_overall_skipped

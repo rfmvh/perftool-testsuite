@@ -12,7 +12,6 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
 THIS_TEST_NAME=`basename $0 .sh`
 

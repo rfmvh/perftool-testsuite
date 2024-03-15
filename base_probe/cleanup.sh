@@ -9,7 +9,6 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
 clear_all_probes
 if [ ! -n "$PERFSUITE_RUN_DIR" ]; then

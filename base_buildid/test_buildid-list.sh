@@ -13,7 +13,6 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
 TEST_RESULT=0
 
