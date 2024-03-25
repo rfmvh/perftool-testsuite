@@ -15,9 +15,7 @@
 # include working environment
 . ../common/init.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
-
 
 ######## function argument uprobing ########
 
@@ -30,7 +28,7 @@ else
 
 # clean up before we start
 clear_all_probes
-find . -name perf.data\* | xargs -r rm
+find . -name perf.data\* -print0 | xargs -0 -r rm
 
 
 ### function argument probing :: add
@@ -78,7 +76,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "function argument probing :: scr
 
 # clean up between the tests
 clear_all_probes
-find . -name perf.data\* | xargs -r rm
+find . -name perf.data\* -print0 | xargs -0 -r rm
 
 
 ### function retval probing :: add
@@ -126,7 +124,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "function retval probing :: scrip
 
 # clean up between the tests
 clear_all_probes
-find . -name perf.data\* | xargs -r rm
+find . -name perf.data\* -print0 | xargs -0 -r rm
 
 
 ### function string argument probing :: add
@@ -182,7 +180,7 @@ else
 
 # clean up between the tests
 clear_all_probes
-find . -name perf.data\* | xargs -r rm
+find . -name perf.data\* -print0 | xargs -0 -r rm
 
 
 ### function string argument kprobing :: add

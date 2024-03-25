@@ -30,8 +30,8 @@ print_results()
 	PERF_RETVAL="$1"; shift
 	CHECK_RETVAL="$1"; shift
 	FAILURE_REASON=""
-	TASK_COMMENT="$@"
-	if [ $PERF_RETVAL -eq 0 -a $CHECK_RETVAL -eq 0 ]; then
+	TASK_COMMENT="$*"
+	if [ $PERF_RETVAL -eq 0 ] && [ $CHECK_RETVAL -eq 0 ]; then
 		_echo "$MPASS-- [ PASS ] --$MEND $TEST_NAME :: $THIS_TEST_NAME :: $TASK_COMMENT"
 		return 0
 	else
@@ -60,7 +60,7 @@ print_overall_results()
 
 print_testcase_skipped()
 {
-	TASK_COMMENT="$@"
+	TASK_COMMENT="$*"
 	_echo "$MSKIP-- [ SKIP ] --$MEND $TEST_NAME :: $THIS_TEST_NAME :: $TASK_COMMENT :: testcase skipped"
 	return 0
 }
@@ -73,7 +73,7 @@ print_overall_skipped()
 
 print_warning()
 {
-	WARN_COMMENT="$@"
+	WARN_COMMENT="$*"
 	_echo "$MWARN-- [ WARN ] --$MEND $TEST_NAME :: $THIS_TEST_NAME :: $WARN_COMMENT"
 	return 0
 }
@@ -158,7 +158,7 @@ should_support_ctf_conversion()
 	# return value
 	# 0 = expected to support CTF conversion
 	# 1 = not expected to support CTF conversion
-	ldd `which $CMD_PERF` | grep -q 'libbabeltrace'
+	ldd "`which $CMD_PERF`" | grep -q 'libbabeltrace'
 }
 
 #----------------------------------------------------------
@@ -196,7 +196,7 @@ check_perf_probe_option()
 #FIXME
 check_kernel_debuginfo()
 {
-	eu-addr2line -k 0x`grep -m 1 vfs_read /proc/kallsyms | cut -f 1 -d" "` | grep vfs_read
+	eu-addr2line -k 0x"`grep -m 1 vfs_read /proc/kallsyms | cut -f 1 -d" "`" | grep vfs_read
 }
 
 check_sdt_support()
@@ -337,7 +337,7 @@ disable_nmi_watchdog_if_exists()
 {
 	test -e /proc/sys/kernel/nmi_watchdog || return 9
 	stat -c '%A' /proc/sys/kernel/nmi_watchdog | grep -q 'w' || return 9
-	export NMI_WD_PREVIOUS_VALUE=`cat /proc/sys/kernel/nmi_watchdog`
+	NMI_WD_PREVIOUS_VALUE=`cat /proc/sys/kernel/nmi_watchdog`; export NMI_WD_PREVIOUS_VALUE
 	echo 0 > /proc/sys/kernel/nmi_watchdog
 	return $NMI_WD_PREVIOUS_VALUE
 }

@@ -13,7 +13,6 @@
 # include working environment
 . ../common/init.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 
@@ -77,7 +76,7 @@ outputs["xfs:\*"]="^\s*xfs:"
 outputs["kmem:\*"]="^\s*kmem:"
 outputs["syscalls:\*"]="^\s*syscalls:sys"
 
-for i in ${!outputs[@]}; do
+for i in "${!outputs[@]}"; do
 	j=`echo $i | tr -d '\\\*:'`
 	$CMD_PERF list $i > $LOGS_DIR/basic_$j.log
 	PERF_EXIT_CODE=$?

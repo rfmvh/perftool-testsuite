@@ -19,7 +19,6 @@
 # include working environment
 . ../common/init.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 # ppc64, ppc64le (or ppc64el) only
@@ -58,7 +57,7 @@ fi
 
 # we can continue only if VIRT is "LPAR" or unknown
 echo "$VIRT" | grep -i -q "lpar"
-if ! [ "$VIRT" = "" -o "$VIRT" = "unknown" -o $? -eq 0 ]; then
+if ! [ "$VIRT" = "" ] || [ "$VIRT" = "unknown" ] || [ $? -eq 0 ]; then
 	print_overall_skipped
 	exit 0
 fi

@@ -17,7 +17,6 @@
 # include working environment
 . ../common/init.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 check_uprobes_available

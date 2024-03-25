@@ -13,7 +13,6 @@
 # include working environment
 . ../common/init.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 consider_skipping $RUNMODE_EXPERIMENTAL
@@ -43,6 +42,7 @@ for scr in $TESTED_SCRIPTS; do
 		print_testcase_skipped "script $scr"
 		continue
 	fi
+	# shellcheck source=/dev/null
 	. $CURRENT_TEST_DIR/subtest__$scr.sh
 done
 

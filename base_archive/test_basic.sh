@@ -10,6 +10,9 @@
 #
 #
 
+# run the setup
+source ./setup_src.sh
+
 # include working environment
 . ../common/init.sh
 
@@ -22,14 +25,6 @@ if [ -n "$PERFSUITE_RUN_DIR" ]; then
 fi
 
 TEST_RESULT=0
-
-# run the setup
-source ./setup_src.sh
-
-# the test name needs to be reset here
-# shellcheck disable=SC2034 # the variable is later used after the working environment is included
-THIS_TEST_NAME=`basename $0 .sh`
-
 
 ### help message
 

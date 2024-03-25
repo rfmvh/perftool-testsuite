@@ -71,7 +71,7 @@ READ_PLUS_CHECK=`perl -ne 'BEGIN{$n=0;$en=0;}{$n+=$1 if ($en&&/\s*\d+\s+\S+\s+(\
 WRITE_PLUS_CHECK=`perl -ne 'BEGIN{$n=0;$en=0;}{$n+=$1 if ($en&&/\s*\d+\s+\S+\s+(\d+)\s+\d+/);$en=1 if /^\s+pid\s+comm\s+#\s+writes\s+bytes_written/;$en=0 if /^\s*$/} END{print "$n";}' < $LOGS_DIR/script__${script}__report.log`
 
 for COUNT in "0" "1" "32" "58" "125" "600"; do
-	PERF_EXIT_CDOE=0
+	PERF_EXIT_CODE=0
 	$CMD_PERF script record $script -o $CURRENT_TEST_DIR/perf.data -- dd if=/dev/zero of=/dev/null bs=1024 count=$COUNT 2> $LOGS_DIR/script__${script}__record__${COUNT}.log
 	(( PERF_EXIT_CODE += $? ))
 

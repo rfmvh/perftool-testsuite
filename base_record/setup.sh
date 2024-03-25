@@ -20,8 +20,6 @@ if [ -n "$PERFSUITE_RUN_DIR" ]; then
 	test -d "$MAKE_TARGET_DIR" || mkdir -p "$MAKE_TARGET_DIR"
 fi
 
-THIS_TEST_NAME=`basename $0 .sh`
-
 make -s -C examples
 print_results $? 0 "building the example code"
 TEST_RESULT=$?

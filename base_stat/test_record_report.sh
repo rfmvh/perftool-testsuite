@@ -15,7 +15,6 @@
 # include working environment
 . ../common/init.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 
@@ -26,7 +25,7 @@ $CMD_PERF stat record -o $CURRENT_TEST_DIR/perf.data $CMD_SIMPLE 2> $LOGS_DIR/re
 PERF_EXIT_CODE=$?
 
 REGEX_HEADER="\s*Performance counter stats for .+true':"
-REGEX_LINES="\s*"$RE_NUMBER"\s+"$RE_EVENT"\s+#\s+"$RE_NUMBER"%?.*"
+REGEX_LINES="\s*$RE_NUMBER\s+$RE_EVENT\s+#\s+$RE_NUMBER%?.*"
 ../common/check_all_patterns_found.pl "$REGEX_HEADER" "$REGEX_LINES" < $LOGS_DIR/record_report_record.log
 CHECK_EXIT_CODE=$?
 

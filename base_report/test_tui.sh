@@ -13,7 +13,6 @@
 # include working environment
 . ../common/init.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 consider_skipping $RUNMODE_EXPERIMENTAL
@@ -23,7 +22,7 @@ if ! should_support_expect_script; then
 	exit 0
 fi
 
-COMMAND=pwd
+COMMAND="pwd"
 
 
 # record

@@ -13,9 +13,6 @@
 # include working environment
 . ../common/init.sh
 
-# shellcheck disable=SC2034 # the variable is later used after the working environment is included
-THIS_TEST_NAME=`basename $0 .sh`
-
 if [ -n "$PERFSUITE_RUN_DIR" ]; then
 	# when $PERFSUITE_RUN_DIR is set to something, all the logs and temp files will be placed there
 	# --> the $PERFSUITE_RUN_DIR/perf_something/examples and $PERFSUITE_RUN_DIR/perf_something/logs

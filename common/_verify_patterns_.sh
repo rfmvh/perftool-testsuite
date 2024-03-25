@@ -1,7 +1,5 @@
 #!/bin/bash
 
-TEST_NAME="common"
-
 . ../common/init.sh
 . ../common/patterns.sh
 

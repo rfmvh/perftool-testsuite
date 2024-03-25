@@ -14,7 +14,6 @@
 # include working environment
 . ../common/init.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 check_uprobes_available
@@ -25,7 +24,7 @@ fi
 
 # clean up before we start
 clear_all_probes
-find . -name perf.data\* | xargs -r rm
+find . -name perf.data\* -print0 | xargs -0 -r rm
 
 
 ### adding userspace probes

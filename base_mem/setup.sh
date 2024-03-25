@@ -20,8 +20,6 @@ if [ -n "$PERFSUITE_RUN_DIR" ]; then
 	test -d "$MAKE_TARGET_DIR" || mkdir -p "$MAKE_TARGET_DIR"
 fi
 
-THIS_TEST_NAME=`basename $0 .sh`
-
 # skip the testcase if $PERFSUITE_RUN_DIR is set, since we
 # cannot guarantee not writting into the current tree (we
 # miss '-o' option in 'perf mem record'

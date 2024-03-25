@@ -15,11 +15,10 @@
 # include working environment
 . ../common/init.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 # skip the testcase if there are no suitable events to be used
-if [ "$MEM_LOADS_SUPPORTED" = "no" -a "$MEM_STORES_SUPPORTED" = "no" ]; then
+if [ "$MEM_LOADS_SUPPORTED" = "no" ] && [ "$MEM_STORES_SUPPORTED" = "no" ]; then
 	print_overall_skipped
 	exit 0
 fi

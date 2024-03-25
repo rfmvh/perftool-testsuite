@@ -16,7 +16,6 @@
 # include working environment
 . ../common/init.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 if [ ! "$PARAM_STAT_TRACEPOINT_EVENTS_SYNTAX" == "y" ]; then

@@ -26,10 +26,10 @@ fi
 # report
 
 # export-to-sqlite has no option for input file
-cd $CURRENT_TEST_DIR
+cd $CURRENT_TEST_DIR || true
 $CMD_PERF script report $script $LOGS_DIR/script__${script}__database.data > $LOGS_DIR/script__${script}__report.log 2> /dev/null
 PERF_EXIT_CODE=$?
-cd $OLDPWD
+cd $OLDPWD || true
 
 REGEX_PROCESSING_LINE="^\d+-\d+-\d+\s\d+:\d+:${RE_NUMBER}\s[\w .]+"
 

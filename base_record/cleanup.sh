@@ -16,8 +16,8 @@ fi
 
 make -s -C examples clean
 
-find . -name \*.log | xargs -r rm
-find . -name \*.err | xargs -r rm
+find . -name \*.log -print0 | xargs -r -0 rm
+find . -name \*.err -print0 | xargs -r -0 rm
 rm -f perf.data*
 RM_EXIT_CODE=$?
 

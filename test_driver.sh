@@ -27,9 +27,9 @@ TESTING_SET['i686']="annotate buildid list probe report stat trace"
 
 
 #### show something about the environment
-export ARCH=`arch`
-export KERNEL=`uname -r`
-export NPROC=`nproc`
+ARCH=`arch`; export ARCH
+KERNEL=`uname -r`; export KERNEL
+NPROC=`nproc`; export NPROC
 echo "======================================================"
 echo "Kernel: $KERNEL"
 echo "Architecture: $ARCH"
@@ -47,7 +47,8 @@ else
 	echo -e "\t$VENDOR_ID\tFamily:$FAMILY Model:$MODEL Stepping:$STEPPING"
 fi
 if [[ $ARCH =~ ppc64.* ]]; then
-	export VIRTUALIZATION=`systemd-detect-virt -q && echo PowerKVM || ( test -e /proc/ppc64/lparcfg && echo PowerVM || echo none )`
+	VIRTUALIZATION=`systemd-detect-virt -q && echo PowerKVM || ( test -e /proc/ppc64/lparcfg && echo PowerVM || echo none )`
+	export  VIRTUALIZATION
 else
 	VIRTUALIZATION=`systemd-detect-virt`
 	export VIRTUALIZATION=${VIRTUALIZATION:-none}
@@ -61,7 +62,7 @@ SUBTESTS_TO_RUN="${TESTING_SET[$ARCH]}"
 if [ "$PERFTEST_LOGGING" = "y" ]; then
 	test -d LOGS && rm -rf LOGS
 	mkdir LOGS
-	export LOGS_DIR=`pwd`/LOGS
+	LOGS_DIR=`pwd`/LOGS; export LOGS_DIR
 
 	# print header
 	echo "============= Running tests ============="
@@ -73,7 +74,7 @@ PASSED_COUNT=0
 #### run the tests
 for subtest in $SUBTESTS_TO_RUN; do
 	SUBTEST_RESULT=0
-	cd base_$subtest
+	cd base_$subtest || { echo "Failure, base_dir does not exist!"; exit 1; }
 	if [ "$PERFTEST_LOGGING" = "y" ]; then
 		mkdir $LOGS_DIR/$subtest
 		export LOGGING="> $LOGS_DIR/$subtest/"
@@ -89,7 +90,7 @@ for subtest in $SUBTESTS_TO_RUN; do
 
 	# run all the available testcases
 	for testcase in test_*sh; do
-		eval ./$testcase $LOGGING/`basename $testcase .sh`.log
+		eval ./$testcase $LOGGING/"`basename $testcase .sh`".log
 		(( SUBTEST_RESULT += $?))
 	done
 

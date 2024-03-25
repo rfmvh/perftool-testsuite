@@ -13,7 +13,6 @@
 # include working environment
 . ../common/init.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 EVENTS_TO_TEST=`$CMD_PERF list --no-desc uncore | grep -P "^\s\sunc" | grep -v uncore_frequency | awk '{print $1}' | tr '\n' ' '`

@@ -10,17 +10,13 @@
 #       command, which manages buildid-cache.
 #
 
+### run the setup
+source setup_src.sh
+
 # include working environment
 . ../common/init.sh
 
 TEST_RESULT=0
-
-### run the setup
-source setup_src.sh
-
-# the test name needs to be reset here
-THIS_TEST_NAME=`basename $0 .sh`
-
 
 ### help message
 

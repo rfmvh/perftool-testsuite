@@ -13,7 +13,6 @@
 # include working environment
 . ../common/init.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 # skip if not running in EXPERIMENTAL runmode
@@ -21,7 +20,7 @@ consider_skipping $RUNMODE_EXPERIMENTAL
 
 
 # cause some load
-for i in `seq 1 $MY_CPUS_ONLINE`; do
+for _ in `seq 1 $MY_CPUS_ONLINE`; do
 	$CURRENT_TEST_DIR/examples/load 99999 > /dev/null &
 done
 

@@ -28,7 +28,6 @@
 # include working environment
 . ../common/init.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 TEST_PROBE="vfs_read"
@@ -71,7 +70,7 @@ PERF_EXIT_CODE=$?
 REGEX_STAT_HEADER="\s*Performance counter stats for \'cat /proc/uptime\':"
 REGEX_STAT_VALUES="\s*\d+\s+probe:myprobe"
 # the value should be greater than 1
-REGEX_STAT_VALUES_NONZERO="\s*[1-9][0-9]*\s+probe:myprobe"
+#REGEX_STAT_VALUES_NONZERO="\s*[1-9][0-9]*\s+probe:myprobe" - is not used? todo
 REGEX_STAT_TIME="\s*$RE_NUMBER\s+seconds (?:time elapsed|user|sys)"
 ../common/check_all_lines_matched.pl "$REGEX_STAT_HEADER" "$REGEX_STAT_VALUES" "$REGEX_STAT_TIME" "$RE_LINE_COMMENT" "$RE_LINE_EMPTY" < $LOGS_DIR/probe_syntax_custom_name_use.log
 CHECK_EXIT_CODE=$?

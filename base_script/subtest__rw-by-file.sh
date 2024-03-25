@@ -30,7 +30,7 @@ REGEX_MSG_READ="file read counts for dd:"
 REGEX_HEADER_READ="\s*fd\s+# reads\s+bytes_requested"
 REGEX_MSG_WRITE="file write counts for dd:"
 REGEX_HEADER_WRITE="\s*fd\s+# writes\s+bytes_written"
-REGEX_HEADER_UNDERLINE="[- ]{25,}"
+#REGEX_HEADER_UNDERLINE="[- ]{25,}"
 REGEX_FILE_LINE="\s*\d+\s+\d+\s+\d+"
 
 ../common/check_all_patterns_found.pl "$REGEX_MSG_READ" "$REGEX_HEADER_READ" "$REGEX_MSG_WRITE" "$REGEX_HEADER_WRITE" "$REGEX_HEADER_UNDELINE" "$REGEX_FILE_LINE" < $LOGS_DIR/script__${script}__report.log
@@ -74,7 +74,7 @@ WRITE_PLUS_CHECK=`perl -ne 'BEGIN{$n=0;$en=0;}{$n+=$1 if ($en&&/\s*\d+\s+(\d+)\s
 (( WRITE_PLUS_CHECK -= $REAL_COUNT ))
 
 for COUNT in "0" "1" "10" "20" "120" "125" "257"; do
-	PERF_EXIT_CDOE=0
+	PERF_EXIT_CODE=0
 	$CMD_PERF script record $script -o $CURRENT_TEST_DIR/perf.data -- dd if=/dev/zero of=/dev/null bs=1024 count=$COUNT 2> $LOGS_DIR/script__${script}__record__${COUNT}.log
 	(( PERF_EXIT_CODE += $? ))
 

@@ -21,13 +21,13 @@ print_results $PERF_EXIT_CODE 0 "script $script :: record"
 # report
 
 # stackcollapse has no option for input file
-cd $CURRENT_TEST_DIR
+cd $CURRENT_TEST_DIR || false
 CHECK_EXIT_CODE=$?
 
 $CMD_PERF script report $script > $LOGS_DIR/script__${script}__report.log 2> $LOGS_DIR/script__${script}__report.err
 PERF_EXIT_CODE=$?
 
-cd $OLDPWD
+cd $OLDPWD || false
 (( CHECK_EXIT_CODE += $? ))
 
 $CMD_PERF script -i $CURRENT_TEST_DIR/perf.data | grep -oP "^[^\[]*\[" | sed 's/\s*[0-9]*\s\[$//g' | sort | uniq -c | sed 's/^\s*\([0-9]*\)\s*\(.*\)$/\2 \1/g' | sed 's/ /_/g' | sed 's/_\([^_]*$\)/ \1/g' | LC_COLLATE=C sort > $LOGS_DIR/script__${script}__collapse.log
