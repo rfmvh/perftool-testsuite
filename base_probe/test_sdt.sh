@@ -35,6 +35,8 @@ fi
 # FIXME -- experimental (this test is testing libpthread SDT tracepoints)
 PTHREAD_LIBRARY=`$CMD_PERF probe --cache --list | grep ^/ | cut -d' ' -f1 | grep -e libc -e libpthread | sort | tail -1`
 EVENTS_TO_TEST=`$CMD_PERF probe --cache --list | grep -P 'sdt_lib.+:pthread_' | perl -pe 's/\n/ /' | perl -pe 's/\s+$//'`
+ADD_EVENTS_TO_TEST=`echo " $EVENTS_TO_TEST" | perl -pe 's/ / -a /g'`
+OUTPUT_EVENTS_TO_TEST=`echo $EVENTS_TO_TEST | perl -pe 's/:[^=]+=/:/g'`
 NO_OF_EVENTS_TO_TEST=`echo "$EVENTS_TO_TEST" | wc -w`
 
 if [ -z "$PTHREAD_LIBRARY" ] || [ -z "$EVENTS_TO_TEST" ]; then
@@ -54,10 +56,10 @@ find . -name perf.data\* -print0 | xargs -0 -r rm
 ### adding SDT tracepoints as probes
 
 # perf probe should add all the SDT tracepoints as probes
-$CMD_PERF probe -x $PTHREAD_LIBRARY "`echo " $EVENTS_TO_TEST" | perl -pe 's/ / -a /g'`" 2> $LOGS_DIR/sdt_adding_probes.log
+$CMD_PERF probe -x $PTHREAD_LIBRARY $ADD_EVENTS_TO_TEST 2> $LOGS_DIR/sdt_adding_probes.log
 PERF_EXIT_CODE=$?
 
-../common/check_all_patterns_found.pl "`echo $EVENTS_TO_TEST | perl -pe 's/:[^=]+=/:/g'`" < $LOGS_DIR/sdt_adding_probes.log
+../common/check_all_patterns_found.pl $OUTPUT_EVENTS_TO_TEST < $LOGS_DIR/sdt_adding_probes.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "adding SDT tracepoints as probes"
@@ -69,7 +71,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "adding SDT tracepoints as probes
 $CMD_PERF probe -l > $LOGS_DIR/sdt_list.log
 PERF_EXIT_CODE=$?
 
-../common/check_all_patterns_found.pl "`echo $EVENTS_TO_TEST | perl -pe 's/:[^=]+=/:/g'`" < $LOGS_DIR/sdt_list.log
+../common/check_all_patterns_found.pl $OUTPUT_EVENTS_TO_TEST < $LOGS_DIR/sdt_list.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probes"
@@ -127,7 +129,7 @@ for N in 37 97 237; do
 	PERF_EXIT_CODE=$?
 
 	# perf script should report exact sample counts
-	../common/check_all_lines_matched.pl "`echo $EVENTS_TO_TEST | perl -pe 's/:[^=]+=/:/g'`" < $LOGS_DIR/sdt_script_$N.log
+	../common/check_all_lines_matched.pl $OUTPUT_EVENTS_TO_TEST < $LOGS_DIR/sdt_script_$N.log
 	CHECK_EXIT_CODE=$?
 	../common/check_all_lines_matched.pl "$REGEX_SCRIPT_LINE" < $LOGS_DIR/sdt_script_$N.log
 	(( CHECK_EXIT_CODE += $? ))
