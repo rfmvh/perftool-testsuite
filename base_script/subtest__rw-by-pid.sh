@@ -74,7 +74,7 @@ WRITE_PLUS_CHECK=`perl -ne 'BEGIN{$n=0;$en=0;}{$n+=$1 if ($en&&/\s*\d+\s+\S+\s+(
 (( WRITE_PLUS_CHECK -= $REAL_COUNT ))
 
 for COUNT in "0" "1" "10" "20" "120" "125" "257"; do
-	PERF_EXIT_CDOE=0
+	PERF_EXIT_CODE=0
 	$CMD_PERF script record $script -o $CURRENT_TEST_DIR/perf.data -- dd if=/dev/zero of=/dev/null bs=1024 count=$COUNT 2> /dev/null
 	(( PERF_EXIT_CODE += $? ))
 

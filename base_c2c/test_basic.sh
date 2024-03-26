@@ -12,21 +12,19 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 REASONABLE_SAMPLE_RATE=20000
 SAMPLE_RATE_MIN=18000
 
 # skip the testcase if there are no suitable events to be used
-if [ "$MEM_LOADS_SUPPORTED" = "no" -a "$MEM_STORES_SUPPORTED" = "no" ]; then
+if [ "$MEM_LOADS_SUPPORTED" = "no" ] && [ "$MEM_STORES_SUPPORTED" = "no" ]; then
 	print_overall_skipped
 	exit 0
 fi
 
 # skip the testcase if there are no suitable events to be used
-if [ "$LDLAT_LOADS_SUPPORTED" = "no" -a "$LDLAT_STORES_SUPPORTED" = "no" ]; then
+if [ "$LDLAT_LOADS_SUPPORTED" = "no" ] && [ "$LDLAT_STORES_SUPPORTED" = "no" ]; then
 	# FIXME: one of the blocks, either this or the previous one is probably redundant
 	# but in order to check it, we need to watch its behaviour for some time, since
 	# the mem-* events are still somehow broken on some boxes, thus it's safer to have
@@ -224,7 +222,7 @@ fi
 
 ### ldlat-loads&ldlat-stores record, ldlat-loads&ldlat-stores event check, ldlat-loads&ldlat-stores report, ldlat-loads&ldlat-stores verification
 
-if [ "$LDLAT_LOADS_SUPPORTED" = "yes" -a "$LDLAT_STORES_SUPPORTED" = "yes" ]; then
+if [ "$LDLAT_LOADS_SUPPORTED" = "yes" ] && [ "$LDLAT_STORES_SUPPORTED" = "yes" ]; then
 	### both loads and stores record
 
 	# test that perf c2c record can record both ldlat-loads and ldlat-stores

@@ -12,9 +12,9 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
+test -d "$HEADER_TAR_DIR" || mkdir -p "$HEADER_TAR_DIR"
+
 SW_EVENT="cpu-clock"
 
 $CMD_PERF record -asdg -e $SW_EVENT -o $CURRENT_TEST_DIR/perf.data -- $CMD_LONGER_SLEEP 2> $LOGS_DIR/setup.log

@@ -11,9 +11,6 @@
 #
 
 . ../common/init.sh
-. ./settings.sh
-
-THIS_TEST_NAME=`basename $0 .sh`
 
 $CMD_PERF record -asdg -o $CURRENT_TEST_DIR/perf.data -- $CMD_LONGER_SLEEP 2> $LOGS_DIR/setup.log
 PERF_EXIT_CODE=$?

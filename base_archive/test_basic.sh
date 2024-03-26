@@ -10,9 +10,11 @@
 #
 #
 
+# run the setup
+source ./setup_src.sh
+
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
 # skip the testcase if $PERFSUITE_RUN_DIR is set, since we
 # cannot guarantee not writting into the current tree (we
@@ -23,13 +25,6 @@ if [ -n "$PERFSUITE_RUN_DIR" ]; then
 fi
 
 TEST_RESULT=0
-
-# run the setup
-source ./setup_src.sh
-
-# the test name needs to be reset here
-THIS_TEST_NAME=`basename $0 .sh`
-
 
 ### help message
 

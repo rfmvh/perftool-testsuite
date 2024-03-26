@@ -12,9 +12,7 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 consider_skipping $RUNMODE_EXPERIMENTAL
@@ -126,7 +124,7 @@ perl -ne 'print "$1\n" if /\s+'$RE_DATE_YYYYMMDD'\s+'$RE_TIME'\.'$RE_NUMBER'\s+(
 (( CMD_EXIT_CODE += $? ))
 
 # create nanosecond deltas from script output
-LAST_TIME_FIELD=$(echo `head -n 1 $LOGS_DIR/field_tod_timestamps.log` \* 1000000000 | bc)
+LAST_TIME_FIELD=$(echo "`head -n 1 $LOGS_DIR/field_tod_timestamps.log`" \* 1000000000 | bc)
 while read timestamps; do
 	CURRENT_TIME_FIELD=`echo "$timestamps" \* 1000000000 | bc`
 	echo $CURRENT_TIME_FIELD - $LAST_TIME_FIELD | bc

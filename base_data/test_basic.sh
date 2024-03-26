@@ -12,9 +12,7 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 # skip if the CTF conversion is not compiled in
@@ -67,6 +65,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "convert --to-ctf"
 RECORD_SAMPLES=`perl -ne 'print "$1" if /\((\d+) samples\)/' $LOGS_DIR/setup_record.log`
 DATA_SAMPLES=`perl -ne 'print "$1" if /\((\d+) samples\)/' $LOGS_DIR/basic_convert_ctf.log`
 
+# shellcheck disable=SC2065 # the file redirection is intentional
 test $RECORD_SAMPLES -eq $DATA_SAMPLES &> /dev/null
 print_results 0 $? "convert --to-ctl sample count check ($DATA_SAMPLES == $RECORD_SAMPLES)"
 (( TEST_RESULT += $? ))
@@ -94,6 +93,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "convert --all --to-ctf"
 
 DATA_ALL_SAMPLES=`perl -ne 'print "$1" if /\((\d+) samples, \d+ non-samples\)/' $LOGS_DIR/basic_convert_all_ctf.log`
 
+# shellcheck disable=SC2065 # the file redirection is intentional
 test $RECORD_SAMPLES -eq $DATA_ALL_SAMPLES &> /dev/null
 print_results 0 $? "convert --to-ctl sample count check ($DATA_ALL_SAMPLES == $RECORD_SAMPLES)"
 (( TEST_RESULT += $? ))

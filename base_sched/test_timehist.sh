@@ -12,9 +12,7 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 
@@ -50,7 +48,7 @@ if echo "$REGEX_TMP_PERF" | grep -q /; then
 	REGEX_PERF_PID=`echo "$REGEX_PERF_PID_TID" | grep -o '^[0-9]*'`
 	REGEX_PERF_TID=`echo "$REGEX_PERF_PID_TID" | grep -o '[0-9]*$'`
 else
-	REGEX_PERF_PID=`echo "$REGEX_TMP_PERF" | grep -o [0-9]*`
+	REGEX_PERF_PID=`echo "$REGEX_TMP_PERF" | grep -o '[0-9]*'`
 	REGEX_PERF_TID=$REGEX_PERF_PID
 	REGEX_PERF_PID_TID=$REGEX_PERF_PID
 fi
@@ -61,7 +59,7 @@ if echo "$REGEX_TMP_SLEEP" | grep -q /; then
 	REGEX_SLEEP_PID=`echo "$REGEX_SLEEP_PID_TID" | grep -o '^[0-9]*'`
 	REGEX_SLEEP_TID=`echo "$REGEX_SLEEP_PID_TID" | grep -o '[0-9]*$'`
 else
-	REGEX_SLEEP_PID=`echo "$REGEX_TMP_SLEEP" | grep -o [0-9]*`
+	REGEX_SLEEP_PID=`echo "$REGEX_TMP_SLEEP" | grep -o '[0-9]*'`
 	REGEX_SLEEP_TID=$REGEX_SLEEP_PID
 	REGEX_SLEEP_PID_TID=$REGEX_SLEEP_PID
 fi
@@ -137,11 +135,11 @@ $CMD_PERF sched -i $CURRENT_TEST_DIR/perf.data timehist -S > $LOGS_DIR/timehist_
 PERF_EXIT_CODE=$?
 
 # should be the same as with -s option
-grep -B 1 -A `wc -l < $LOGS_DIR/timehist_with-summary.log` 'Runtime summary' < $LOGS_DIR/timehist_with-summary.log > $LOGS_DIR/timehist_with-summary_summ.log 2> /dev/null
+grep -B 1 -A "`wc -l < $LOGS_DIR/timehist_with-summary.log`" 'Runtime summary' < $LOGS_DIR/timehist_with-summary.log > $LOGS_DIR/timehist_with-summary_summ.log 2> /dev/null
 CHECK_EXIT_CODE=$?
 
 # should be the same as with no options
-grep -B `wc -l < $LOGS_DIR/timehist_with-summary.log` 'Runtime summary' < $LOGS_DIR/timehist_with-summary.log | head -n -2 > $LOGS_DIR/timehist_with-summary_all.log 2> /dev/null
+grep -B "`wc -l < $LOGS_DIR/timehist_with-summary.log`" 'Runtime summary' < $LOGS_DIR/timehist_with-summary.log | head -n -2 > $LOGS_DIR/timehist_with-summary_all.log 2> /dev/null
 (( CHECK_EXIT_CODE += $? ))
 
 cmp $LOGS_DIR/timehist_summary.log $LOGS_DIR/timehist_with-summary_summ.log &> /dev/null

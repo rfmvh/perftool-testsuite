@@ -14,8 +14,9 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
+# the test name needs to be reset here
+# shellcheck disable=SC2034 # the variable is later used after the working environment is included
 THIS_TEST_NAME="setup"
 
 # clear the cache

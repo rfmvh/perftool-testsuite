@@ -12,9 +12,7 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 consider_skipping $RUNMODE_STANDARD
@@ -27,7 +25,7 @@ fi
 
 test -d $LOGS_DIR/hv_24x7 || mkdir $LOGS_DIR/hv_24x7
 
-if [ "$PARAM_STAT_24x7_ALL_DOMAINS" = "y" ]; then
+if [ "${PARAM_STAT_24x7_ALL_DOMAINS:?}" == "y" ]; then
 	DOMAIN_TABLE_FILE=/sys/bus/event_source/devices/hv_24x7/interface/domains
 	if [ -e $DOMAIN_TABLE_FILE ]; then
 		DOMAINS_TO_TEST=`perl -ne 'print "$1 " if /^(\d+):/' < $DOMAIN_TABLE_FILE`
@@ -38,7 +36,7 @@ else
 	DOMAINS_TO_TEST="1 2"
 fi
 
-if [ "$PARAM_STAT_24x7_ALL_CORES" = "y" ]; then
+if [ "${PARAM_STAT_24x7_ALL_CORES:?}" == "y" ]; then
 	NPROC=`nproc`
 	CORES_TO_TEST="`seq 0 $((NPROC-1))`"
 else

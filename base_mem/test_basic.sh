@@ -12,15 +12,13 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 REASONABLE_SAMPLE_RATE=20000
 SAMPLE_RATE_MIN=18000
 
 # skip the testcase if there are no suitable events to be used
-if [ "$MEM_LOADS_SUPPORTED" = "no" -a "$MEM_STORES_SUPPORTED" = "no" ]; then
+if [ "$MEM_LOADS_SUPPORTED" = "no" ] && [ "$MEM_STORES_SUPPORTED" = "no" ]; then
 	print_overall_skipped
 	exit 0
 fi
@@ -188,7 +186,7 @@ fi
 
 ### loads&stores record, loads&stores event check, loads&tores report
 
-if [ "$MEM_LOADS_SUPPORTED" = "yes" -a "$MEM_STORES_SUPPORTED" = "yes" ]; then
+if [ "$MEM_LOADS_SUPPORTED" = "yes" ] && [ "$MEM_STORES_SUPPORTED" = "yes" ]; then
 	### both loads and stores record
 
 	# test that perf mem record can record both mem-loads and mem-stores
@@ -259,7 +257,6 @@ if [ -f $CURRENT_TEST_DIR/perf.data ]; then
 	$CMD_PERF script -i $CURRENT_TEST_DIR/perf.data -F "comm,pid,event,weight" > $LOGS_DIR/basic_weight.log 2> $LOGS_DIR/basic_weight.err
 	PERF_EXIT_CODE=$?
 
-	REGEX_SYMBOL="(?:[\w\.@:<>*~, ]+\+$RE_ADDRESS|\[unknown\])"
 	REGEX_SCRIPT_LINE="\s*[\w\-]+\s+$RE_NUMBER\s+$RE_EVENT_ANY\s+$RE_NUMBER"
 	../common/check_all_patterns_found.pl "$REGEX_SCRIPT_LINE" < $LOGS_DIR/basic_weight.log
 	CHECK_EXIT_CODE=$?

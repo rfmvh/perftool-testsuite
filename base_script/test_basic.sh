@@ -12,9 +12,7 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 consider_skipping $RUNMODE_STANDARD
@@ -189,7 +187,6 @@ print_results 0 $? "script :: cpu :: sample count check ($CNT <= $N_SAMPLES)"
 
 REGEX_PERF_COMM_SCRIPT_LINE="^\s*perf(?:-exec)?\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT_ANY:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
 REGEX_SLEEP_COMM_SCRIPT_LINE="^\s*sleep\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT_ANY:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
-REGEX_COMMAND_NAME_COMM_SCRIPT_LINE="^\s*$COMMAND_NAME\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT_ANY:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
 
 REGEX_PERF_COMM_SMALL_SCRIPT_LINE="^\s*perf(?:-exec)?\s+$RE_NUMBER\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT_ANY:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
 REGEX_COMMAND_NAME_COMM_SMALL_SCRIPT_LINE="^\s*$COMMAND_NAME\s+$RE_NUMBER\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT_ANY:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"

@@ -12,9 +12,7 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 consider_skipping $RUNMODE_EXPERIMENTAL
@@ -49,7 +47,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "timechart with highlight=$HIGHLI
 # timechart with highlight :: highlight check
 
 TITLE_LINE="<title>.*running\s*($RE_NUMBER)\s*us<\/title>"
-RECT_LINE="<rect\s*x=\"$RE_NUMBER\"\s*width=\"$RE_NUMBER\"\s*y=\"$RE_NUMBER\"\s*height=\"$RE_NUMBER\"\s*class=\"(\w+)\"\/>"
+RECT_LINE="<rect\s*x=\x22$RE_NUMBER\x22\s*width=\x22$RE_NUMBER\x22\s*y=\x22$RE_NUMBER\x22\s*height=\x22$RE_NUMBER\x22\s*class=\x22(\w+)\x22\/>"
 
 # checking if the highlight option set highlight class
 CHECK_EXIT_CODE=`perl -ne 'BEGIN{$n=0; $us=0; $class=""} {$n += 1 if ($class eq "sample" and $us > '$HIGHLIGHT'); $us = $1 if /^'$TITLE_LINE'$/; $class = "$1" if /^'$RECT_LINE'$/} END{print "$n";}' < $LOGS_DIR/highlight_timechart.svg`

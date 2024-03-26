@@ -12,9 +12,7 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 EVENTS_TO_TEST=`$CMD_PERF list sw | grep "Software event" | awk '{print $1}' | egrep '^.' | tr '\n' ' '`
@@ -39,7 +37,7 @@ for event in $EVENTS_TO_TEST; do
 	REGEX_LINES="$RE_NUMBER;[^;]*;$event;$RE_NUMBER;100\.00"
 	test -e $LOGS_DIR/sw/$event.log && ../common/check_all_patterns_found.pl "$REGEX_LINES" < $LOGS_DIR/sw/$event.log
 	CHECK_EXIT_CODE=$?
-	if [ $TESTLOG_VERBOSITY -ge 2 -a $PERF_EXIT_CODE -ne 0 ]; then
+	if [ $TESTLOG_VERBOSITY -ge 2 ] && [ $PERF_EXIT_CODE -ne 0 ]; then
 		cat $LOGS_DIR/test_sw.err
 	fi
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "event $event"
@@ -58,7 +56,7 @@ for event in $EVENTS_TO_TEST; do
 	PERF_EXIT_CODE=$?
 	test -e $LOGS_DIR/sw/$event--ku.log && ../common/check_ku_sum.pl < $LOGS_DIR/sw/$event--ku.log
 	CHECK_EXIT_CODE=$?
-	if [ $TESTLOG_VERBOSITY -ge 2 -a $PERF_EXIT_CODE -ne 0 ]; then
+	if [ $TESTLOG_VERBOSITY -ge 2 ] && [ $PERF_EXIT_CODE -ne 0 ]; then
 		cat $LOGS_DIR/test_sw.err
 	fi
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "k+u=ku check :: event $event"

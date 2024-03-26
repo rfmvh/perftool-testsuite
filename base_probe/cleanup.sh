@@ -9,12 +9,11 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
 clear_all_probes
 if [ ! -n "$PERFSUITE_RUN_DIR" ]; then
-	find . -name \*.log | xargs -r rm
-	find . -name \*.err | xargs -r rm
+	find . -name \*.log -print0 | xargs -0 -r rm
+	find . -name \*.err -print0 | xargs -0 -r rm
 	rm -f perf.data*
 	make -s -C examples clean
 fi

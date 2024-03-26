@@ -12,9 +12,7 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 
@@ -48,14 +46,14 @@ fi
 ### basic execution
 
 # diff...
-( cd $CURRENT_TEST_DIR ; $CMD_PERF diff -m -t'|' perf.data.1 perf.data.2 > $LOGS_DIR/basic_diff.log 2> $LOGS_DIR/basic_diff.err )
+( cd $CURRENT_TEST_DIR && $CMD_PERF diff -m -t'|' perf.data.1 perf.data.2 > $LOGS_DIR/basic_diff.log 2> $LOGS_DIR/basic_diff.err )
 PERF_EXIT_CODE=$?
 
 # check the diff output
 REGEX_SEP="\s*\|\s*"
 REGEX_LINE_BASELINE="$RE_NUMBER$REGEX_SEP$REGEX_SEP(?:$RE_FILE_NAME)|(?:\[[\w\.]+\])$REGEX_SEP\[[\.kH]\]\s[\w\.\-]+"
-REGEX_LINE_DELTA="$REGEX_SEP[\+\-]$RE_NUMBER%$REGEX_SEP(?:$RE_FILE_NAME)|(?:\[[\w\.]+\](?:[\.\w]+)?)$REGEX_SEP\[[\.kH]\]\s[\w\.\-]+"
-REGEX_LINE_BOTH="$RE_NUMBER$REGEX_SEP[\+\-]$RE_NUMBER%$REGEX_SEP(?:$RE_FILE_NAME)|(?:\[[\w\.]+\](?:[\.\w]+)?)$REGEX_SEP\[[\.kH]\]\s[\w\.\-]+"
+REGEX_LINE_DELTA="${REGEX_SEP}[\+\-]$RE_NUMBER%$REGEX_SEP(?:$RE_FILE_NAME)|(?:\[[\w\.]+\](?:[\.\w]+)?)$REGEX_SEP\[[\.kH]\]\s[\w\.\-]+"
+REGEX_LINE_BOTH="$RE_NUMBER${REGEX_SEP}[\+\-]$RE_NUMBER%$REGEX_SEP(?:$RE_FILE_NAME)|(?:\[[\w\.]+\](?:[\.\w]+)?)$REGEX_SEP\[[\.kH]\]\s[\w\.\-]+"
 # check for the basic structure
 ../common/check_all_lines_matched.pl "$REGEX_LINE_BASELINE" "$REGEX_LINE_DELTA" "$REGEX_LINE_BOTH" "$RE_LINE_COMMENT" "$RE_LINE_EMPTY" < $LOGS_DIR/basic_diff.log
 CHECK_EXIT_CODE=$?
@@ -63,7 +61,7 @@ CHECK_EXIT_CODE=$?
 ../common/check_all_patterns_found.pl "${REGEX_SEP}load" < $LOGS_DIR/basic_diff.log
 (( CHECK_EXIT_CODE += $? ))
 # check for the output's sanity: "load" must give similar results, not differ byt more than 30%
-../common/check_no_patterns_found.pl "$REGEX_SEP[\+\-][3-9]\d\.\d+%\s*${REGEX_SEP}load" < $LOGS_DIR/basic_diff.log
+../common/check_no_patterns_found.pl "${REGEX_SEP}[\+\-][3-9]\d\.\d+%\s*${REGEX_SEP}load" < $LOGS_DIR/basic_diff.log
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic execution - diff"

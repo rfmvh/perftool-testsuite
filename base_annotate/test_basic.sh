@@ -12,9 +12,7 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 
@@ -78,7 +76,7 @@ CHECK_EXIT_CODE=$?
 ../common/check_all_patterns_found.pl "main\s*\(" "from = atol" "from = 20L;" "for\s*\(i = 1L; j; \+\+i\)" "return 0;" < $LOGS_DIR/basic_dso.log
 (( CHECK_EXIT_CODE += $? ))
 # check whether the '--dso' option cuts the output to one dso only
-test `grep -c "Disassembly" $LOGS_DIR/basic_dso.log` -ge 2 # FIXME wrong
+test "`grep -c "Disassembly" $LOGS_DIR/basic_dso.log`" -ge 2 # FIXME wrong
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "dso filter"
@@ -97,7 +95,7 @@ CHECK_EXIT_CODE=$?
 ../common/check_no_patterns_found.pl "from = atol" "from = 20L;" "for\s*\(i = 1L; j; \+\+i\)" "return 0;" < $LOGS_DIR/basic_nosource.log
 (( CHECK_EXIT_CODE += $? ))
 # check whether the '--dso' option cuts the output to one dso only
-test `grep -c "Disassembly" $LOGS_DIR/basic_nosource.log` -ge 2 # FIXME wrong
+test "`grep -c "Disassembly" $LOGS_DIR/basic_nosource.log`" -ge 2 # FIXME wrong
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "no-source"

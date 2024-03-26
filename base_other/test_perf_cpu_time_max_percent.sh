@@ -13,9 +13,7 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 VARIABLE="/proc/sys/kernel/perf_cpu_time_max_percent"
@@ -28,10 +26,11 @@ VALUES="0 1 10 25 51 99 100"
 EXP_RESULT=0  # PASS
 for val in $VALUES; do
 	echo $val > $VARIABLE 2> $LOGS_DIR/perf_cpu_time_max_percent_$val.err
+	# shellcheck disable=SC2320 # the '$?' refers to the echo command on purpose
 	test $? -eq $EXP_RESULT
 	WRITE_EXIT_CODE=$?
 
-	test `cat $VARIABLE` -eq $val
+	test "`cat $VARIABLE`" -eq $val
 	VERIFICATION_EXIT_CODE=$?
 
 	print_results $WRITE_EXIT_CODE $VERIFICATION_EXIT_CODE "correct values: $val"
@@ -45,6 +44,7 @@ VALUES="-1 101 255 256 1025"
 EXP_RESULT=1  # FAIL
 for val in $VALUES; do
 	echo $val > $VARIABLE 2> $LOGS_DIR/perf_cpu_time_max_percent_$val.err
+	# shellcheck disable=SC2320 # the '$?' refers to the echo command on purpose
 	test $? -eq $EXP_RESULT
 	WRITE_EXIT_CODE=$?
 

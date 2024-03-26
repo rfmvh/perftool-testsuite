@@ -10,17 +10,16 @@
 #
 
 . ../common/init.sh
-. ./settings.sh
 
 if [ -n "$PERFSUITE_RUN_DIR" ]; then
 	print_overall_skipped
 	exit 0
 fi
 
-find . -name \*.log | xargs -r rm
-find . -name \*.err | xargs -r rm
-find . -name \*.svg | xargs -r rm
-find . -name \*.diff | xargs -r rm
+find . -name \*.log -print0 | xargs -r -0 rm
+find . -name \*.err -print0 | xargs -r -0 rm
+find . -name \*.svg -print0 | xargs -r -0 rm
+find . -name \*.diff -print0 | xargs -r -0 rm
 rm -f perf.data*
 
 print_overall_results 0

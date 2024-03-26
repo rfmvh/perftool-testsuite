@@ -13,9 +13,7 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 MAX_PERCENT="/proc/sys/kernel/perf_cpu_time_max_percent"
@@ -33,10 +31,11 @@ VALUES="28000 $MAX_SAMPLE_RATE_BACKUP"
 EXP_RESULT=0  # PASS
 for val in $VALUES; do
 	echo $val > $MAX_SAMPLE_RATE 2> $LOGS_DIR/perf_event_max_sample_rate_$MAX_PERCENT_SANE_VALUE.err
+	# shellcheck disable=SC2320 # the '$?' refers to the echo command on purpose
 	test $? -eq $EXP_RESULT
 	WRITE_EXIT_CODE=$?
 
-	test `cat $MAX_SAMPLE_RATE` -eq $val
+	test "`cat $MAX_SAMPLE_RATE`" -eq $val
 	CHECK_EXIT_CODE=$?
 
 	print_results $WRITE_EXIT_CODE $CHECK_EXIT_CODE "changes enabled (perf_cpu_time_max_percent = $MAX_PERCENT_SANE_VALUE): $val"
@@ -51,10 +50,12 @@ SOME_VALUE=$(( MAX_SAMPLE_RATE_BACKUP / 2 ))
 for val in 0 100; do
 	# set MAX_PERCENT to a value that prevents MAX_SAMPLE_RATE changes
 	echo $val > $MAX_PERCENT
+	# shellcheck disable=SC2320 # the '$?' refers to the echo command on purpose
 	WRITE_EXIT_CODE=$?
 
 	# the following attempt of changing MAX_SAMPLE_RATE should fail:
 	echo $SOME_VALUE > $MAX_SAMPLE_RATE 2> $LOGS_DIR/perf_event_max_sample_rate_$val.err
+	# shellcheck disable=SC2320 # the '$?' refers to the echo command on purpose
 	test $? -eq $EXP_RESULT
 	(( WRITE_EXIT_CODE += $? ))
 
@@ -65,9 +66,9 @@ for val in 0 100; do
 	(( CHECK_EXIT_CODE += $? ))
 
 	# we also need to check that the value of $MAX_SAMPLE_RATE did not change
-	test `cat $MAX_SAMPLE_RATE` -eq $MAX_SAMPLE_RATE_BACKUP
+	test "`cat $MAX_SAMPLE_RATE`" -eq $MAX_SAMPLE_RATE_BACKUP
 	(( CHECK_EXIT_CODE += $? ))
-	test `cat $MAX_SAMPLE_RATE` -ne $SOME_VALUE
+	test "`cat $MAX_SAMPLE_RATE`" -ne $SOME_VALUE
 	(( CHECK_EXIT_CODE += $? ))
 
 	print_results $WRITE_EXIT_CODE $CHECK_EXIT_CODE "changes disabled (perf_cpu_time_max_percent = $val): $SOME_VALUE"
@@ -76,7 +77,7 @@ done
 
 
 # restore original values
-echo $MAX_PERCENT_SANE_VALUE > $MAX_PERCENT
+echo $MAX_PERCENT_BACKUP > $MAX_PERCENT
 echo $MAX_SAMPLE_RATE_BACKUP > $MAX_SAMPLE_RATE
 
 # print overall results

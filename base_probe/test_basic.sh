@@ -12,9 +12,7 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 check_kprobes_available
@@ -69,7 +67,7 @@ PERF_EXIT_CODE=$?
 $CMD_PERF probe --quiet --del vfs_read > $LOGS_DIR/basic_quiet03.log 2> $LOGS_DIR/basic_quiet02.err
 (( PERF_EXIT_CODE += $? ))
 
-test `cat $LOGS_DIR/basic_quiet*log $LOGS_DIR/basic_quiet*err | wc -l` -eq 0
+test "`cat $LOGS_DIR/basic_quiet*log $LOGS_DIR/basic_quiet*err | wc -l`" -eq 0
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "quiet switch"

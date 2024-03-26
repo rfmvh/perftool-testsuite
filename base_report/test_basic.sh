@@ -12,9 +12,7 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 
@@ -108,9 +106,9 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "header"
 OLD_TIMESTAMP=`$CMD_PERF report --stdio --header-only -i $CURRENT_TEST_DIR/perf.data | grep "captured on"`
 PERF_EXIT_CODE=$?
 
-( tar c $CURRENT_TEST_DIR/perf.data | xz > perf.data.tar.xz ; cd $HEADER_TAR_DIR ; xzcat ../perf.data.tar.xz | tar x )
+( tar c $CURRENT_TEST_DIR/perf.data | xz > perf.data.tar.xz ; cd $HEADER_TAR_DIR || true ; xzcat ../perf.data.tar.xz | tar x )
 (( PERF_EXIT_CODE += $? ))
-cd $HEADER_TAR_DIR
+cd $HEADER_TAR_DIR || false
 (( PERF_EXIT_CODE += $? ))
 NEW_TIMESTAMP=`$CMD_PERF report --stdio --header-only -i ./perf.data | grep "captured on"`
 (( PERF_EXIT_CODE += $? ))

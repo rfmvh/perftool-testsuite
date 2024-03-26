@@ -10,15 +10,14 @@
 #
 
 . ../common/init.sh
-. ./settings.sh
 
 if [ -n "$PERFSUITE_RUN_DIR" ]; then
 	print_overall_skipped
 	exit 0
 fi
 
-find . -name \*.log | xargs -r rm
-find . -name \*.err | xargs -r rm
+find . -name \*.log -print0 | xargs -r -0 rm
+find . -name \*.err -print0 | xargs -r -0 rm
 rm -f perf.data*
 rm -rf $LOGS_DIR/converted_ctf
 rm -rf $LOGS_DIR/converted_all_ctf

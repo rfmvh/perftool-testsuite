@@ -12,9 +12,7 @@
 
 # include working environment
 . ../common/init.sh
-. ./settings.sh
 
-THIS_TEST_NAME=`basename $0 .sh`
 TEST_RESULT=0
 
 EVENTS_TO_TEST=`$CMD_PERF list hwcache | grep -P "^\s{2}\w" | awk '{print $1}' | egrep '^.' | tr '\n' ' '`
