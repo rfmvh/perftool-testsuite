@@ -34,8 +34,6 @@ $CMD_PERF script -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/header_script.log 2>
 PERF_EXIT_CODE=$?
 
 REGEX_COMMAND="[\w#~\-\+\/: ]+"
-# todo unused variable?
-#REGEX_EVENT="[\w]+"
 REGEX_SYMBOL="(?:[\w\.@:<>*~,\[\] ]+\+$RE_ADDRESS|\[unknown\])"
 
 REGEX_BASIC_SCRIPT_LINE="^\s*$REGEX_COMMAND\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+($RE_NUMBER):\s+$RE_NUMBER\s*$RE_EVENT_ANY:\s+$RE_NUMBER_HEX\s+$REGEX_SYMBOL\s+\($RE_DSO\)$"
