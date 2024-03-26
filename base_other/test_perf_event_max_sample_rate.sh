@@ -17,8 +17,7 @@
 TEST_RESULT=0
 
 MAX_PERCENT="/proc/sys/kernel/perf_cpu_time_max_percent"
-# todo unused variable
-#MAX_PERCENT_BACKUP=`cat $MAX_PERCENT`
+MAX_PERCENT_BACKUP=`cat $MAX_PERCENT`
 MAX_PERCENT_SANE_VALUE=25
 
 MAX_SAMPLE_RATE="/proc/sys/kernel/perf_event_max_sample_rate"
@@ -78,7 +77,7 @@ done
 
 
 # restore original values
-echo $MAX_PERCENT_SANE_VALUE > $MAX_PERCENT
+echo $MAX_PERCENT_BACKUP > $MAX_PERCENT
 echo $MAX_SAMPLE_RATE_BACKUP > $MAX_SAMPLE_RATE
 
 # print overall results
