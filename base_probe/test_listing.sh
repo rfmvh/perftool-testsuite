@@ -15,14 +15,12 @@
 
 TEST_RESULT=0
 
-check_kprobes_available
-if [ $? -ne 0 ]; then
+if ! check_kprobes_available; then
 	print_overall_skipped
 	exit 0
 fi
 
-check_uprobes_available
-if [ $? -ne 0 ]; then
+if ! check_uprobes_available; then
 	print_overall_skipped
 	exit 0
 fi

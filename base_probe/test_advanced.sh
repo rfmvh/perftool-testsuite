@@ -19,8 +19,7 @@ TEST_RESULT=0
 
 ######## function argument uprobing ########
 
-check_uprobes_available
-if [ $? -ne 0 ]; then
+if ! check_uprobes_available; then
 	print_testcase_skipped "function argument probing"
 	print_testcase_skipped "function retval probing"
 	print_testcase_skipped "function string argument probing"

@@ -14,8 +14,7 @@
 
 TEST_RESULT=0
 
-check_uprobes_available
-if [ $? -ne 0 ]; then
+if ! check_uprobes_available; then
 	print_overall_skipped
 	exit 0
 fi
@@ -25,8 +24,7 @@ for lib in `ldd $CURRENT_TEST_DIR/examples/simple_threads | grep -e libc -e thre
 	$CMD_PERF buildid-cache --add $lib
 done
 
-check_sdt_support
-if [ $? -ne 0 ]; then
+if ! check_sdt_support; then
 	print_overall_skipped
 	exit 0
 fi
