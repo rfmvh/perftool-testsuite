@@ -5,7 +5,7 @@
 
 long func_ref(long from)
 {
-	long i, j;
+	long i, j=1;
 	for (i = 1L; j; ++i)
 	{
 		for (j = from; j > 0L; --j)
@@ -17,7 +17,7 @@ long func_ref(long from)
 
 long func_test(long from)
 {
-	long i, j;
+	long i, j=1;
 	for (i = 1L; j; ++i)
 	{
 		for (j = from; j > 0L; --j)
