@@ -85,9 +85,10 @@ $CMD_PERF stat -x';' -o /dev/stdout -a -- sleep 0.1 > $LOGS_DIR/basic_csv.log
 PERF_EXIT_CODE=$?
 
 REGEX_LINES="^$RE_NUMBER;+$RE_EVENT"
+REGEX_LINES_TOPDOWN="$RE_NUMBER;+[\w_\s\%\(\)]+$"
 REGEX_UNSUPPORTED_LINES="^<not supported>;+$RE_EVENT"
 REGEX_METRIC_LINE="stalled\scycles\sper\sinsn"
-../common/check_all_lines_matched.pl "$REGEX_LINES" "$REGEX_METRIC_LINE" "$REGEX_UNSUPPORTED_LINES" "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" < $LOGS_DIR/basic_csv.log
+../common/check_all_lines_matched.pl "$REGEX_LINES" "$REGEX_LINES_TOPDOWN" "$REGEX_METRIC_LINE" "$REGEX_UNSUPPORTED_LINES" "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" < $LOGS_DIR/basic_csv.log
 CHECK_EXIT_CODE=$?
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "CSV output"
