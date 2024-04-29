@@ -106,20 +106,16 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "header"
 OLD_TIMESTAMP=`$CMD_PERF report --stdio --header-only -i $CURRENT_TEST_DIR/perf.data | grep "captured on"`
 PERF_EXIT_CODE=$?
 
-( tar c $CURRENT_TEST_DIR/perf.data | xz > perf.data.tar.xz ; cd $HEADER_TAR_DIR || true ; xzcat ../perf.data.tar.xz | tar x )
-(( PERF_EXIT_CODE += $? ))
-cd $HEADER_TAR_DIR || false
-(( PERF_EXIT_CODE += $? ))
-NEW_TIMESTAMP=`$CMD_PERF report --stdio --header-only -i ./perf.data | grep "captured on"`
+( tar -C $CURRENT_TEST_DIR -c perf.data | xz > $CURRENT_TEST_DIR/perf.data.tar.xz ; xzcat $CURRENT_TEST_DIR/perf.data.tar.xz | tar x -C $HEADER_TAR_DIR )
 (( PERF_EXIT_CODE += $? ))
 
-cd ..
+NEW_TIMESTAMP=`$CMD_PERF report --stdio --header-only -i $HEADER_TAR_DIR/perf.data | grep "captured on"`
 (( PERF_EXIT_CODE += $? ))
 
 test "$OLD_TIMESTAMP" = "$NEW_TIMESTAMP"
-(( PERF_EXIT_CODE += $? ))
+CHECK_EXIT_CODE=$?
 
-print_results $PERF_EXIT_CODE 0 "header timestamp"
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "header timestamp"
 (( TEST_RESULT += $? ))
 
 
