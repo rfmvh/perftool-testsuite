@@ -84,11 +84,11 @@ print_results 0 $CHECK_EXIT_CODE "check $BUILDIDDIR structure"
 ### remove test
 
 # let's pick some files to remove
-COUNT=`cat $LOGS_DIR/cache_list.log | wc -l`
+COUNT=`cat $LOGS_DIR/cache_list.log | grep -v kernel.kallsyms | wc -l`
 (( PART = COUNT / 2 ))
 test $PART -gt 4 && PART=4
 
-REMOVED_FILES=`awk '{print $2}' < $LOGS_DIR/cache_list.log | ../common/pick_random.pl $PART`
+REMOVED_FILES=`awk '{print $2}' < $LOGS_DIR/cache_list.log | grep -v kernel.kallsyms | ../common/pick_random.pl $PART`
 echo "$REMOVED_FILES" | tr ' ' '\n' > $LOGS_DIR/cache_files_to_be_removed.log
 
 # remove files
