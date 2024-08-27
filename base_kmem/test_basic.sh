@@ -35,7 +35,7 @@ else
 fi
 
 
-# use output redirection paramter if it is supported
+# use output redirection paramter if it is supported for rhel7/8
 if support_output_parameter; then
 	OUTPUT_FLAG="-o $CURRENT_TEST_DIR/perf.data"
 else
@@ -58,7 +58,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "record"
 
 
 # basic kmem stat test
-
+# input option not working for rhel9+, option required before stat
 $CMD_PERF kmem stat -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat.log 2> $LOGS_DIR/basic_stat.err
 PERF_EXIT_CODE=$?
 
@@ -67,12 +67,11 @@ REGEX_STAT_HEADER_UNDERLINE="={20,}"
 REGEX_TOT_REQUEST="Total bytes requested:\s+$RE_NUMBER"
 REGEX_TOT_ALLOC="Total bytes allocated:\s+$RE_NUMBER"
 REGEX_TOT_FREED="Total bytes freed:\s+$RE_NUMBER"
-REGEX_NET_TOT_ALLOC="Net total bytes allocated:\s+$RE_NUMBER"
 REGEX_TOT_WASTED="Total bytes wasted on internal fragmentation:\s+$RE_NUMBER"
 REGEX_INTERN_FRAG="Internal fragmentation:\s+${RE_NUMBER}%"
 REGEX_CROSS_CPU_ALLOC="Cross CPU allocations:\s+$RE_NUMBER/$RE_NUMBER"
 
-../common/check_exact_pattern_order.pl "$REGEX_STAT_HEADER_LINE" "$REGEX_STAT_HEADER_UNDERLINE" "$REGEX_TOT_REQUEST" "$REGEX_TOT_ALLOC" "$REGEX_TOT_FREED" "$REGEX_NET_TOT_ALLOC" "$REGEX_TOT_WASTED" "$REGEX_INTERN_FRAG" "$REGEX_CROSS_CPU_ALLOC" < $LOGS_DIR/basic_stat.log
+../common/check_exact_pattern_order.pl "$REGEX_STAT_HEADER_LINE" "$REGEX_STAT_HEADER_UNDERLINE" "$REGEX_TOT_REQUEST" "$REGEX_TOT_ALLOC" "$REGEX_TOT_FREED" "$REGEX_TOT_WASTED" "$REGEX_INTERN_FRAG" "$REGEX_CROSS_CPU_ALLOC" < $LOGS_DIR/basic_stat.log
 CHECK_EXIT_CODE=$?
 
 # should create the same file
@@ -102,7 +101,7 @@ REGEX_CALLER_DATA_LINE="\s+[\w\+\.]+\s+\|\s+\d+\/\d+\s+\|\s+\d+\/\d+\s+\|\s+\d+\
 CHECK_EXIT_CODE=$?
 
 # slab allocator events
-../common/check_exact_pattern_order.pl "$REGEX_STAT_HEADER_LINE" "$REGEX_STAT_HEADER_UNDERLINE" "$REGEX_TOT_REQUEST" "$REGEX_TOT_ALLOC" "$REGEX_TOT_FREED" "$REGEX_NET_TOT_ALLOC" "$REGEX_TOT_WASTED" "$REGEX_INTERN_FRAG" "$REGEX_CROSS_CPU_ALLOC" < $LOGS_DIR/basic_stat_caller.log
+../common/check_exact_pattern_order.pl "$REGEX_STAT_HEADER_LINE" "$REGEX_STAT_HEADER_UNDERLINE" "$REGEX_TOT_REQUEST" "$REGEX_TOT_ALLOC" "$REGEX_TOT_FREED" "$REGEX_TOT_WASTED" "$REGEX_INTERN_FRAG" "$REGEX_CROSS_CPU_ALLOC" < $LOGS_DIR/basic_stat_caller.log
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "stat --caller"
@@ -126,7 +125,7 @@ REGEX_RAW_IP_DATA_LINE="\s+${RE_ADDRESS}\s+\|\s+\d+\/\d+\s+\|\s+\d+\/\d+\s+\|\s+
 CHECK_EXIT_CODE=$?
 
 # slab allocator events
-../common/check_exact_pattern_order.pl "$REGEX_STAT_HEADER_LINE" "$REGEX_STAT_HEADER_UNDERLINE" "$REGEX_TOT_REQUEST" "$REGEX_TOT_ALLOC" "$REGEX_TOT_FREED" "$REGEX_NET_TOT_ALLOC" "$REGEX_TOT_WASTED" "$REGEX_INTERN_FRAG" "$REGEX_CROSS_CPU_ALLOC" < $LOGS_DIR/basic_stat_raw-ip.log
+../common/check_exact_pattern_order.pl "$REGEX_STAT_HEADER_LINE" "$REGEX_STAT_HEADER_UNDERLINE" "$REGEX_TOT_REQUEST" "$REGEX_TOT_ALLOC" "$REGEX_TOT_FREED" "$REGEX_TOT_WASTED" "$REGEX_INTERN_FRAG" "$REGEX_CROSS_CPU_ALLOC" < $LOGS_DIR/basic_stat_raw-ip.log
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "stat --caller --raw-ip"
@@ -150,7 +149,7 @@ REGEX_ALLOC_HEADER_LINE="\s+Alloc Ptr\s+\|\s+Total_alloc\/Per\s+\|\s+Total_req\/
 CHECK_EXIT_CODE=$?
 
 # slab allocator events
-../common/check_exact_pattern_order.pl "$REGEX_STAT_HEADER_LINE" "$REGEX_STAT_HEADER_UNDERLINE" "$REGEX_TOT_REQUEST" "$REGEX_TOT_ALLOC" "$REGEX_TOT_FREED" "$REGEX_NET_TOT_ALLOC" "$REGEX_TOT_WASTED" "$REGEX_INTERN_FRAG" "$REGEX_CROSS_CPU_ALLOC" < $LOGS_DIR/basic_stat_alloc.log
+../common/check_exact_pattern_order.pl "$REGEX_STAT_HEADER_LINE" "$REGEX_STAT_HEADER_UNDERLINE" "$REGEX_TOT_REQUEST" "$REGEX_TOT_ALLOC" "$REGEX_TOT_FREED" "$REGEX_TOT_WASTED" "$REGEX_INTERN_FRAG" "$REGEX_CROSS_CPU_ALLOC" < $LOGS_DIR/basic_stat_alloc.log
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "stat --alloc"
