@@ -159,7 +159,7 @@ export RE_LINE_EMPTY="^\s*$"
 #
 
 
-export RE_FLAGS="(?:(?:[A-Z]+|0x$RE_NUMBER_HEX)\|?)+"
+export RE_FLAGS="(?:(?:[A-Z]+|$RE_ADDRESS)\|?)+"
 # An empty line with possible whitespaces
 # Examples:
 #    WRONLY|0x20000
@@ -206,8 +206,43 @@ export RE_LINE_RECORD2_TOLERANT_FILENAME="^\[\s+perf\s+record:\s+Captured and wr
 #!    [ perf record: Captured and wrote 0.405 MB ./aNyKiNDoF.data.3 (109 samples) ]
 #!    [ perf record: Captured and wrote 0.405 MB perf.data ]
 
+export RE_TRACE_DURATION="\(\s*$RE_NUMBER\s*ms\s*\)"
+# The time duration for trace output
+# Examples:
+#    ( 0.005 ms)
+#    ( 0.012 ms)
+#!    (         )
 
-export RE_LINE_TRACE_FULL="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*$RE_PROCESS_PID\s+.*\)\s+=\s+(?:\-?$RE_NUMBER|$RE_FLAGS).*$"
+export RE_FUNC_ARG_NO_NAME="[\w\|\/\.<>\"-]+"
+# The arguments of the function without the argument names
+# Examples:
+#    0x7ffd24202230
+#    1379
+#    "/etc/selinux/config"
+#    RDONLY|CLOEXEC|DIRECTORY|NONBLOCK
+
+export RE_FUNC_ARG="\w+:\s+$RE_FUNC_ARG_NO_NAME"
+# The arguments of the function contained in trace lines
+# Examples:
+#    filename: 0xd09e2ab2
+#    flags: PRIVATE|DENYWRITE
+#    fd: 29</proc/1/cgroup>
+#    filename: "/lib64/libcap.so.2"
+#    count: 832
+
+export RE_TRACE_RESULT="(?:\-?$RE_NUMBER|$RE_FLAGS).*"
+# The return value of the processess for trace lines
+# Example:
+#    3
+#    0x7f89d0605000
+#    WRONLY|0x20000
+
+export RE_TRACE_CONTINUED="\.{3}\s*\[continued\]:\s+\w+\(\)"
+# The continued message for trace lines
+# Example:
+#    ... [continued]: nanosleep()
+
+export RE_LINE_TRACE_FULL="^\s*$RE_NUMBER\s*$RE_TRACE_DURATION:\s*$RE_PROCESS_PID\s+\w+\((?:$RE_FUNC_ARG, )*(?:$RE_FUNC_ARG\s*)?\)\s+=\s+$RE_TRACE_RESULT.*$"
 # A line of perf-trace output
 # Examples:
 #    0.115 ( 0.005 ms): sleep/4102 open(filename: 0xd09e2ab2, flags: CLOEXEC                             ) = 3
@@ -216,14 +251,14 @@ export RE_LINE_TRACE_FULL="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*$RE_PRO
 #    1156.756 ( 0.002 ms): systemd/846 fcntl(fd: 29</proc/1/cgroup>, cmd: GETFL)                           = WRONLY|0x20000
 #!    0.115 ( 0.005 ms): sleep/4102 open(filename: 0xd09e2ab2, flags: CLOEXEC                             ) =
 
-export RE_LINE_TRACE_ONE_PROC="^\s*$RE_NUMBER\s*\(\s*$RE_NUMBER\s*ms\s*\):\s*\w+\(.*\)\s+=\s+(?:\-?$RE_NUMBER|$RE_FLAGS).*$"
+export RE_LINE_TRACE_ONE_PROC="^\s*$RE_NUMBER\s*$RE_TRACE_DURATION:\s*\w+\((?:$RE_FUNC_ARG, )*(?:$RE_FUNC_ARG\s*)?\)\s+=\s+$RE_TRACE_RESULT.*$"
 # A line of perf-trace output
 # Examples:
 #    0.115 ( 0.005 ms): open(filename: 0xd09e2ab2, flags: CLOEXEC                             ) = 3
 #    0.157 ( 0.005 ms): mmap(len: 3932736, prot: EXEC|READ, flags: PRIVATE|DENYWRITE, fd: 3   ) = 0x7f89d0605000
 #!    0.115 ( 0.005 ms): open(filename: 0xd09e2ab2, flags: CLOEXEC                             ) =
 
-export RE_LINE_TRACE_CONTINUED="^\s*(?:$RE_NUMBER|\?)\s*\(\s*($RE_NUMBER\s*ms\s*)?\):\s*($RE_PROCESS_PID\s*)?\.\.\.\s*\[continued\]:\s+\w+\(\).*\s+=\s+(?:\-?$RE_NUMBER|$RE_FLAGS).*$"
+export RE_LINE_TRACE_CONTINUED="^\s*(?:$RE_NUMBER|\?)\s*(?:$RE_TRACE_DURATION|\(\s+\)):\s*($RE_PROCESS_PID\s*)?$RE_TRACE_CONTINUED.*\s+=\s+$RE_TRACE_RESULT.*$"
 # A line of perf-trace output
 # Examples:
 #    0.000 ( 0.000 ms):  ... [continued]: nanosleep()) = 0
@@ -231,7 +266,7 @@ export RE_LINE_TRACE_CONTINUED="^\s*(?:$RE_NUMBER|\?)\s*\(\s*($RE_NUMBER\s*ms\s*
 #    ? (         ): packagekitd/94838  ... [continued]: poll())                                             = 0 (Timeout)
 #!    0.000 ( 0.000 ms):  ... [continued]: nanosleep()) =
 
-export RE_LINE_TRACE_UNFINISHED="^\s*$RE_NUMBER\s*\(\s*\):\s*$RE_PROCESS_PID\s+.*\)\s+\.\.\.\s*$"
+export RE_LINE_TRACE_UNFINISHED="^\s*$RE_NUMBER\s*\(\s*\):\s*$RE_PROCESS_PID\s+.*\)\s+\.{3}\s*$"
 # A line of perf-trace output
 # Examples:
 #    901.040 (         ): in:imjournal/1096 ppoll(ufds: 0x7f701a5adb70, nfds: 1, tsp: 0x7f701a5adaf0, sigsetsize: 8) ...

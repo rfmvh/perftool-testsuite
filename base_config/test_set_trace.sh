@@ -20,21 +20,7 @@ TEST_RESULT=0
 touch $HOME/.perfconfig
 mv $HOME/.perfconfig $CURRENT_TEST_DIR/.config_before
 
-
-### regexes
-
-REGEX_CONTINUED="\.{3}\s*\[continued\]:\s+\w+\(\)\)"
-REGEX_DURATION="\(\s*$RE_NUMBER\s*ms\)"
-REGEX_EMPTY_DURATION="\(\s+\)"
-REGEX_COMMAND="ls\/\d+"
-REGEX_ARG="[\w\|\/\.<>-]+"
-REGEX_FUNCTION_ARGS="\w+\((?:\w+:\s+$REGEX_ARG, )*(?:\w+:\s+$REGEX_ARG\s*)?\)"
-REGEX_FUNCTION_NO_ARGS="\w+\((?:$REGEX_ARG, )*(?:$REGEX_ARG\s*)?\)"
-REGEX_RESULT="(?:(?:0x$RE_NUMBER_HEX)|(?:\-?$RE_NUMBER))"
-
-
 ### trace.args_alignment variable
-
 ALIGNMENT=150
 
 grep -q trace.args_alignment $LOGS_DIR/config_all_variables.log &> /dev/null
@@ -63,13 +49,11 @@ if [ $? -eq 0 ]; then
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "checking trace.args_alignment variable - alignment"
 	(( TEST_RESULT += $? ))
 
-	REGEX_ALIGN_CONTINUED_LINE="\s*(?:\?|$RE_NUMBER)\s*$REGEX_EMPTY_DURATION:\s*$REGEX_COMMAND\s*$REGEX_CONTINUED\s*=\s*$REGEX_RESULT"
-	REGEX_ALIGN_DATA_LINE="\s*$RE_NUMBER\s*$REGEX_DURATION:\s*$REGEX_COMMAND\s*$REGEX_FUNCTION_ARGS\s*=\s*$REGEX_RESULT"
-	REGEX_ALIGN_EXIT_LINE="\s*$RE_NUMBER\s*$REGEX_EMPTY_DURATION:\s*$REGEX_COMMAND\s*exit_group\(\s*\)(?:\s*=\s*\?)?"
+	REGEX_ALIGN_EXIT_LINE="^\s*$RE_NUMBER\s*\(\s+\):\s*$RE_PROCESS_PID\s*exit_group\(\s*\)(?:\s*=\s*\?)?$"
 
-	../common/check_all_lines_matched.pl "$REGEX_ALIGN_CONTINUED_LINE" "$REGEX_ALIGN_DATA_LINE" "$REGEX_ALIGN_EXIT_LINE" "^\s*$" < $LOGS_DIR/set_trace_alignment.log
+	../common/check_all_lines_matched.pl "$RE_LINE_TRACE_CONTINUED" "$RE_LINE_TRACE_FULL" "$REGEX_ALIGN_EXIT_LINE" "$RE_LINE_EMPTY" < $LOGS_DIR/set_trace_alignment.log
 	CHECK_EXIT_CODE=$?
-	../common/check_all_patterns_found.pl "$REGEX_ALIGN_DATA_LINE" "$REGEX_ALIGN_EXIT_LINE" < $LOGS_DIR/set_trace_alignment.log
+	../common/check_all_patterns_found.pl "$RE_LINE_TRACE_FULL" "$REGEX_ALIGN_EXIT_LINE" < $LOGS_DIR/set_trace_alignment.log
 	(( CHECK_EXIT_CODE += $? ))
 
 	print_results 0 $CHECK_EXIT_CODE "checking trace.args_alignment variable - output"
@@ -107,13 +91,11 @@ if [ $? -eq 0 ]; then
 	$CMD_PERF trace ls > /dev/null 2> $LOGS_DIR/set_trace_inherit.log
 	PERF_EXIT_CODE=$?
 
-	REGEX_INHERIT_CONTINUED_LINE="\s*(?:\?|$RE_NUMBER)\s*$REGEX_EMPTY_DURATION:\s*$REGEX_CONTINUED\s*=\s*$REGEX_RESULT"
-	REGEX_INHERIT_DATA_LINE="\s*$RE_NUMBER\s*$REGEX_DURATION:\s*$REGEX_FUNCTION_ARGS\s*=\s*$REGEX_RESULT"
-	REGEX_INHERIT_EXIT_LINE="\s*$RE_NUMBER\s*$REGEX_EMPTY_DURATION:\s*exit_group\(\s*\)(?:\s*=\s*\?)?"
+	REGEX_INHERIT_EXIT_LINE="^\s*$RE_NUMBER\s*\(\s+\):\s*exit_group\(\s*\)(?:\s*=\s*\?)?$"
 
-	../common/check_all_lines_matched.pl "$REGEX_INHERIT_CONTINUED_LINE" "$REGEX_INHERIT_DATA_LINE" "$REGEX_INHERIT_EXIT_LINE" "^\s*$" < $LOGS_DIR/set_trace_inherit.log
+	../common/check_all_lines_matched.pl "$RE_LINE_TRACE_CONTINUED" "$RE_LINE_TRACE_ONE_PROC" "$REGEX_INHERIT_EXIT_LINE" "$RE_LINE_EMPTY" < $LOGS_DIR/set_trace_inherit.log
 	CHECK_EXIT_CODE=$?
-	../common/check_all_patterns_found.pl "$REGEX_INHERIT_DATA_LINE" "$REGEX_INHERIT_EXIT_LINE" < $LOGS_DIR/set_trace_inherit.log
+	../common/check_all_patterns_found.pl "$RE_LINE_TRACE_ONE_PROC" "$REGEX_INHERIT_EXIT_LINE" < $LOGS_DIR/set_trace_inherit.log
 	(( CHECK_EXIT_CODE += $? ))
 
 	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "checking trace.no_inherit variable"
@@ -151,11 +133,10 @@ if [ $? -eq 0 ]; then
 	$CMD_PERF trace ls > /dev/null 2> $LOGS_DIR/set_trace_arg_names.log
 	PERF_EXIT_CODE=$?
 
-	REGEX_ARG_NAMES_CONTINUED_LINE="\s*(?:\?|$RE_NUMBER)\s*$REGEX_EMPTY_DURATION:\s*$REGEX_COMMAND\s*$REGEX_CONTINUED\s*=\s*$REGEX_RESULT"
-	REGEX_ARG_NAMES_DATA_LINE="\s*$RE_NUMBER\s*$REGEX_DURATION:\s*$REGEX_COMMAND\s*$REGEX_FUNCTION_NO_ARGS\s*=\s*$REGEX_RESULT"
-	REGEX_ARG_NAMES_EXIT_LINE="\s*$RE_NUMBER\s*$REGEX_EMPTY_DURATION:\s*$REGEX_COMMAND\s*exit_group\((?:0|\s*)?\)(?:\s*=\s*\?)?"
+	REGEX_ARG_NAMES_DATA_LINE="^\s*$RE_NUMBER\s*$RE_TRACE_DURATION:\s*$RE_PROCESS_PID\s*\s+\w+\((?:$RE_FUNC_ARG_NO_NAME, )*(?:$RE_FUNC_ARG_NO_NAME\s*)?\)\s+=\s+$RE_TRACE_RESULT.*$"
+	REGEX_ARG_NAMES_EXIT_LINE="^\s*$RE_NUMBER\s*\(\s+\):\s*$RE_PROCESS_PID\s*exit_group\((?:0|\s*)?\)(?:\s*=\s*\?)?$"
 
-	../common/check_all_lines_matched.pl "$REGEX_ARG_NAMES_CONTINUED_LINE" "$REGEX_ARG_NAMES_DATA_LINE" "$REGEX_ARG_NAMES_EXIT_LINE" "^\s*$" < $LOGS_DIR/set_trace_arg_names.log
+	../common/check_all_lines_matched.pl "$RE_LINE_TRACE_CONTINUED" "$REGEX_ARG_NAMES_DATA_LINE" "$REGEX_ARG_NAMES_EXIT_LINE" "$RE_LINE_EMPTY" < $LOGS_DIR/set_trace_arg_names.log
 	CHECK_EXIT_CODE=$?
 	../common/check_all_patterns_found.pl "$REGEX_ARG_NAMES_DATA_LINE" "$REGEX_ARG_NAMES_EXIT_LINE" < $LOGS_DIR/set_trace_arg_names.log
 	(( CHECK_EXIT_CODE += $? ))
@@ -195,11 +176,11 @@ if [ $? -eq 0 ]; then
 	$CMD_PERF trace ls > /dev/null 2> $LOGS_DIR/set_trace_duration.log
 	PERF_EXIT_CODE=$?
 
-	REGEX_DURATION_CONTINUED_LINE="\s*(?:\?|$RE_NUMBER)\s*$REGEX_COMMAND\s*$REGEX_CONTINUED\s*=\s*$REGEX_RESULT"
-	REGEX_DURATION_DATA_LINE="\s*$RE_NUMBER\s*$REGEX_COMMAND\s*$REGEX_FUNCTION_ARGS\s*=\s*$REGEX_RESULT"
-	REGEX_DURATION_EXIT_LINE="\s*$RE_NUMBER\s*$REGEX_COMMAND\s*exit_group\(\s*\)(?:\s*=\s*\?)?"
+	REGEX_DURATION_CONTINUED_LINE="^\s*(?:$RE_NUMBER|\?)\s*$RE_PROCESS_PID\s+$RE_TRACE_CONTINUED.*\s+=\s+$RE_TRACE_RESULT.*$"
+	REGEX_DURATION_DATA_LINE="^\s*$RE_NUMBER\s*$RE_PROCESS_PID\s+\w+\((?:$RE_FUNC_ARG, )*(?:$RE_FUNC_ARG\s*)?\)\s+=\s+$RE_TRACE_RESULT.*$"
+	REGEX_DURATION_EXIT_LINE="^\s*$RE_NUMBER\s*$RE_PROCESS_PID\s+exit_group\(\s*\)(?:\s*=\s*\?)?$"
 
-	../common/check_all_lines_matched.pl "$REGEX_DURATION_CONTINUED_LINE" "$REGEX_DURATION_DATA_LINE" "$REGEX_DURATION_EXIT_LINE" "^\s*$" < $LOGS_DIR/set_trace_duration.log
+	../common/check_all_lines_matched.pl "$REGEX_DURATION_CONTINUED_LINE" "$REGEX_DURATION_DATA_LINE" "$REGEX_DURATION_EXIT_LINE" "$RE_LINE_EMPTY" < $LOGS_DIR/set_trace_duration.log
 	CHECK_EXIT_CODE=$?
 	../common/check_all_patterns_found.pl "$REGEX_DURATION_DATA_LINE" "$REGEX_DURATION_EXIT_LINE" < $LOGS_DIR/set_trace_duration.log
 	(( CHECK_EXIT_CODE += $? ))
@@ -239,11 +220,11 @@ if [ $? -eq 0 ]; then
 	$CMD_PERF trace ls > /dev/null 2> $LOGS_DIR/set_trace_timestamp.log
 	PERF_EXIT_CODE=$?
 
-	REGEX_TIMESTAMP_CONTINUED_LINE="\s*$REGEX_EMPTY_DURATION:\s*$REGEX_COMMAND\s*$REGEX_CONTINUED\s*=\s*$REGEX_RESULT"
-	REGEX_TIMESTAMP_DATA_LINE="\s*$REGEX_DURATION:\s*$REGEX_COMMAND\s*$REGEX_FUNCTION_ARGS\s*=\s*$REGEX_RESULT"
-	REGEX_TIMESTAMP_EXIT_LINE="\s*$REGEX_EMPTY_DURATION:\s*$REGEX_COMMAND\s*exit_group\(\s*\)(?:\s*=\s*\?)?"
+	REGEX_TIMESTAMP_CONTINUED_LINE="^\s*\(\s+\):\s*$RE_PROCESS_PID\s*$RE_TRACE_CONTINUED.*\s+=\s+$RE_TRACE_RESULT.*$"
+	REGEX_TIMESTAMP_DATA_LINE="^\s*$RE_TRACE_DURATION:\s*$RE_PROCESS_PID\s+\w+\((?:$RE_FUNC_ARG, )*(?:$RE_FUNC_ARG\s*)?\)\s+=\s+$RE_TRACE_RESULT.*$"
+	REGEX_TIMESTAMP_EXIT_LINE="^\s*\(\s+\):\s*$RE_PROCESS_PID\s*exit_group\(\s*\)(?:\s*=\s*\?)?$"
 
-	../common/check_all_lines_matched.pl "$REGEX_TIMESTAMP_CONTINUED_LINE" "$REGEX_TIMESTAMP_DATA_LINE" "$REGEX_TIMESTAMP_EXIT_LINE" "^\s*$" < $LOGS_DIR/set_trace_timestamp.log
+	../common/check_all_lines_matched.pl "$REGEX_TIMESTAMP_CONTINUED_LINE" "$REGEX_TIMESTAMP_DATA_LINE" "$REGEX_TIMESTAMP_EXIT_LINE" "$RE_LINE_EMPTY" < $LOGS_DIR/set_trace_timestamp.log
 	CHECK_EXIT_CODE=$?
 	../common/check_all_patterns_found.pl "$REGEX_TIMESTAMP_DATA_LINE" "$REGEX_TIMESTAMP_EXIT_LINE" < $LOGS_DIR/set_trace_timestamp.log
 	(( CHECK_EXIT_CODE += $? ))
