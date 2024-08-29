@@ -213,7 +213,7 @@ export RE_TRACE_DURATION="\(\s*$RE_NUMBER\s*ms\s*\)"
 #    ( 0.012 ms)
 #!    (         )
 
-export RE_FUNC_ARG_NO_NAME="[\w\|\/\.<>\"-]+"
+export RE_FUNC_ARG_NO_NAME="[\w\|\/\.<>\[\]:\"-]+"
 # The arguments of the function without the argument names
 # Examples:
 #    0x7ffd24202230
