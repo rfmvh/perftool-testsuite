@@ -58,8 +58,8 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "record"
 
 
 # basic kmem stat test
-# input option not working for rhel9+, option required before stat
-$CMD_PERF kmem stat -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat.log 2> $LOGS_DIR/basic_stat.err
+# input option option required before stat for rhel9+
+$CMD_PERF kmem -i $CURRENT_TEST_DIR/perf.data stat > $LOGS_DIR/basic_stat.log 2> $LOGS_DIR/basic_stat.err
 PERF_EXIT_CODE=$?
 
 REGEX_STAT_HEADER_LINE="SUMMARY \(SLAB allocator\)"
@@ -75,7 +75,7 @@ REGEX_CROSS_CPU_ALLOC="Cross CPU allocations:\s+$RE_NUMBER/$RE_NUMBER"
 CHECK_EXIT_CODE=$?
 
 # should create the same file
-$CMD_PERF kmem --slab stat -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_slab.log
+$CMD_PERF kmem --slab -i $CURRENT_TEST_DIR/perf.data stat > $LOGS_DIR/basic_stat_slab.log
 (( PERF_EXIT_CODE += $? ))
 
 cmp $LOGS_DIR/basic_stat.log $LOGS_DIR/basic_stat_slab.log 2> /dev/null
@@ -89,7 +89,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "stat"
 
 # --caller
 
-$CMD_PERF kmem --caller stat -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_caller.log 2> $LOGS_DIR/basic_stat_caller.err
+$CMD_PERF kmem --caller -i $CURRENT_TEST_DIR/perf.data stat > $LOGS_DIR/basic_stat_caller.log 2> $LOGS_DIR/basic_stat_caller.err
 PERF_EXIT_CODE=$?
 
 REGEX_CALLER_HEADER_LINE="\s+Callsite\s+\|\s+Total_alloc\/Per\s+\|\s+Total_req\/Per\s+\|\s+Hit\s+\|\s+Ping-pong\s+\|\s+Frag"
@@ -116,7 +116,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "stat --caller ($CHECK_EXIT_CODE 
 
 # --raw-ip
 
-$CMD_PERF kmem --caller --raw-ip stat -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_raw-ip.log 2> $LOGS_DIR/basic_stat_raw-ip.err
+$CMD_PERF kmem --caller --raw-ip -i $CURRENT_TEST_DIR/perf.data stat > $LOGS_DIR/basic_stat_raw-ip.log 2> $LOGS_DIR/basic_stat_raw-ip.err
 PERF_EXIT_CODE=$?
 
 REGEX_RAW_IP_DATA_LINE="\s+${RE_ADDRESS}\s+\|\s+\d+\/\d+\s+\|\s+\d+\/\d+\s+\|\s+\d+\s+\|\s+\d+\s+\|\s+\d+\.\d+%"
@@ -140,7 +140,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "stat --caller --raw-ip ($CHECK_E
 
 # kmem stat --alloc
 
-$CMD_PERF kmem --alloc stat -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_alloc.log 2> $LOGS_DIR/basic_stat_alloc.err
+$CMD_PERF kmem --alloc -i $CURRENT_TEST_DIR/perf.data stat > $LOGS_DIR/basic_stat_alloc.log 2> $LOGS_DIR/basic_stat_alloc.err
 PERF_EXIT_CODE=$?
 
 REGEX_ALLOC_HEADER_LINE="\s+Alloc Ptr\s+\|\s+Total_alloc\/Per\s+\|\s+Total_req\/Per\s+\|\s+Hit\s+\|\s+Ping-pong\s+\|\s+Frag"
@@ -175,7 +175,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "record --page"
 (( TEST_RESULT += $? ))
 
 # stat
-$CMD_PERF kmem --page stat -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_stat_page.log 2> $LOGS_DIR/basic_stat_page.err
+$CMD_PERF kmem --page -i $CURRENT_TEST_DIR/perf.data stat > $LOGS_DIR/basic_stat_page.log 2> $LOGS_DIR/basic_stat_page.err
 PERF_EXIT_CODE=$?
 
 REGEX_PAGE_HEADER_LINE="SUMMARY \(page allocator\)"
