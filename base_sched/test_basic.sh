@@ -57,7 +57,7 @@ PERF_EXIT_CODE=$?
 REGEX_SEP="\s*\|\s*"
 REGEX_MAX_DELAY_AT="Max(?:imum)? delay at${REGEX_SEP}"
 REGEX_MAX_DELAY_START_END="Max(?:imum)? delay start${REGEX_SEP}Max(?:imum)? delay end${REGEX_SEP}"
-REGEX_HEADER_LINE="\s+Task${REGEX_SEP}Runtime ms${REGEX_SEP}Switches${REGEX_SEP}(?:Average|Avg) delay ms${REGEX_SEP}Max(?:imum)? delay ms${REGEX_SEP}(?:$REGEX_MAX_DELAY_AT|$REGEX_MAX_DELAY_START_END)"
+REGEX_HEADER_LINE="\s+Task${REGEX_SEP}Runtime ms${REGEX_SEP}(?:Switches|Count)${REGEX_SEP}(?:Average|Avg) delay ms${REGEX_SEP}Max(?:imum)? delay ms${REGEX_SEP}(?:$REGEX_MAX_DELAY_AT|$REGEX_MAX_DELAY_START_END)"
 REGEX_HEADER_UNDERLINE="-{100,}"
 
 REGEX_MAX_AT="max at:\s+$RE_NUMBER s"
