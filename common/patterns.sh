@@ -65,7 +65,7 @@ export RE_PROCESS_PID="[^\/]+\/\d+"
 #    in:imjournal/1096
 #    random#$& test/866607
 
-export RE_EVENT_ANY="[\w\-\:\/_=,\.]+"
+export RE_EVENT_ANY="[\w\-\:\/_=,\.%]+"
 # Name of any event (universal)
 # Examples:
 #    cpu-cycles
@@ -73,6 +73,7 @@ export RE_EVENT_ANY="[\w\-\:\/_=,\.]+"
 #    r41e1
 #    nfs:nfs_getattr_enter
 #    unc_c_tor_occupancy.llc_data_read
+#    tma_info_mem_exec_bound_%_loadhead_with_storefwding:
 
 
 export RE_EVENT="[\w\-:_]+"
