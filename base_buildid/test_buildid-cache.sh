@@ -88,7 +88,7 @@ COUNT=`cat $LOGS_DIR/cache_list.log | wc -l`
 (( PART = COUNT / 2 ))
 test $PART -gt 4 && PART=4
 
-REMOVED_FILES=`awk '{print $2}' < $LOGS_DIR/cache_list.log | ../common/pick_random.pl $PART`
+REMOVED_FILES=`awk '{print $2}' < $LOGS_DIR/cache_list.log | grep -v kallsyms | ../common/pick_random.pl $PART`
 echo "$REMOVED_FILES" | tr ' ' '\n' > $LOGS_DIR/cache_files_to_be_removed.log
 
 # remove files
@@ -154,7 +154,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "add test"
 $CMD_PERF record -a -o $CURRENT_TEST_DIR/perfnew.data -- $CMD_LONGER_SLEEP &> /dev/null
 PERF_EXIT_CODE=$?
 
-MISSING_IDS=`$CMD_PERF --buildid-dir $BUILDIDDIR buildid-cache -M $CURRENT_TEST_DIR/perfnew.data 2> /dev/null`
+MISSING_IDS=`$CMD_PERF --buildid-dir $BUILDIDDIR buildid-cache -M $CURRENT_TEST_DIR/perfnew.data 2> /dev/null | cut -d' ' -f2`
 (( PERF_EXIT_CODE += $? ))
 
 if [ -z "$MISSING_IDS" ]; then
@@ -163,6 +163,9 @@ else
 	# check if the missing buildids not in cache
 	CHECK_EXIT_CODE=0
 	for BUILDID in $MISSING_IDS; do
+		if [[ "$BUILDID" =~ kallsyms ]]; then
+			continue
+		fi
 		cat $LOGS_DIR/cache_added_list.log | grep -q $BUILDID
 		test $? -ne 0
 		(( CHECK_EXIT_CODE += $? ))
@@ -206,7 +209,7 @@ COUNT=`cat $LOGS_DIR/cache_list.log | wc -l`
 (( PART = COUNT / 2 ))
 test $PART -gt 3 && PART=3
 
-PURGED_FILES=`awk '{print $2}' < $LOGS_DIR/cache_added_list.log | ../common/pick_random.pl $PART`
+PURGED_FILES=`awk '{print $2}' < $LOGS_DIR/cache_added_list.log | grep -v kallsyms | ../common/pick_random.pl $PART`
 
 # purge files
 PERF_EXIT_CODE=0
