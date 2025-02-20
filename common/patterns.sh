@@ -148,6 +148,13 @@ export RE_DSO="(?:$RE_PATH_ABSOLUTE(?: \(deleted\))?|\[kernel\.kallsyms\]|\[unkn
 #    [unknown]
 
 
+export RE_MODULE="\[[^]]+\]"
+# A module name
+# Examples:
+#    [xfs]
+#    [nfs]
+
+
 export RE_LINE_COMMENT="^#.*"
 # A comment line
 # Examples:
