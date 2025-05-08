@@ -15,7 +15,7 @@
 
 TEST_RESULT=0
 
-EVENTS_TO_TEST=`$CMD_PERF list hwcache | grep -P "^\s{2}\w" | awk '{print $1}' | egrep '^.' | tr '\n' ' '`
+EVENTS_TO_TEST=`$CMD_PERF list hwcache | grep -P "^\s{2}\w" | awk '{print $3}' | egrep '^.' | tr '\n' ' '`
 if [ -z "$EVENTS_TO_TEST" ]; then
 	if [ "$TEST_IGNORE_MISSING_PMU" = "y" ]; then
 		print_overall_skipped
@@ -43,7 +43,8 @@ disable_nmi_watchdog_if_exists
 #### testing hardware cache events
 
 for event in $EVENTS_TO_TEST; do
-	$CMD_PERF stat -a -e $event -o $LOGS_DIR/hwcache/$event.log --append -x';' -- $CMD_BASIC_SLEEP
+	log_name=`echo $event | awk -F'/' '{print $(NF-1)}'`
+	$CMD_PERF stat -a -e $event -o $LOGS_DIR/hwcache/$log_name.log --append -x';' -- $CMD_BASIC_SLEEP
 	PERF_EXIT_CODE=$?
 	REGEX_LINES="$RE_NUMBER;+(?:\w+\/)?$event\/?;$RE_NUMBER;100\.00"
 	../common/check_all_patterns_found.pl "$REGEX_LINES" < $LOGS_DIR/hwcache/$event.log
