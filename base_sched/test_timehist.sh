@@ -253,7 +253,7 @@ REGEX_ST_IDLE_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+$REGEX_IDLE_PROC\s+$RE_NUMBER\s+$R
 ../common/check_all_lines_matched.pl "$REGEX_ST_HEADER_LINE" "$REGEX_HEADER_NOTES" "$REGEX_HEADER_UNDERLINE" "$REGEX_ST_DATA_LINE" "$REGEX_ST_IDLE_LINE" < $LOGS_DIR/timehist_state.log
 CHECK_EXIT_CODE=$?
 
-REGEX_ST_SLEEP_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+sleep\[\d+\]\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+[Xx]"
+REGEX_ST_SLEEP_LINE="\s*$RE_NUMBER\s+\[\d+\]\s+sleep\[\d+\]\s+$RE_NUMBER\s+$RE_NUMBER\s+$RE_NUMBER\s+[XxSs]"
 ../common/check_all_patterns_found.pl "$REGEX_ST_SLEEP_LINE" < $LOGS_DIR/timehist_state.log
 (( CHECK_EXIT_CODE += $? ))
 
