@@ -139,6 +139,7 @@ fi
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "errno summary"
 (( TEST_RESULT += $? ))
 
+
 ### attach process
 
 # perf-trace should be able to attach an existing process by '-p PID'
@@ -161,6 +162,20 @@ CHECK_EXIT_CODE=$?
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "attach process"
+(( TEST_RESULT += $? ))
+
+
+### syscall filtering
+
+# perf-trace should be able to catch only some syscalls defined by -e
+$CMD_PERF trace -e close -o $LOGS_DIR/basic_filter.log -- cat /dev/null
+PERF_EXIT_CODE=$?
+
+# sanity check
+../common/check_all_patterns_found.pl "$RE_LINE_TRACE_FULL" "close\(" < $LOGS_DIR/basic_filter.log
+CHECK_EXIT_CODE=$?
+
+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "filter syscall"
 (( TEST_RESULT += $? ))
 
 
