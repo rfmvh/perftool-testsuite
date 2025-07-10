@@ -148,7 +148,7 @@ export RE_DSO="(?:$RE_PATH_ABSOLUTE(?: \(deleted\))?|\[kernel\.kallsyms\]|\[unkn
 #    [unknown]
 
 
-export RE_MODULE="\[[^]]+\]"
+export RE_MODULE="\[\w+\]"
 # A module name
 # Examples:
 #    [xfs]
