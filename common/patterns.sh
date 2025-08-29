@@ -221,13 +221,15 @@ export RE_TRACE_DURATION="\(\s*$RE_NUMBER\s*ms\s*\)"
 #    ( 0.012 ms)
 #!    (         )
 
-export RE_FUNC_ARG_NO_NAME="[\w\|\/\.<>\[\]:\"-]+"
+export RE_FUNC_ARG_NO_NAME="(?:\\\\[0-9]+|[\w\|\/\.<>\[\]:\"\-])+"
 # The arguments of the function without the argument names
 # Examples:
 #    0x7ffd24202230
 #    1379
 #    "/etc/selinux/config"
 #    RDONLY|CLOEXEC|DIRECTORY|NONBLOCK
+#    \1\0\0\0\0\0\0\0
+#    \250
 
 export RE_FUNC_ARG="\w+:\s+$RE_FUNC_ARG_NO_NAME"
 # The arguments of the function contained in trace lines
