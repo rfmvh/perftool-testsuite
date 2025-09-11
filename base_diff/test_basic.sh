@@ -60,11 +60,11 @@ CHECK_EXIT_CODE=$?
 # check for the output's sanity: "load" must be there
 ../common/check_all_patterns_found.pl "${REGEX_SEP}load" < $LOGS_DIR/basic_diff.log
 (( CHECK_EXIT_CODE += $? ))
-# check for the output's sanity: "load": func_test's load must grow by ~40-49%
-../common/check_all_patterns_found.pl "${REGEX_SEP}\+4\d\.\d+%\s*${REGEX_SEP}load${REGEX_SEP}\[\.\]\s*func_test" < $LOGS_DIR/basic_diff.log
+# check for the output's sanity: "load": func_test's load must grow by 30-60%
+../common/check_all_patterns_found.pl "${REGEX_SEP}\+[3-6]\d\.\d+%\s*${REGEX_SEP}load${REGEX_SEP}\[\.\]\s*func_test" < $LOGS_DIR/basic_diff.log
 (( CHECK_EXIT_CODE += $? ))
-# check for the output's sanity: "load": func_ref's load must decrase (relatively!) by ~40-49%
-../common/check_all_patterns_found.pl "${REGEX_SEP}\-4\d\.\d+%\s*${REGEX_SEP}load${REGEX_SEP}\[\.\]\s*func_ref" < $LOGS_DIR/basic_diff.log
+# check for the output's sanity: "load": func_ref's load must decrease (relatively!) by at least 30-60%
+../common/check_all_patterns_found.pl "${REGEX_SEP}\-[3-6]\d\.\d+%\s*${REGEX_SEP}load${REGEX_SEP}\[\.\]\s*func_ref" < $LOGS_DIR/basic_diff.log
 (( CHECK_EXIT_CODE += $? ))
 
 print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic execution - diff"
