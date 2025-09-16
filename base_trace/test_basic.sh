@@ -144,7 +144,7 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "errno summary"
 
 # perf-trace should be able to attach an existing process by '-p PID'
 echo "some_test_string" | $CURRENT_TEST_DIR/examples/vest &
-$CMD_PERF trace -p $! -o $LOGS_DIR/basic_attach.log
+$CMD_PERF trace --no-inherit -p $! -o $LOGS_DIR/basic_attach.log
 PERF_EXIT_CODE=$?
 
 # sanity check
