@@ -124,7 +124,7 @@ if [ "$MEM_STORES_SUPPORTED" = "yes" ]; then
 	### stores record
 
 	# test that perf mem record can record mem-stores
-	$CMD_PERF mem -t store record -c 100000 -o $CURRENT_TEST_DIR/perf.data examples/dummy > /dev/null 2> $LOGS_DIR/basic_stores_record.err
+	$CMD_PERF mem -t store record -c 10000 -o $CURRENT_TEST_DIR/perf.data examples/dummy > /dev/null 2> $LOGS_DIR/basic_stores_record.err
 	PERF_EXIT_CODE=$?
 
 	# check the perf mem record output
