@@ -84,8 +84,11 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "script"
 
 ### archive creation
 
+REGEX_BUILDID="^[0-9a-fA-F]{40}"
+REGEX_EXCLUDE="(kallsyms|kcore)"
+
 # create an archive
-echo $(perf buildid-list | grep kallsyms | cut -d' ' -f1) > exclude_id.txt 
+$CMD_PERF buildid-list | grep -P "$REGEX_BUILDID\s+.*$REGEX_EXCLUDE" | cut -d' ' -f1 > exclude_id.txt 
 $CMD_PERF --buildid-dir $BUILDIDDIR archive --exclude-buildids exclude_id.txt -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/basic_archive.log 2> $LOGS_DIR/basic_archive.err
 # FIXME the above command needs redirect output file to $CURRENT_TEST_DIR
 PERF_EXIT_CODE=$?
