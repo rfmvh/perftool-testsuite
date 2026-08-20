@@ -112,7 +112,8 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "archive creation"
 
 # get the DSOs that were hit by samples
 REGEX_MODULE="$RE_PATH_ABSOLUTE/modules/`uname -r | perl -pe 's/\+/\\\+/'`/$RE_PATH/.*\.ko(?:\.gz|\.xz)?$"
-$CMD_PERF script -i $CURRENT_TEST_DIR/perf.data 2> $LOGS_DIR/basic_archive_sanity.err | perl -ne 'print "$1\n" if /\(([^\)]+)\)$/' | sort -u | grep -v -P "$REGEX_MODULE" | grep -P '^/' > $CURRENT_TEST_DIR/basic_dsos_hit.list
+REGEX_JIT_MAP="perf-[0-9]+\.map$"
+$CMD_PERF script -i $CURRENT_TEST_DIR/perf.data 2> $LOGS_DIR/basic_archive_sanity.err | perl -ne 'print "$1\n" if /\(([^\)]+)\)$/' | sort -u | grep -v -P "$REGEX_MODULE|$REGEX_JIT_MAP" | grep -P '^/' > $CURRENT_TEST_DIR/basic_dsos_hit.list
 # get the DSOs that were saved to the archive
 bzcat $CURRENT_TEST_DIR/perf.data.tar.bz2 2>/dev/null | tar t 2>/dev/null | grep -v -P '^\.' 2>/dev/null | grep -v -P '^\[' | perl -pe 's/^/\//;s/\/[0-9a-f]{40}.*$//' | sort > $CURRENT_TEST_DIR/basic_dsos_archived.list
 (( EXIT_CODE = ${PIPESTATUS[0]} + ${PIPESTATUS[1]} + ${PIPESTATUS[2]} + ${PIPESTATUS[3]} + ${PIPESTATUS[4]} ))
